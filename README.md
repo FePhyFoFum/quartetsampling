@@ -2,9 +2,11 @@
 Quartet Sampling is a method to analyze molecular phylogenies by calculating branch support using repeated sampling of quartets.  Quartet Sampling differs from other support methods by combining a set of of tests into a single, efficient framework to address phylogenetic discordance.  QS is particularly useful for very largv and data-sparse aligmments or large phylogenomic datasets.
 
 ## Requirements ##
-* RAxML: (https://sco.h-its.org/exelixis/web/software/raxml/index.html)
 * Python 3 is recommended (but is compatible with Python 2.7)
+* RAxML: (https://sco.h-its.org/exelixis/web/software/raxml/index.html)
 * The SciPy library (https://www.scipy.org/) is needed to run the stats on QD (optional)
+* PAUP (optional, if you want to use this instead of RAxML): https://people.sc.fsu.edu/~dswofford/paup_test/
+
 
 ## Usage ##
 
