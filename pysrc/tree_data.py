@@ -21,8 +21,8 @@ along with 'quartetsampling'.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
-from phylo import tree_reader
-from phylo import tree_utils
+from phylo.tree_reader import read_tree_string
+from phylo.tree_utils import get_mrca
 
 
 class TreeData(object):
@@ -31,7 +31,7 @@ class TreeData(object):
     def __init__(self, args):
         self.tree = None
         print("reading tree from {}".format(args.tree[0].name))
-        self.tree = tree_reader.read_tree_string(args.tree[0].readline())
+        self.tree = read_tree_string(args.tree[0].readline())
         if self.tree is None:
             raise RuntimeError(
                 "Could not find a tree in the treefile: {}".format(
@@ -60,7 +60,7 @@ class TreeData(object):
                         break
                 if found is False:
                     raise RuntimeError("{} not found. Exiting...".format(i))
-            self.clade = tree_utils.get_mrca(nodes, self.tree)
+            self.clade = get_mrca(nodes, self.tree)
 
     def __str__(self):
         print("tree:", self.tree.get_newick_repr())
