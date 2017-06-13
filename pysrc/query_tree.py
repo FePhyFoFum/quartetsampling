@@ -2,10 +2,20 @@
 # -*- coding: utf-8 -*-
 # vim:fileencoding=utf-8
 """
-query_tree.py: Tree query script to find specific nodes in large trees
+Tree query script to find specific nodes numbers in large trees
+when using the post-run annotated trees.
 
 http://www.github.com/FePhyFoFum/quartetsampling
+"""
 
+import os
+import sys
+import argparse
+from tree_data import TreeData
+from phylo.tree_utils import get_mrca
+
+
+LICENSE = """
 This file is part of 'quartetsampling'.
 
 'quartetsampling' is free software: you can redistribute it and/or modify
@@ -22,28 +32,33 @@ You should have received a copy of the GNU General Public License
 along with 'quartetsampling'.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os
-import sys
-import argparse
-from tree_data import TreeData
-from phylo.tree_utils import get_mrca
+
+def generate_argparser():
+    """Generates the argparsr ArgumentParser
+    """
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        epilog=LICENSE)
+    parser.add_argument('-t', '--tree', type=open, nargs=1,
+                        help="input tree in newick format")
+    parser.add_argument('-d', '--data', type=os.path.abspath, nargs=1,
+                        help=("CSV output from quartet_sampling"
+                              " (RESULT.node.score.csv)"))
+    parser.add_argument("-c", "--clade", nargs=1, help=argparse.SUPPRESS)
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="verbose screen output")
+    parser.add_argument("-s", "--startk", type=int, default=0,
+                        help=argparse.SUPPRESS)
+    parser.add_argument("-p", "--stopk", type=int, help=argparse.SUPPRESS)
+    return parser
 
 
 def main(arguments=None):
     """Main method for query_tree.py
     """
     arguments = arguments if arguments is not None else sys.argv[1:]
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-t', '--tree', type=open, nargs=1)
-    parser.add_argument('-d', '--data', type=os.path.abspath, nargs=1)
-    # parser.add_argument("-n", '--nodes', nargs=1,
-    #                    help=("comma-separated list of nodes to use"))
-    parser.add_argument("-c", "--clade", nargs=1)
-    parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("-s", "--startk", type=int, default=0)
-    parser.add_argument("-p", "--stopk", type=int)
+    parser = generate_argparser()
     args = parser.parse_args(args=arguments)
     treedata = TreeData(args)
     params = {

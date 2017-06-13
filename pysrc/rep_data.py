@@ -29,7 +29,7 @@ import subprocess
 from itertools import product
 from shutil import copyfile
 from phylo import tree_reader
-from phylo  import tree_utils
+from phylo import tree_utils
 
 
 class DataStore():
@@ -45,11 +45,11 @@ class DataStore():
                 os.mkdir(dirname)
         self.headers = {"main": ["node_label", "freq0",
                                  "qc", "qd", "qu", "qf",
-                                 "qcsig", "qdsig",
+                                 "qdsig",
                                  "diff", "num_replicates", "notes"],
                         "clade": ["taxon", "tree1", "tree2", "tree3", "treeu",
                                   "qc", "qd", "qu",
-                                  "qcsig", "qdsig", "freq0"]}
+                                  "qdsig", "freq0"]}
 
     def write_headers(self, file_path, restype="main"):
         """Write the headers into the file"""
@@ -102,7 +102,6 @@ class DataStore():
         qscores = calc_qc_qd_qu(
             self.tree_counts[fnode], params)
         fnode.data["qc_score"] = na_fmt(qscores['qc'])
-        fnode.data["qc_sig"] = na_fmt(qscores['qcsig'])
         fnode.data["qd_score"] = na_fmt(qscores['qd'])
         fnode.data["qd_sig"] = na_fmt(qscores['qdsig'])
         fnode.data["qu_score"] = na_fmt(qscores['qu'])
@@ -114,7 +113,7 @@ class DataStore():
             {"node_label": fnode.label,
              "freq0": qscores['freq0'],
              "qc": qscores['qc'], "qd": qscores['qd'],
-             "qcsig": qscores['qcsig'], 'qdsig': qscores['qdsig'],
+             'qdsig': qscores['qdsig'],
              "qu": qscores['qu'], "diff": rep_info['likelihood_diff'],
              "num_replicates": nreplicates, "notes": notes})
         # this will record the taxa included and the tree
@@ -151,7 +150,6 @@ class DataStore():
                         "treeu": fnode_dict[xnode][3],
                         "qc": nqscores['qc'],
                         'qd': nqscores['qd'],
-                        "qcsig": nqscores['qcsig'],
                         "qdsig": nqscores['qdsig'],
                         "qu": nqscores['qu'],
                         "freq0": nqscores['freq0']},
@@ -164,7 +162,7 @@ class DataStore():
             "replicates": "{:.2g}".format(0),
             "freq0": "{:.2g}".format(0),
             "qc_score": "NA", "qd_score": "NA", "qu_score": "NA",
-            'qc_sig': 'NA', 'qd_sig': 'NA'})
+            'qd_sig': 'NA'})
         # write the scores to the file
         self.write_entry(
             params["score_result_file_path"],
@@ -219,16 +217,15 @@ def calc_qc_qd_qu(counts, params):
     utotal = total + counts.get(3, 0)
     if utotal == 0:
         qscores = {'qc': 'NA', 'qd': 'NA', 'qu': 'NA',
-                   'freq0': 'NA', 'qcsig': 'NA', 'qdsig': 'NA'}
+                   'freq0': 'NA', 'qdsig': 'NA'}
     elif total == 0:
         qscores = {'qc': 0, 'qd': 0, 'qu': 1, 'freq0': 0,
-                   'qcsig': 'NA', 'qdsig': 'NA'}
+                   'qdsig': 'NA'}
     else:
         freqs = [counts.get(x, 0) / total for x in (0, 1, 2)]
         ufreqs = [counts.get(x, 0) / utotal for x in (0, 1, 2, 3)]
         ncounts = sum([int(x > 0) for x in freqs])
         qc_score = 1
-        qc_sig = 0
         if ncounts > 1:
             qc_score += sum([freqs[i] * math.log(freqs[i], ncounts)
                              if freqs[i] > 0.0 else 0.0
@@ -238,10 +235,9 @@ def calc_qc_qd_qu(counts, params):
         qd_score = (abs(counts.get(1, 0) - counts.get(2, 0)) / (
             counts.get(1, 0) + counts.get(2, 0))
                     if counts.get(1, 0) + counts.get(2, 0) > 0 else "NA")
-        if params['skip_stats'] is True:
+        if params['calc_qdstats'] is False:
             qd_sig = 'NA'
         else:
-
             _, qd_sig = chi2_test(counts.get(1, 0), counts.get(2, 0))
         qu_score = ('NA' if params['lnlikethresh'] == 0
                     else counts.get(3, 0) / utotal)
@@ -250,7 +246,7 @@ def calc_qc_qd_qu(counts, params):
                 vfile.write('{}\n'.format(','.join([
                     str(x) for x in ufreqs + [
                         qc_score, qd_score, qu_score]])))
-        qscores = {'qc': qc_score, 'qcsig': qc_sig,
+        qscores = {'qc': qc_score,
                    'qd': qd_score, 'qdsig': qd_sig,
                    'qu': qu_score, 'freq0': freqs[0]}
     return qscores

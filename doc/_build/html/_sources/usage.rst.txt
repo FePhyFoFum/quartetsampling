@@ -1,0 +1,14 @@
+.. _usage:
+
+Usage
+=====
+
+quartet_sampling.py
+-------------------
+
+Basic Usage
+^^^^^^^^^^^
+
+Required Flags
+^^^^^^^^^^^^^^
+**``-t/--tree``:** File containing a single Newick-formatted phylogeny.  

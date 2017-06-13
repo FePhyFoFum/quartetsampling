@@ -1,0 +1,11 @@
+.. qs:
+
+qs
+==
+
+.. literalinclude:: ../pysrc/quartet_sampling.py
+
+.. argparse::
+   :module ../pysrc/quartet_sampling.py
+   :func: argument_parser 
+   :prog: quartet_sampling

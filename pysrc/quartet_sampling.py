@@ -5,23 +5,9 @@
 quartet_samping.py: Quartet Sampling method for
 phylogenetic branch support evaluation
 
-http://www.github.com/FePhyFoFum/quartetsampling
-
-This file is part of 'quartetsampling'.
-
-'quartetsampling' is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-'quartetsampling' is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with 'quartetsampling'.  If not, see <http://www.gnu.org/licenses/>.
+<http://www.github.com/FePhyFoFum/quartetsampling>
 """
+
 
 import argparse
 import os
@@ -38,45 +24,66 @@ from paramset import ParamSet, read_config
 from alignment import Alignment
 
 
-def main(arguments=None):
-    """Main method for quartet_sampling"""
-    if arguments is None:
-        if (len(sys.argv) == 2 and
-                sys.argv[1] not in ('-h', '--help', '--version')):
-            arguments = read_config(sys.argv[1])
-            print("Config file used.")
-            print("Executing with arguments: ", " ".join(arguments))
-        else:
-            arguments = sys.argv[1:]
+LICENSE = """
+This file is part of 'quartetsampling'.
+
+'quartetsampling' is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+'quartetsampling' is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with 'quartetsampling'.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+
+def generate_argparser():
     parser = argparse.ArgumentParser(
         prog="quartet_sampling.py",
         description=__doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        epilog=LICENSE)
     parser.add_argument("-t", "--tree", type=open, nargs=1, required=True,
-                        help="The input tree.")
+                        help=("The input tree in Newick "
+                              "(parenthetical) format."))
     parser.add_argument("-a", "--alignment", type=open, nargs=1, required=True,
                         help=("Alignment file in \"relaxed phylip\" format, "
                               "as used by RAxML."))
     parser.add_argument("-N", "--number-of-reps", type=int, nargs=1,
-                        required=True,
+                        required=True, default=100,
                         help=("The number of replicate quartet topology "
                               "searches to be performed at each node."))
+    parser.add_argument("-T", "--number-of-threads", type=int, nargs=1,
+                        required=True, default=1,
+                        help=("The number of parallel threads to be used "
+                              "by Python for quartet topology searches."))
     parser.add_argument("-L", "--lnlike-thresh", type=float, nargs=1,
+                        default=2.0,
                         help=("The lnlike threshhold that is the minimum "
-                              "a quartet must be to be considered better "
-                              "than others."))
+                              "value by which the log-likelihood value "
+                              "of the best-likelihood tree must be "
+                              "higher than the second-best-likelihood tree "
+                              "for the replicate to register as the "
+                              "best-likelihood topology rather than "
+                              "'uncertain'. If set to zero, this turns off "
+                              "likelihood evaluation mode and invokes tree "
+                              "inference mode where a tree is simply inferred "
+                              "from the alignment without considering "
+                              "likelihood (QU values are N/A in this case)."))
     parser.add_argument("-r", "--result-prefix", type=str, nargs=1,
                         help="A prefix to put on the result files.")
-    parser.add_argument("-T", "--number-of-threads", type=int, nargs=1,
-                        required=True,
-                        help=("The number of parallel threads to be used "
-                              "for quartet topology searches."))
     parser.add_argument("-A", "--amino-acid", action="store_true",
                         help="use amino acids instead of nucleotides")
     parser.add_argument("-O", "--min-overlap", type=int,
                         help=("The minimum sites required to be sampled for "
                               "all taxa in a given quartet."))
     parser.add_argument("-o", "--results-dir", type=os.path.abspath, nargs=1,
+                        default='.',
                         help=("A directory to which output files will "
                               "be saved. If not supplied, the current working "
                               "directory will be used."))
@@ -94,6 +101,7 @@ def main(arguments=None):
                               "Gene alignments will be sampled random for the "
                               "quartet topology searches."))
     parser.add_argument("-e", "--temp-dir", type=os.path.abspath, nargs=1,
+                        default="./temp",
                         help=("A directory to which temporary files will be "
                               "saved. If not supplied, \"temp\" will be "
                               "created in the current working directory."))
@@ -122,12 +130,14 @@ def main(arguments=None):
     parser.add_argument("-X", "--raxml-executable", nargs=1,
                         help=("The name (or absolute path) of the raxml "
                               "executable to be used for calculating "
-                              "likelihoods on quartet topologies."))
+                              "likelihoods on quartet topologies."
+                              "(default='raxml')"))
     parser.add_argument("-P", "--paup", action="store_true",
                         help="Use PAUP instead of RAxML.")
     parser.add_argument("--paup-executable", nargs=1,
                         help=("The name or path of the PAUP executable to "
-                              "be used for calculated quartets."))
+                              "be used for calculated quartets. "
+                              "(default='paup')"))
     parser.add_argument("--ignore-errors", action="store_true",
                         help=("Ignore RAxML and PAUP erroneous runs"))
     parser.add_argument("--low-mem", action="store_true",
@@ -141,14 +151,29 @@ def main(arguments=None):
                               "progressively longer as it proceeds. To avoid "
                               "long runtimes, the recommended range is < 0.5 "
                               "(which is the default)."))
-    parser.add_argument("--skip-stats", action="store_true",
-                        help=("Skips running the significance tests for QD. "
-                              "Use if Scipy is not available or to speed"
-                              "up testing."))
+    parser.add_argument("--calc-qdstats", action="store_true",
+                        help=("EXPERIMENTAL: Calculates Chi-square test "
+                              "for QD tree frequencies. Use only "
+                              " if Scipy is available. "
+                              "Will increase running time."))
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="Provide more verbose output if specified.")
     parser.add_argument('--version', action='version',
-                        version='%(prog)s version 1')
+                        version='%(prog)s version 1.1')
+    return parser
+
+
+def main(arguments=None):
+    """Main method for quartet_sampling"""
+    if arguments is None:
+        if (len(sys.argv) == 2 and
+                sys.argv[1] not in ('-h', '--help', '--version')):
+            arguments = read_config(sys.argv[1])
+            print("Config file used.")
+            print("Executing with arguments: ", " ".join(arguments))
+        else:
+            arguments = sys.argv[1:]
+    parser = generate_argparser()
     args = parser.parse_args(arguments)
     treedata = TreeData(args)
     params = ParamSet()

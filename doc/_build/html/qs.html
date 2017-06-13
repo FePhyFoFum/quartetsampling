@@ -1,0 +1,385 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>qs &#8212; quartetsampling 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Usage" href="usage.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="qs">
+<h1>qs<a class="headerlink" href="#qs" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># vim:fileencoding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">quartet_samping.py: Quartet Sampling method for</span>
+<span class="sd">phylogenetic branch support evaluation</span>
+
+<span class="sd">http://www.github.com/FePhyFoFum/quartetsampling</span>
+
+<span class="sd">This file is part of &#39;quartetsampling&#39;.</span>
+
+<span class="sd">&#39;quartetsampling&#39; is free software: you can redistribute it and/or modify</span>
+<span class="sd">it under the terms of the GNU General Public License as published by</span>
+<span class="sd">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">(at your option) any later version.</span>
+
+<span class="sd">&#39;quartetsampling&#39; is distributed in the hope that it will be useful,</span>
+<span class="sd">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License</span>
+<span class="sd">along with &#39;quartetsampling&#39;.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">Pool</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="k">import</span> <span class="n">copyfile</span>
+<span class="kn">from</span> <span class="nn">tree_data</span> <span class="k">import</span> <span class="n">TreeData</span><span class="p">,</span> <span class="n">write_test_trees</span>
+<span class="kn">from</span> <span class="nn">rep_data</span> <span class="k">import</span> <span class="n">DataStore</span><span class="p">,</span> <span class="n">process_replicate_raxml</span>
+<span class="kn">from</span> <span class="nn">rep_data</span> <span class="k">import</span> <span class="n">process_replicate_raxml2lk</span><span class="p">,</span> <span class="n">process_replicate_paup</span>
+<span class="kn">from</span> <span class="nn">rep_data</span> <span class="k">import</span> <span class="n">get_replicates_exhaustive</span><span class="p">,</span> <span class="n">get_replicates_random</span>
+<span class="kn">from</span> <span class="nn">rep_data</span> <span class="k">import</span> <span class="n">write_run_stats</span>
+<span class="kn">from</span> <span class="nn">paramset</span> <span class="k">import</span> <span class="n">ParamSet</span><span class="p">,</span> <span class="n">read_config</span>
+<span class="kn">from</span> <span class="nn">alignment</span> <span class="k">import</span> <span class="n">Alignment</span>
+
+
+<span class="k">def</span> <span class="nf">argument_parser</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">prog</span><span class="o">=</span><span class="s2">&quot;quartet_sampling.py&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--tree&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">open</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The input tree in newick (parenthetical) format.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="s2">&quot;--alignment&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">open</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Alignment file in </span><span class="se">\&quot;</span><span class="s2">relaxed phylip</span><span class="se">\&quot;</span><span class="s2"> format, &quot;</span>
+                              <span class="s2">&quot;as used by RAxML.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-N&quot;</span><span class="p">,</span> <span class="s2">&quot;--number-of-reps&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The number of replicate quartet topology &quot;</span>
+                              <span class="s2">&quot;searches to be performed at each node.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-L&quot;</span><span class="p">,</span> <span class="s2">&quot;--lnlike-thresh&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The lnlike threshhold that is the minimum &quot;</span>
+                              <span class="s2">&quot;a quartet must be to be considered better &quot;</span>
+                              <span class="s2">&quot;than others.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;--result-prefix&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A prefix to put on the result files.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-T&quot;</span><span class="p">,</span> <span class="s2">&quot;--number-of-threads&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The number of parallel threads to be used &quot;</span>
+                              <span class="s2">&quot;for quartet topology searches.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-A&quot;</span><span class="p">,</span> <span class="s2">&quot;--amino-acid&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;use amino acids instead of nucleotides&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-O&quot;</span><span class="p">,</span> <span class="s2">&quot;--min-overlap&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The minimum sites required to be sampled for &quot;</span>
+                              <span class="s2">&quot;all taxa in a given quartet.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--results-dir&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;A directory to which output files will &quot;</span>
+                              <span class="s2">&quot;be saved. If not supplied, the current working &quot;</span>
+                              <span class="s2">&quot;directory will be used.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-V&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbout&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Provide output of the frequencies of each &quot;</span>
+                              <span class="s2">&quot;topology and QC&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="s2">&quot;--partitions&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Partitions file in RAxML format. If omitted &quot;</span>
+                              <span class="s2">&quot;then the entire alignment will be treated &quot;</span>
+                              <span class="s2">&quot;as one partition for all quartet replicate &quot;</span>
+                              <span class="s2">&quot;topology searches.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-g&quot;</span><span class="p">,</span> <span class="s2">&quot;--genetrees&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Use partitions file (RAxML format) to divide &quot;</span>
+                              <span class="s2">&quot;the alignment into separate gene tree regions. &quot;</span>
+                              <span class="s2">&quot;Gene alignments will be sampled random for the &quot;</span>
+                              <span class="s2">&quot;quartet topology searches.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--temp-dir&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;A directory to which temporary files will be &quot;</span>
+                              <span class="s2">&quot;saved. If not supplied, </span><span class="se">\&quot;</span><span class="s2">temp</span><span class="se">\&quot;</span><span class="s2"> will be &quot;</span>
+                              <span class="s2">&quot;created in the current working directory.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--retain-temp&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Do not remove temporary files&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-C&quot;</span><span class="p">,</span> <span class="s2">&quot;--clade&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Conduct analysis on specific clade identified &quot;</span>
+                              <span class="s2">&quot;by CSV taxon list&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--start-node-number&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;An integer denoting the node to which to start &quot;</span>
+                              <span class="s2">&quot;from. Nodes will be read from topologically &quot;</span>
+                              <span class="s2">&quot;identical (and isomorphic!) input trees in &quot;</span>
+                              <span class="s2">&quot;deterministic order, so this argument may be  &quot;</span>
+                              <span class="s2">&quot;used to restart at an intermediate position &quot;</span>
+                              <span class="s2">&quot;(in case the previous run was canceled before &quot;</span>
+                              <span class="s2">&quot;completion, for example).&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--stop-node-number&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;An integer denoting the node at which to stop. &quot;</span>
+                              <span class="s2">&quot;Will include nodes with indices &lt;= the stop &quot;</span>
+                              <span class="s2">&quot;node number. This argument may be used to &quot;</span>
+                              <span class="s2">&quot;limit the length of a given run in case only &quot;</span>
+                              <span class="s2">&quot;a certain part of the tree is of interest. &quot;</span>
+                              <span class="s2">&quot;Nodes will be read from topologically &quot;</span>
+                              <span class="s2">&quot;identical (and isomorphic!) input trees &quot;</span>
+                              <span class="s2">&quot;in deterministic order.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-X&quot;</span><span class="p">,</span> <span class="s2">&quot;--raxml-executable&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The name (or absolute path) of the raxml &quot;</span>
+                              <span class="s2">&quot;executable to be used for calculating &quot;</span>
+                              <span class="s2">&quot;likelihoods on quartet topologies.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="s2">&quot;--paup&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use PAUP instead of RAxML.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--paup-executable&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The name or path of the PAUP executable to &quot;</span>
+                              <span class="s2">&quot;be used for calculated quartets.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--ignore-errors&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Ignore RAxML and PAUP erroneous runs&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--low-mem&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Do not store large alignment in memory &quot;</span>
+                              <span class="s2">&quot;for whole-alignment (non-genetree) mode&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--max-random-sample-proportion&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The proportion of possible replicates explored &quot;</span>
+                              <span class="s2">&quot;unsuccessfully by the random generation &quot;</span>
+                              <span class="s2">&quot;procedure before it gives up. Because this &quot;</span>
+                              <span class="s2">&quot;generates random replicates, it takes &quot;</span>
+                              <span class="s2">&quot;progressively longer as it proceeds. To avoid &quot;</span>
+                              <span class="s2">&quot;long runtimes, the recommended range is &lt; 0.5 &quot;</span>
+                              <span class="s2">&quot;(which is the default).&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--skip-stats&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Skips running the significance tests for QD. &quot;</span>
+                              <span class="s2">&quot;Use if Scipy is not available or to speed&quot;</span>
+                              <span class="s2">&quot;up testing.&quot;</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Provide more verbose output if specified.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--version&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;version&#39;</span><span class="p">,</span>
+                        <span class="n">version</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(prog)s</span><span class="s1"> version 1&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">arguments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main method for quartet_sampling&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">arguments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">,</span> <span class="s1">&#39;--version&#39;</span><span class="p">)):</span>
+            <span class="n">arguments</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Config file used.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Executing with arguments: &quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arguments</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">arguments</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argument_parser</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+    <span class="n">treedata</span> <span class="o">=</span> <span class="n">TreeData</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ParamSet</span><span class="p">()</span>
+    <span class="n">params</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">treedata</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PARAMETERS:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------&quot;</span><span class="p">)</span>
+    <span class="n">maindata</span> <span class="o">=</span> <span class="n">DataStore</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="c1">#  shared object access for multithreading</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">()</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+    <span class="n">aln</span> <span class="o">=</span> <span class="n">Alignment</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;using_genetrees&#39;</span><span class="p">]:</span>
+        <span class="n">aln</span><span class="o">.</span><span class="n">read_genes</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">aln</span><span class="o">.</span><span class="n">read_align</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">params</span><span class="p">)</span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_overlap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aln</span><span class="o">.</span><span class="n">min_overlap</span>
+    <span class="c1"># k is the node counter</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1">#  if we are starting at the beginning, initialize the results file</span>
+    <span class="c1">#  (otherwise assume it&#39;s already there and don&#39;t overwrite it)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;startk&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">k</span><span class="p">:</span>
+        <span class="n">maindata</span><span class="o">.</span><span class="n">write_headers</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;score_result_file_path&#39;</span><span class="p">])</span>
+    <span class="c1"># process the nodes in the tree</span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">fnode</span> <span class="ow">in</span> <span class="n">treedata</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">iternodes</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;verbose&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;testing node&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fnode</span><span class="o">.</span><span class="n">leaves</span><span class="p">()])</span>
+        <span class="k">if</span> <span class="n">treedata</span><span class="o">.</span><span class="n">clade</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fnode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">treedata</span><span class="o">.</span><span class="n">clade</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;temp_wd&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stopk&#39;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processed all nodes up to the stop node. Exiting...&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="n">write_test_trees</span><span class="p">()</span>
+        <span class="c1"># skip tips and root</span>
+        <span class="n">k</span><span class="p">,</span> <span class="n">leafsets</span> <span class="o">=</span> <span class="n">treedata</span><span class="o">.</span><span class="n">check_node</span><span class="p">(</span><span class="n">fnode</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">leafsets</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;verbose&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;skipping node...&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="c1"># Begin multiprocessing queue</span>
+        <span class="n">results_queue</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="n">n_completed</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;lock&quot;</span><span class="p">)</span>
+        <span class="c1"># Establish replicates</span>
+        <span class="n">n_possible_replicates</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">leafset</span> <span class="ow">in</span> <span class="n">leafsets</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">n_possible_replicates</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">leafset</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;using_genetrees&#39;</span><span class="p">]:</span>
+            <span class="n">n_possible_replicates</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">aln</span><span class="o">.</span><span class="n">seqs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;verbose&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of possible gene-quartet combos: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">n_possible_replicates</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;verbose&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of possible quartets: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">n_possible_replicates</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n_possible_replicates</span> <span class="o">*</span>
+                <span class="n">params</span><span class="p">[</span><span class="s1">&#39;max_quartet_enumeration_threshold&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;nreps&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;verbose&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of possible quartets is close enough to the &#39;</span>
+                      <span class="s1">&#39;total number to be sampled, so will generate all&#39;</span>
+                      <span class="s1">&#39;and do a random draw&#39;</span><span class="p">)</span>
+            <span class="n">replicates</span><span class="p">,</span> <span class="n">repstats</span> <span class="o">=</span> <span class="n">get_replicates_exhaustive</span><span class="p">(</span>
+                <span class="n">n_completed</span><span class="p">,</span> <span class="n">results_queue</span><span class="p">,</span> <span class="n">leafsets</span><span class="p">,</span>
+                <span class="n">params</span><span class="p">,</span> <span class="n">aln</span><span class="p">,</span> <span class="n">fnode</span><span class="p">,</span> <span class="n">lock</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;verbose&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generating random quartets...&#39;</span><span class="p">)</span>
+            <span class="n">replicates</span><span class="p">,</span> <span class="n">repstats</span> <span class="o">=</span> <span class="n">get_replicates_random</span><span class="p">(</span>
+                <span class="n">n_completed</span><span class="p">,</span> <span class="n">results_queue</span><span class="p">,</span> <span class="n">leafsets</span><span class="p">,</span>
+                <span class="n">params</span><span class="p">,</span> <span class="n">aln</span><span class="p">,</span> <span class="n">fnode</span><span class="p">,</span> <span class="n">lock</span><span class="p">)</span>
+        <span class="n">nreplicates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">replicates</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nreplicates</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># no suitable replicates</span>
+            <span class="n">maindata</span><span class="o">.</span><span class="n">process_empty_rep_results</span><span class="p">(</span><span class="n">fnode</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">nreplicates</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># copy original partitions file, should not change throughout run</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;partitions_file_path&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">copyfile</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;partitions_file_path&#39;</span><span class="p">],</span> <span class="s2">&quot;temp_parts&quot;</span><span class="p">)</span>
+            <span class="c1"># run the raxml calls in parallel</span>
+            <span class="c1"># now designate multiprocessing resource pool.</span>
+            <span class="c1"># important to do outside node loop. garbage collecting does not</span>
+            <span class="c1"># apply to threads! set maxtasksperchild to release mem and files</span>
+            <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;nprocs&#39;</span><span class="p">],</span> <span class="n">maxtasksperchild</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;paup&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">process_replicate_paup</span><span class="p">,</span> <span class="n">replicates</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;lnlikethresh&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">process_replicate_raxml2lk</span><span class="p">,</span> <span class="n">replicates</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">process_replicate_raxml</span><span class="p">,</span> <span class="n">replicates</span><span class="p">)</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">pool</span>
+            <span class="c1"># print(&quot;&quot;)</span>
+            <span class="c1"># now process the results. first open a file to hold topologies</span>
+            <span class="c1"># sending params[&#39;just_clade&#39;] = True will give back detailed</span>
+            <span class="c1"># name results</span>
+            <span class="n">maindata</span><span class="o">.</span><span class="n">process_rep_results</span><span class="p">(</span><span class="n">fnode</span><span class="p">,</span> <span class="n">results_queue</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span>
+                                         <span class="n">nreplicates</span><span class="p">)</span>
+        <span class="c1"># clean up</span>
+        <span class="k">del</span> <span class="n">results_queue</span>
+        <span class="k">del</span> <span class="n">n_completed</span>
+        <span class="c1"># break # Left in place for troubleshooting</span>
+    <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;retain_temp&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">the_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;temp_wd&#39;</span><span class="p">]):</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;temp_wd&#39;</span><span class="p">],</span> <span class="n">the_file</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot; not found&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;temp_wd&#39;</span><span class="p">])</span>
+    <span class="n">qf_scores</span> <span class="o">=</span> <span class="n">maindata</span><span class="o">.</span><span class="n">write_qf_scores</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;score_result_file_path&quot;</span><span class="p">])</span>
+    <span class="n">treedata</span><span class="o">.</span><span class="n">write_figtree</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;figtree_file_path&#39;</span><span class="p">],</span> <span class="n">qf_scores</span><span class="p">)</span>
+    <span class="n">treedata</span><span class="o">.</span><span class="n">write_scoretrees</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">write_run_stats</span><span class="p">(</span><span class="n">repstats</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">done.</span><span class="se">\n</span><span class="s2">scores written to: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">labeled &quot;</span>
+           <span class="s2">&quot;tree written to: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">total time </span><span class="si">{:.2f}</span><span class="s2"> hours&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+               <span class="n">params</span><span class="p">[</span><span class="s1">&#39;score_result_file_path&#39;</span><span class="p">],</span>
+               <span class="n">params</span><span class="p">[</span><span class="s1">&#39;tree_result_file_path&#39;</span><span class="p">],</span>
+               <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3600</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="usage.html" title="previous chapter">Usage</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/qs.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, James B. Pease, Stephen A. Smith, Cody E. Hinchliff, Joseph W. Brown, Joseph F. Walker.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/qs.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

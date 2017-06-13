@@ -35,7 +35,7 @@ class ParamSet(dict):
         self['low_mem'] = args.low_mem
         self['retain_temp'] = args.retain_temp
         self['amino_acid'] = args.amino_acid
-        self['skip_stats'] = args.skip_stats
+        self['calc_qdstats'] = args.calc_qdstats
         self['max_quartet_enumeration_threshold'] = 0.333333
         self['just_clade'] = args.clade is not None
         self['nprocs'] = args.number_of_threads[0]

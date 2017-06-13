@@ -1,0 +1,207 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &#8212; quartetsampling 1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Program Parameter Descriptions" href="prog_desc.html" />
+    <link rel="prev" title="Welcome to quartetsampling’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started">
+<span id="intro"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-is-quartet-sampling">
+<h2>What is Quartet Sampling?<a class="headerlink" href="#what-is-quartet-sampling" title="Permalink to this headline">¶</a></h2>
+<p>Quartet Sampling (QS) is a method for quantifying branch support values for a phylogenetic tree.  The software requires an input tree topology (branch lengths not required or used) and a molecular alignment in phylip format.  A RAxML-formatted partition file may (optionally) be also used.  The Quartet Sampling method takes a phylogenetic topology and considers each internal (i.e., non-terminal) branch.  Each internal branch has four branches connected to it that lead to one or more taxa.  For each replicate, Quartet Sampling randomly selects one taxon from each of the four groups and evaluates the likelihoods of the three possible topological arrangements of the four taxa.  These replicates then form the basis of branch scores for the QS method.  Full details about the scientific background and equations behind QS can be found in the Quartet Sampling paper at &lt;<a class="reference external" href="http://biorxiv.org/content/early/2017/06/10/148536.1">http://biorxiv.org/content/early/2017/06/10/148536.1</a>&gt;.</p>
+</div>
+<div class="section" id="how-do-i-cite-this-program">
+<h2>How do I cite this program?<a class="headerlink" href="#how-do-i-cite-this-program" title="Permalink to this headline">¶</a></h2>
+<p>Quartet Sampling distinguishes lack of support from conflicting support in the plant tree of life
+James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith
+bioRxiv 148536; doi: <a class="reference external" href="https://doi.org/10.1101/148536">https://doi.org/10.1101/148536</a></p>
+<p>Please also include the URL &lt;<a class="reference external" href="https://www.github.com/fephyfofum/quartetsampling">https://www.github.com/fephyfofum/quartetsampling</a>&gt; in your methods section where the program is referenced.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>No installation is required, quartetsampling scripts should work as long as Python and RAxML are installed.</p>
+<div class="section" id="requirements">
+<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Python 3.x (2.7 should also work, but 3.x recommended) <a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></li>
+<li>RAxML 8.x (7.x should also work, but 8.x recommended) <a class="reference external" href="https://sco.h-its.org/exelixis/web/software/raxml/index.html">https://sco.h-its.org/exelixis/web/software/raxml/index.html</a></li>
+</ul>
+<p><strong>Optional, but recommended:</strong></p>
+<ul class="simple">
+<li>PAUP  <a class="reference external" href="http://people.sc.fsu.edu/~dswofford/paup_test/">http://people.sc.fsu.edu/~dswofford/paup_test/</a> (required only if PAUP is used instead of RAxML)</li>
+<li>Numpy <a class="reference external" href="http://www.numpy.org">http://www.numpy.org</a> (required only for <code class="docutils literal"><span class="pre">calc_qs_stats.py</span></code>)</li>
+<li>Scipy <a class="reference external" href="https://www.scipy.org">https://www.scipy.org</a> (required only if <code class="docutils literal"><span class="pre">--calc-qdstats.py</span></code> is activated)</li>
+<li>Figtree <a class="reference external" href="http://tree.bio.ed.ac.uk/software/figtree/">http://tree.bio.ed.ac.uk/software/figtree/</a> (required to view FigTree output)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="preparing-your-data">
+<h2>Preparing your data<a class="headerlink" href="#preparing-your-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="phylogeny">
+<h3>Phylogeny<a class="headerlink" href="#phylogeny" title="Permalink to this headline">¶</a></h3>
+<p>A phylogenetic tree in Newick (parenthetical) format should be used.  Branch lengths are optional and will be ignored by the program.  Removal of support scores in square brackets is recommended.</p>
+<p>..note:: Internal branch labels will be replaced in output trees.</p>
+</div>
+<div class="section" id="sequence-alignment">
+<h3>Sequence Alignment<a class="headerlink" href="#sequence-alignment" title="Permalink to this headline">¶</a></h3>
+<p>An alignment in Relaxed Phylip format (such as used for RAxML) is required.  The alignment can be DNA nucleotides or amino acids (use <code class="docutils literal"><span class="pre">-A/--amino-acid</span></code> in that case). If you have an alignment in FASTA format, we also include a script called <code class="docutils literal"><span class="pre">utils/fasta2phy.py</span></code> that will convert FASTA alignments to Relaxed Phylip.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">Labels for the alignment sequences must match the labels on tree terminal branches exactly. All tips in the phylogeny must have a sequence represented in the alignment.  Sequences appearing in the alignment, but not in the tree are allowed, and will be ignored.</p>
+</div>
+</div>
+<div class="section" id="partitions-file-optional">
+<h3>Partitions File (Optional)<a class="headerlink" href="#partitions-file-optional" title="Permalink to this headline">¶</a></h3>
+<p>A partitions file in the style of RAxML may also be used either for a partitioned analysis of likelihood or separate gene tree evaluation.  DNA partitions should use the <code class="docutils literal"><span class="pre">DNA</span></code> prefix, and proteins should use the <code class="docutils literal"><span class="pre">WAG</span></code> prefix instead of <code class="docutils literal"><span class="pre">DNA</span></code> in the example below.  Note that partition names are arbitrary in this case and that number ranges are inclusive.</p>
+<dl class="docutils">
+<dt>Example file::</dt>
+<dd>DNA, p1=1-30
+DNA, p2=31-60
+DNA, p3=61-90
+…</dd>
+</dl>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">If your alignment is sparse and you use partitioned most, such that you will frequently have partitions with no sequence data for randomly selected quartets of taxa, you may wish to invoke the <code class="docutils literal"><span class="pre">--ignore-error</span></code> option in <code class="docutils literal"><span class="pre">quartet_sampling.py</span></code> to ignore the RAxML errors that will result from these empty partitions.</p>
+</div>
+</div>
+</div>
+<div class="section" id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>::</dt>
+<dd>python quartet_sampling.py -t TREE.nwk -a ALIGNMENT.phy -N 100 -T 4 -L 2</dd>
+</dl>
+<div class="section" id="required-paramters">
+<h3>Required Paramters<a class="headerlink" href="#required-paramters" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">-t/--tree</span></code>: File containing a single Newick-formatted phylogeny.</p>
+<p><code class="docutils literal"><span class="pre">-a/--alignment</span></code> Phylip-formatted alignment containing one sequence for each tip in the phylogeny provided.</p>
+<p><code class="docutils literal"><span class="pre">-N/--number-of-reps</span></code> Number of replicates per branch to perform.</p>
+<p><code class="docutils literal"><span class="pre">-T/--number-of-threads</span></code> Number of threads for Python to use in parallel (does not pass through to RAxML, this is for Python multiprocessing of per-branch replicates in parallel)</p>
+</div>
+<div class="section" id="recommended-parameters">
+<h3>Recommended Parameters<a class="headerlink" href="#recommended-parameters" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">-L/--lnlike-thresh</span></code>: log-likelihood threshold cutoff, determines the minimum difference by which the best likelihood tree must exceed the second-best likelihood tree when comparing the three possible topologies for a given quartet replicate.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If <code class="docutils literal"><span class="pre">-L/--lnlike-thresh</span></code> is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Uncertainty (QU) scores of ‘NA’ for all branches.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#what-is-quartet-sampling">What is Quartet Sampling?</a></li>
+<li><a class="reference internal" href="#how-do-i-cite-this-program">How do I cite this program?</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#preparing-your-data">Preparing your data</a><ul>
+<li><a class="reference internal" href="#phylogeny">Phylogeny</a></li>
+<li><a class="reference internal" href="#sequence-alignment">Sequence Alignment</a></li>
+<li><a class="reference internal" href="#partitions-file-optional">Partitions File (Optional)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#basic-usage">Basic usage</a><ul>
+<li><a class="reference internal" href="#required-paramters">Required Paramters</a></li>
+<li><a class="reference internal" href="#recommended-parameters">Recommended Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to quartetsampling’s documentation!</a></li>
+      <li>Next: <a href="prog_desc.html" title="next chapter">Program Parameter Descriptions</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/intro.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, James B. Pease, Stephen A. Smith, Cody E. Hinchliff, Joseph W. Brown, Joseph F. Walker.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/intro.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

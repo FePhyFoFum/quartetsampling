@@ -1,0 +1,438 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Program Parameter Descriptions &#8212; quartetsampling 1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Outputs" href="output.html" />
+    <link rel="prev" title="Getting Started" href="intro.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="program-parameter-descriptions">
+<h1>Program Parameter Descriptions<a class="headerlink" href="#program-parameter-descriptions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="quartet-sampling-py">
+<span id="quartet-sampling"></span><h2>quartet_sampling.py<a class="headerlink" href="#quartet-sampling-py" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>quartet_samping.py: Quartet Sampling method for
+phylogenetic branch support evaluation</p>
+<p>&lt;<a class="reference external" href="http://www.github.com/FePhyFoFum/quartetsampling">http://www.github.com/FePhyFoFum/quartetsampling</a>&gt;</p>
+</div>
+<div class="section" id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="h-help">
+<h4><code class="docutils literal"><span class="pre">-h/--help</span></code><a class="headerlink" href="#h-help" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> show this help message and exit</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="a-alignment-required">
+<h4><code class="docutils literal"><span class="pre">-a/--alignment</span></code> (required)<a class="headerlink" href="#a-alignment-required" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Alignment file in “relaxed phylip” format, as used by RAxML.</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="t-tree-required">
+<h4><code class="docutils literal"><span class="pre">-t/--tree</span></code> (required)<a class="headerlink" href="#t-tree-required" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> The input tree in Newick (parenthetical) format.</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="n-number-of-reps-required">
+<h4><code class="docutils literal"><span class="pre">-N/--number-of-reps</span></code> (required)<a class="headerlink" href="#n-number-of-reps-required" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> The number of replicate quartet topology searches to be performed at each node.</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="t-number-of-threads-required">
+<h4><code class="docutils literal"><span class="pre">-T/--number-of-threads</span></code> (required)<a class="headerlink" href="#t-number-of-threads-required" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> The number of parallel threads to be used by Python for quartet topology searches.</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="calc-qdstats">
+<h4><code class="docutils literal"><span class="pre">--calc-qdstats</span></code><a class="headerlink" href="#calc-qdstats" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> EXPERIMENTAL: Calculates Chi-square test for QD tree frequencies. Use only  if Scipy is available. Will increase running time.</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="e-temp-dir">
+<h4><code class="docutils literal"><span class="pre">-e/--temp-dir</span></code><a class="headerlink" href="#e-temp-dir" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> A directory to which temporary files will be saved. If not supplied, “temp” will be created in the current working directory.</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="g-genetrees">
+<h4><code class="docutils literal"><span class="pre">-g/--genetrees</span></code><a class="headerlink" href="#g-genetrees" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Use partitions file (RAxML format) to divide the alignment into separate gene tree regions. Gene alignments will be sampled random for the quartet topology searches.</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="ignore-errors">
+<h4><code class="docutils literal"><span class="pre">--ignore-errors</span></code><a class="headerlink" href="#ignore-errors" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Ignore RAxML and PAUP erroneous runs</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="low-mem">
+<h4><code class="docutils literal"><span class="pre">--low-mem</span></code><a class="headerlink" href="#low-mem" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Do not store large alignment in memory for whole-alignment (non-genetree) mode</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="max-random-sample-proportion">
+<h4><code class="docutils literal"><span class="pre">--max-random-sample-proportion</span></code><a class="headerlink" href="#max-random-sample-proportion" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> The proportion of possible replicates explored unsuccessfully by the random generation procedure before it gives up. Because this generates random replicates, it takes progressively longer as it proceeds. To avoid long runtimes, the recommended range is &lt; 0.5 (which is the default).</p>
+<p><strong>Type:</strong> float <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="o-results-dir">
+<h4><code class="docutils literal"><span class="pre">-o/--results-dir</span></code><a class="headerlink" href="#o-results-dir" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> A directory to which output files will be saved. If not supplied, the current working directory will be used.</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="p-stop-node-number">
+<h4><code class="docutils literal"><span class="pre">-p/--stop-node-number</span></code><a class="headerlink" href="#p-stop-node-number" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> An integer denoting the node at which to stop. Will include nodes with indices &lt;= the stop node number. This argument may be used to limit the length of a given run in case only a certain part of the tree is of interest. Nodes will be read from topologically identical (and isomorphic!) input trees in deterministic order.</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="paup-executable">
+<h4><code class="docutils literal"><span class="pre">--paup-executable</span></code><a class="headerlink" href="#paup-executable" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> The name or path of the PAUP executable to be used for calculated quartets.</p>
+<p><strong>Type:</strong> None <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="q-partitions">
+<h4><code class="docutils literal"><span class="pre">-q/--partitions</span></code><a class="headerlink" href="#q-partitions" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Partitions file in RAxML format. If omitted then the entire alignment will be treated as one partition for all quartet replicate topology searches.</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="r-result-prefix">
+<h4><code class="docutils literal"><span class="pre">-r/--result-prefix</span></code><a class="headerlink" href="#r-result-prefix" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> A prefix to put on the result files.</p>
+<p><strong>Type:</strong> string <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="retain-temp">
+<h4><code class="docutils literal"><span class="pre">--retain-temp</span></code><a class="headerlink" href="#retain-temp" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Do not remove temporary files</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="s-start-node-number">
+<h4><code class="docutils literal"><span class="pre">-s/--start-node-number</span></code><a class="headerlink" href="#s-start-node-number" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> An integer denoting the node to which to start from. Nodes will be read from topologically identical (and isomorphic!) input trees in deterministic order, so this argument may be  used to restart at an intermediate position (in case the previous run was canceled before completion, for example).</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="v-verbose">
+<h4><code class="docutils literal"><span class="pre">-v/--verbose</span></code><a class="headerlink" href="#v-verbose" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Provide more verbose output if specified.</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="a-amino-acid">
+<h4><code class="docutils literal"><span class="pre">-A/--amino-acid</span></code><a class="headerlink" href="#a-amino-acid" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> use amino acids instead of nucleotides</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="c-clade">
+<h4><code class="docutils literal"><span class="pre">-C/--clade</span></code><a class="headerlink" href="#c-clade" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Conduct analysis on specific clade identified by CSV taxon list</p>
+<p><strong>Type:</strong> string <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="l-lnlike-thresh">
+<h4><code class="docutils literal"><span class="pre">-L/--lnlike-thresh</span></code><a class="headerlink" href="#l-lnlike-thresh" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> The lnlike threshhold that is the minimum value by which the log-likelihood value of the best-likelihood tree must be higher than the second-best-likelihood tree for the replicate to register as the best-likelihood topology rather than ‘uncertain’. If set to zero, this turns off likelihood evaluation mode and invokes tree inference mode where a tree is simply inferred from the alignment without considering likelihood (QU values are N/A in this case).</p>
+<p><strong>Type:</strong> float <strong>Default:</strong> 2.0</p>
+</div>
+<div class="section" id="o-min-overlap">
+<h4><code class="docutils literal"><span class="pre">-O/--min-overlap</span></code><a class="headerlink" href="#o-min-overlap" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> The minimum sites required to be sampled for all taxa in a given quartet.</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="p-paup">
+<h4><code class="docutils literal"><span class="pre">-P/--paup</span></code><a class="headerlink" href="#p-paup" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Use PAUP instead of RAxML.</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="v-verbout">
+<h4><code class="docutils literal"><span class="pre">-V/--verbout</span></code><a class="headerlink" href="#v-verbout" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> Provide output of the frequencies of each topology and QC</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="x-raxml-executable">
+<h4><code class="docutils literal"><span class="pre">-X/--raxml-executable</span></code><a class="headerlink" href="#x-raxml-executable" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> The name (or absolute path) of the raxml executable to be used for calculating likelihoods on quartet topologies.</p>
+<p><strong>Type:</strong> None <strong>Default:</strong> None</p>
+</div>
+</div>
+</div>
+<div class="section" id="merge-output-py">
+<span id="merge-output"></span><h2>merge_output.py<a class="headerlink" href="#merge-output-py" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Description<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Combines RESULT.node.scores.csv files from separate
+runs for the same phylogeny into a single set of csv and tree outputs.</p>
+<p><a class="reference external" href="http://www.github.com/FePhyFoFum/quartetsampling">http://www.github.com/FePhyFoFum/quartetsampling</a></p>
+</div>
+<div class="section" id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h4><code class="docutils literal"><span class="pre">-h/--help</span></code><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> show this help message and exit</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="d-nodedata-required">
+<h4><code class="docutils literal"><span class="pre">-d/--nodedata</span></code> (required)<a class="headerlink" href="#d-nodedata-required" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> file containing paths of one or moreRESULT.node.score.csv files</p>
+<p><strong>Type:</strong> None <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="o-out-required">
+<h4><code class="docutils literal"><span class="pre">-o/--out</span></code> (required)<a class="headerlink" href="#o-out-required" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> new output files prefix</p>
+<p><strong>Type:</strong> None <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="id4">
+<h4><code class="docutils literal"><span class="pre">-t/--tree</span></code> (required)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> tree file in Newick format</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="id5">
+<h4><code class="docutils literal"><span class="pre">-v/--verbose</span></code><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> None</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+</div>
+</div>
+<div class="section" id="query-tree-py">
+<span id="query-tree"></span><h2>query_tree.py<a class="headerlink" href="#query-tree-py" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h3>Description<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>Tree query script to find specific nodes numbers in large trees
+when using the post-run annotated trees.</p>
+<p><a class="reference external" href="http://www.github.com/FePhyFoFum/quartetsampling">http://www.github.com/FePhyFoFum/quartetsampling</a></p>
+</div>
+<div class="section" id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h4><code class="docutils literal"><span class="pre">-h/--help</span></code><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> show this help message and exit</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="d-data">
+<h4><code class="docutils literal"><span class="pre">-d/--data</span></code><a class="headerlink" href="#d-data" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> CSV output from quartet_sampling (RESULT.node.score.csv)</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="t-tree">
+<h4><code class="docutils literal"><span class="pre">-t/--tree</span></code><a class="headerlink" href="#t-tree" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> input tree in newick format</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="id9">
+<h4><code class="docutils literal"><span class="pre">-v/--verbose</span></code><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> verbose screen output</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+</div>
+</div>
+<div class="section" id="calc-qstats-py">
+<span id="calc-qstats"></span><h2>calc_qstats.py<a class="headerlink" href="#calc-qstats-py" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id10">
+<h3>Description<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Calculate basic statistics on the</dt>
+<dd>RESULTS.node.score.csv output file
+from quartet_sampling</dd>
+</dl>
+</div>
+<div class="section" id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h4><code class="docutils literal"><span class="pre">-h/--help</span></code><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> show this help message and exit</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="d-data-required">
+<h4><code class="docutils literal"><span class="pre">-d/--data</span></code> (required)<a class="headerlink" href="#d-data-required" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> RESULT.node.score.csv file output fromquartet_sampling.py</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="id13">
+<h4><code class="docutils literal"><span class="pre">-c/--clade</span></code><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> specify a clade using a comma-separatedlist of 2+ descendant taxa</p>
+<p><strong>Type:</strong> None <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="o-out">
+<h4><code class="docutils literal"><span class="pre">-o/--out</span></code><a class="headerlink" href="#o-out" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> output file path for statistics</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="p-stopk">
+<h4><code class="docutils literal"><span class="pre">-p/--stopk</span></code><a class="headerlink" href="#p-stopk" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> stopping branch numerical index</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="s-startk">
+<h4><code class="docutils literal"><span class="pre">-s/--startk</span></code><a class="headerlink" href="#s-startk" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> starting branch numerical index</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> 0</p>
+</div>
+<div class="section" id="id14">
+<h4><code class="docutils literal"><span class="pre">-v/--verbose</span></code><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
+<p><strong>Description:</strong> verbose screen output</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Program Parameter Descriptions</a><ul>
+<li><a class="reference internal" href="#quartet-sampling-py">quartet_sampling.py</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a><ul>
+<li><a class="reference internal" href="#h-help"><code class="docutils literal"><span class="pre">-h/--help</span></code></a></li>
+<li><a class="reference internal" href="#a-alignment-required"><code class="docutils literal"><span class="pre">-a/--alignment</span></code> (required)</a></li>
+<li><a class="reference internal" href="#t-tree-required"><code class="docutils literal"><span class="pre">-t/--tree</span></code> (required)</a></li>
+<li><a class="reference internal" href="#n-number-of-reps-required"><code class="docutils literal"><span class="pre">-N/--number-of-reps</span></code> (required)</a></li>
+<li><a class="reference internal" href="#t-number-of-threads-required"><code class="docutils literal"><span class="pre">-T/--number-of-threads</span></code> (required)</a></li>
+<li><a class="reference internal" href="#calc-qdstats"><code class="docutils literal"><span class="pre">--calc-qdstats</span></code></a></li>
+<li><a class="reference internal" href="#e-temp-dir"><code class="docutils literal"><span class="pre">-e/--temp-dir</span></code></a></li>
+<li><a class="reference internal" href="#g-genetrees"><code class="docutils literal"><span class="pre">-g/--genetrees</span></code></a></li>
+<li><a class="reference internal" href="#ignore-errors"><code class="docutils literal"><span class="pre">--ignore-errors</span></code></a></li>
+<li><a class="reference internal" href="#low-mem"><code class="docutils literal"><span class="pre">--low-mem</span></code></a></li>
+<li><a class="reference internal" href="#max-random-sample-proportion"><code class="docutils literal"><span class="pre">--max-random-sample-proportion</span></code></a></li>
+<li><a class="reference internal" href="#o-results-dir"><code class="docutils literal"><span class="pre">-o/--results-dir</span></code></a></li>
+<li><a class="reference internal" href="#p-stop-node-number"><code class="docutils literal"><span class="pre">-p/--stop-node-number</span></code></a></li>
+<li><a class="reference internal" href="#paup-executable"><code class="docutils literal"><span class="pre">--paup-executable</span></code></a></li>
+<li><a class="reference internal" href="#q-partitions"><code class="docutils literal"><span class="pre">-q/--partitions</span></code></a></li>
+<li><a class="reference internal" href="#r-result-prefix"><code class="docutils literal"><span class="pre">-r/--result-prefix</span></code></a></li>
+<li><a class="reference internal" href="#retain-temp"><code class="docutils literal"><span class="pre">--retain-temp</span></code></a></li>
+<li><a class="reference internal" href="#s-start-node-number"><code class="docutils literal"><span class="pre">-s/--start-node-number</span></code></a></li>
+<li><a class="reference internal" href="#v-verbose"><code class="docutils literal"><span class="pre">-v/--verbose</span></code></a></li>
+<li><a class="reference internal" href="#a-amino-acid"><code class="docutils literal"><span class="pre">-A/--amino-acid</span></code></a></li>
+<li><a class="reference internal" href="#c-clade"><code class="docutils literal"><span class="pre">-C/--clade</span></code></a></li>
+<li><a class="reference internal" href="#l-lnlike-thresh"><code class="docutils literal"><span class="pre">-L/--lnlike-thresh</span></code></a></li>
+<li><a class="reference internal" href="#o-min-overlap"><code class="docutils literal"><span class="pre">-O/--min-overlap</span></code></a></li>
+<li><a class="reference internal" href="#p-paup"><code class="docutils literal"><span class="pre">-P/--paup</span></code></a></li>
+<li><a class="reference internal" href="#v-verbout"><code class="docutils literal"><span class="pre">-V/--verbout</span></code></a></li>
+<li><a class="reference internal" href="#x-raxml-executable"><code class="docutils literal"><span class="pre">-X/--raxml-executable</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#merge-output-py">merge_output.py</a><ul>
+<li><a class="reference internal" href="#id1">Description</a></li>
+<li><a class="reference internal" href="#id2">Parameters</a><ul>
+<li><a class="reference internal" href="#id3"><code class="docutils literal"><span class="pre">-h/--help</span></code></a></li>
+<li><a class="reference internal" href="#d-nodedata-required"><code class="docutils literal"><span class="pre">-d/--nodedata</span></code> (required)</a></li>
+<li><a class="reference internal" href="#o-out-required"><code class="docutils literal"><span class="pre">-o/--out</span></code> (required)</a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal"><span class="pre">-t/--tree</span></code> (required)</a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal"><span class="pre">-v/--verbose</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#query-tree-py">query_tree.py</a><ul>
+<li><a class="reference internal" href="#id6">Description</a></li>
+<li><a class="reference internal" href="#id7">Parameters</a><ul>
+<li><a class="reference internal" href="#id8"><code class="docutils literal"><span class="pre">-h/--help</span></code></a></li>
+<li><a class="reference internal" href="#d-data"><code class="docutils literal"><span class="pre">-d/--data</span></code></a></li>
+<li><a class="reference internal" href="#t-tree"><code class="docutils literal"><span class="pre">-t/--tree</span></code></a></li>
+<li><a class="reference internal" href="#id9"><code class="docutils literal"><span class="pre">-v/--verbose</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#calc-qstats-py">calc_qstats.py</a><ul>
+<li><a class="reference internal" href="#id10">Description</a></li>
+<li><a class="reference internal" href="#id11">Parameters</a><ul>
+<li><a class="reference internal" href="#id12"><code class="docutils literal"><span class="pre">-h/--help</span></code></a></li>
+<li><a class="reference internal" href="#d-data-required"><code class="docutils literal"><span class="pre">-d/--data</span></code> (required)</a></li>
+<li><a class="reference internal" href="#id13"><code class="docutils literal"><span class="pre">-c/--clade</span></code></a></li>
+<li><a class="reference internal" href="#o-out"><code class="docutils literal"><span class="pre">-o/--out</span></code></a></li>
+<li><a class="reference internal" href="#p-stopk"><code class="docutils literal"><span class="pre">-p/--stopk</span></code></a></li>
+<li><a class="reference internal" href="#s-startk"><code class="docutils literal"><span class="pre">-s/--startk</span></code></a></li>
+<li><a class="reference internal" href="#id14"><code class="docutils literal"><span class="pre">-v/--verbose</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Getting Started</a></li>
+      <li>Next: <a href="output.html" title="next chapter">Outputs</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/prog_desc.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, James B. Pease, Stephen A. Smith, Cody E. Hinchliff, Joseph W. Brown, Joseph F. Walker.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/prog_desc.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

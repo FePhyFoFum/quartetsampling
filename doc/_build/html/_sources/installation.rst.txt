@@ -1,0 +1,16 @@
+.. _installation:
+
+Installation
+============
+No installation is required, quartetsampling scripts should work as long as Python and RAxML are installed.
+
+Requirements
+------------
+* Python 3.x (2.7 should also work, but 3.x recommended)
+* RAxML 8.x https://sco.h-its.org/exelixis/web/software/raxml/index.html
+
+**Optional:**
+
+* PAUP  http://people.sc.fsu.edu/~dswofford/paup_test/
+* Numpy http://www.numpy.org
+* Scipy https://www.scipy.org

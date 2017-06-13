@@ -2,11 +2,21 @@
 # -*- coding: utf-8 -*-
 # vim:fileencoding=utf-8
 """
-merge_output.py: Combines RESULT.node.scores.csv files from separate
+Combines RESULT.node.scores.csv files from separate
 runs for the same phylogeny into a single set of csv and tree outputs.
 
 http://www.github.com/FePhyFoFum/quartetsampling
+"""
 
+
+import sys
+import os
+import argparse
+from tree_data import TreeData
+from rep_data import DataStore
+
+
+LICENSE = """
 This file is part of 'quartetsampling'.
 
 'quartetsampling' is free software: you can redistribute it and/or modify
@@ -24,19 +34,11 @@ along with 'quartetsampling'.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-import sys
-import os
-import argparse
-from tree_data import TreeData
-from rep_data import DataStore
-
-
-def main(arguments=None):
-    """Main method for merge_output"""
-    arguments = arguments if arguments is not None else sys.argv[1:]
+def generate_argparser():
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        epilog=LICENSE)
     parser.add_argument('-d', '--nodedata', required=True, nargs=1,
                         help=("file containing paths of one or more"
                               "RESULT.node.score.csv files"))
@@ -52,6 +54,13 @@ def main(arguments=None):
     parser.add_argument("-s", "--startk", type=int, default=0,
                         help=argparse.SUPPRESS)
     parser.add_argument("-p", "--stopk", type=int, help=argparse.SUPPRESS)
+    return parser
+
+
+def main(arguments=None):
+    """Main method for merge_output"""
+    arguments = arguments if arguments is not None else sys.argv[1:]
+    parser = generate_argparser()
     args = parser.parse_args(args=arguments)
     scores = {}
     qfscores = {}

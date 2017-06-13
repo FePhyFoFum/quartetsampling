@@ -1,0 +1,137 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Outputs &#8212; quartetsampling 1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="Program Parameter Descriptions" href="prog_desc.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="outputs">
+<span id="intro"></span><h1>Outputs<a class="headerlink" href="#outputs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="result-node-scores-csv">
+<h2>RESULT.node.scores.csv<a class="headerlink" href="#result-node-scores-csv" title="Permalink to this headline">¶</a></h2>
+<p>A comma-separated values (CSV) file with
+* <strong>node_label</strong> The label of the internal branch (QS###) or terminal branch (original label)
+* <strong>freq0</strong> The number of concordant replicates over the non-uncertain total
+* <strong>qc</strong> The Quartet Concordance score (internal branches only; measures frequency of concordant over discordant)
+* <strong>qd</strong> The Quartet Differential score (internal branches only; measures skew in the two discordant tree counts)
+* <strong>qu</strong> The Quartet Uncertainty score (internal branches only; measures number of replicates that fail likelihood cutoff)
+* <strong>qf</strong> The Quartet Fidelity score (terminal branches only; measures the number of replicates for which this branch produced concordant quartets)
+* <strong>diff</strong> Example likelihood differentinal from last replicate (used for diagnostic purposes)
+* <strong>num_replicates</strong> Number of replicates actually sampled per branch (may not equal the number specified by <code class="docutils literal"><span class="pre">-N</span></code> for internal branches when fewer replicates are possible, and will not equal that number for terminal branches).
+* <strong>notes</strong> Additional notes (enables user to add custom notes to their output after running; e.g., labeling key branches)</p>
+</div>
+<div class="section" id="result-labeled-tre">
+<h2>RESULT.labeled.tre<a class="headerlink" href="#result-labeled-tre" title="Permalink to this headline">¶</a></h2>
+<p>A Newick tree with each internal branch labeled with their QS## identifier.</p>
+</div>
+<div class="section" id="result-labeled-tre-freq-qc-qd-qu">
+<h2>RESULT.labeled.tre.freq/qc/qd/qu<a class="headerlink" href="#result-labeled-tre-freq-qc-qd-qu" title="Permalink to this headline">¶</a></h2>
+<p>A Newick tree with the each internal branch labeled with frequency of concordant replicates or QC/QD/QU scores.</p>
+</div>
+<div class="section" id="result-labeled-tre-figtree">
+<h2>RESULT.labeled.tre.figtree<a class="headerlink" href="#result-labeled-tre-figtree" title="Permalink to this headline">¶</a></h2>
+<p>A FigTree format phylogeny &lt;<a class="reference external" href="http://tree.bio.ed.ac.uk/software/figtree/">http://tree.bio.ed.ac.uk/software/figtree/</a>&gt; that contains all QS scores and a “score” field with QC/QD/QU for internal branches.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Outputs</a><ul>
+<li><a class="reference internal" href="#result-node-scores-csv">RESULT.node.scores.csv</a></li>
+<li><a class="reference internal" href="#result-labeled-tre">RESULT.labeled.tre</a></li>
+<li><a class="reference internal" href="#result-labeled-tre-freq-qc-qd-qu">RESULT.labeled.tre.freq/qc/qd/qu</a></li>
+<li><a class="reference internal" href="#result-labeled-tre-figtree">RESULT.labeled.tre.figtree</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="prog_desc.html" title="previous chapter">Program Parameter Descriptions</a></li>
+      <li>Next: <a href="faq.html" title="next chapter">Frequently Asked Questions</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/output.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, James B. Pease, Stephen A. Smith, Cody E. Hinchliff, Joseph W. Brown, Joseph F. Walker.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/output.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

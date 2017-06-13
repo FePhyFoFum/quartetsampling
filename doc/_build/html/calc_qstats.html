@@ -1,0 +1,161 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>calc_qstats.py &#8212; quartetsampling 1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="calc-qstats-py">
+<span id="calc-qstats"></span><h1>calc_qstats.py<a class="headerlink" href="#calc-qstats-py" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Calculate basic statistics on the</dt>
+<dd>RESULTS.node.score.csv output file
+from quartet_sampling</dd>
+</dl>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="h-help">
+<h3><code class="docutils literal"><span class="pre">-h/--help</span></code><a class="headerlink" href="#h-help" title="Permalink to this headline">¶</a></h3>
+<p><strong>Description:</strong> show this help message and exit</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+<div class="section" id="d-data-required">
+<h3><code class="docutils literal"><span class="pre">-d/--data</span></code> (required)<a class="headerlink" href="#d-data-required" title="Permalink to this headline">¶</a></h3>
+<p><strong>Description:</strong> RESULT.node.score.csv file output fromquartet_sampling.py</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="c-clade">
+<h3><code class="docutils literal"><span class="pre">-c/--clade</span></code><a class="headerlink" href="#c-clade" title="Permalink to this headline">¶</a></h3>
+<p><strong>Description:</strong> specify a clade using a comma-separatedlist of 2+ descendant taxa</p>
+<p><strong>Type:</strong> None <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="o-out">
+<h3><code class="docutils literal"><span class="pre">-o/--out</span></code><a class="headerlink" href="#o-out" title="Permalink to this headline">¶</a></h3>
+<p><strong>Description:</strong> output file path for statistics</p>
+<p><strong>Type:</strong> file path <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="p-stopk">
+<h3><code class="docutils literal"><span class="pre">-p/--stopk</span></code><a class="headerlink" href="#p-stopk" title="Permalink to this headline">¶</a></h3>
+<p><strong>Description:</strong> stopping branch numerical index</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> None</p>
+</div>
+<div class="section" id="s-startk">
+<h3><code class="docutils literal"><span class="pre">-s/--startk</span></code><a class="headerlink" href="#s-startk" title="Permalink to this headline">¶</a></h3>
+<p><strong>Description:</strong> starting branch numerical index</p>
+<p><strong>Type:</strong> integer <strong>Default:</strong> 0</p>
+</div>
+<div class="section" id="v-verbose">
+<h3><code class="docutils literal"><span class="pre">-v/--verbose</span></code><a class="headerlink" href="#v-verbose" title="Permalink to this headline">¶</a></h3>
+<p><strong>Description:</strong> verbose screen output</p>
+<p><strong>Type:</strong> boolean flag</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">calc_qstats.py</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a><ul>
+<li><a class="reference internal" href="#h-help"><code class="docutils literal"><span class="pre">-h/--help</span></code></a></li>
+<li><a class="reference internal" href="#d-data-required"><code class="docutils literal"><span class="pre">-d/--data</span></code> (required)</a></li>
+<li><a class="reference internal" href="#c-clade"><code class="docutils literal"><span class="pre">-c/--clade</span></code></a></li>
+<li><a class="reference internal" href="#o-out"><code class="docutils literal"><span class="pre">-o/--out</span></code></a></li>
+<li><a class="reference internal" href="#p-stopk"><code class="docutils literal"><span class="pre">-p/--stopk</span></code></a></li>
+<li><a class="reference internal" href="#s-startk"><code class="docutils literal"><span class="pre">-s/--startk</span></code></a></li>
+<li><a class="reference internal" href="#v-verbose"><code class="docutils literal"><span class="pre">-v/--verbose</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/calc_qstats.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, James B. Pease, Stephen A. Smith, Cody E. Hinchliff, Joseph W. Brown, Joseph F. Walker.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/calc_qstats.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

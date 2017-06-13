@@ -1,16 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fileencoding=utf-8
-#
-# This script is meant as a general template for Py3
-#
-# @author: James B. Pease
-# @version: 1.0
+"""Calculate basic statistics on the
+   RESULTS.node.score.csv output file
+   from quartet_sampling
+   """
+
 
 import os
 import sys
 import argparse
 import numpy as np
+
+
+LICENSE = """
+This file is part of 'quartetsampling'.
+
+'quartetsampling' is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+'quartetsampling' is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with 'quartetsampling'.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 
 def basic_stats(nums):
@@ -22,17 +40,32 @@ def basic_stats(nums):
     return ''
 
 
-def main(arguments=None):
-    arguments = arguments if arguments is not None else sys.argv[1:]
+def generate_argparser():
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-d', '--data', type=os.path.abspath, nargs=1)
-    parser.add_argument("-c", "--clade", nargs=1)
-    parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("-s", "--startk", type=int, default=0)
-    parser.add_argument("-p", "--stopk", type=int)
-    parser.add_argument("-o", "--out", type=os.path.abspath, nargs=1)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        epilog=LICENSE)
+    parser.add_argument('-d', '--data', type=os.path.abspath, nargs=1,
+                        required=True,
+                        help=("RESULT.node.score.csv file output from"
+                              "quartet_sampling.py"))
+    parser.add_argument("-c", "--clade", nargs=1,
+                        help=("specify a clade using a comma-separated"
+                              "list of 2+ descendant taxa"))
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="verbose screen output")
+    parser.add_argument("-s", "--startk", type=int, default=0,
+                        help="starting branch numerical index")
+    parser.add_argument("-p", "--stopk", type=int,
+                        help="stopping branch numerical index")
+    parser.add_argument("-o", "--out", type=os.path.abspath, nargs=1,
+                        help="output file path for statistics")
+    return parser
+
+
+def main(arguments=None):
+    arguments = arguments if arguments is not None else sys.argv[1:]
+    parser = generate_argparser()
     args = parser.parse_args(args=arguments)
     data = {}
     with open(args.data[0]) as datafile:
