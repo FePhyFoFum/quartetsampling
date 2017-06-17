@@ -18,7 +18,7 @@ Please also include the URL <https://www.github.com/fephyfofum/quartetsampling> 
 
 Installation
 ============
-No installation is required, quartetsampling scripts should work as long as Python and RAxML are installed.
+No installation is required, quartetsampling scripts should work as long as Python and RAxML are installed.  The repository can be cloned or downloaded as a .zip file from GitHub.
 
 Requirements
 ------------
@@ -40,7 +40,7 @@ Phylogeny
 
 A phylogenetic tree in Newick (parenthetical) format should be used.  Branch lengths are optional and will be ignored by the program.  Removal of support scores in square brackets is recommended.  
 
-..note:: Internal branch labels will be replaced in output trees.
+.. note:: Internal branch labels will be replaced in output trees.
 
 Sequence Alignment
 ------------------

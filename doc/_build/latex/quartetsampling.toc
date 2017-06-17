@@ -7,7 +7,7 @@
 \contentsline {section}{\numberline {1.4}Preparing your data}{2}{section.1.4}
 \contentsline {subsection}{\numberline {1.4.1}Phylogeny}{2}{subsection.1.4.1}
 \contentsline {subsection}{\numberline {1.4.2}Sequence Alignment}{2}{subsection.1.4.2}
-\contentsline {subsection}{\numberline {1.4.3}Partitions File (Optional)}{2}{subsection.1.4.3}
+\contentsline {subsection}{\numberline {1.4.3}Partitions File (Optional)}{3}{subsection.1.4.3}
 \contentsline {section}{\numberline {1.5}Basic usage}{3}{section.1.5}
 \contentsline {subsection}{\numberline {1.5.1}Required Paramters}{3}{subsection.1.5.1}
 \contentsline {subsection}{\numberline {1.5.2}Recommended Parameters}{3}{subsection.1.5.2}
