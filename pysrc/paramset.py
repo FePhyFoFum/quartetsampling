@@ -34,7 +34,15 @@ class ParamSet(dict):
         self['verbose'] = args.verbose
         self['low_mem'] = args.low_mem
         self['retain_temp'] = args.retain_temp
-        self['amino_acid'] = args.amino_acid
+        self['data_type'] = args.data_type[0]
+        if self['data_type'] == 'cat'and self['paup'] is False:
+            raise RuntimeError("-d/-datatype 'cat' only currently enabled "
+                               "for PAUP mode.")
+        self['raxml_model'] = 'GTRGAMMA'
+        if self['data_type'] == 'amino':
+            self['raxml_model'] = 'PROTGAMMAWAG'
+        elif self['data_type'] == 'cat':
+            self['raxml_model'] = 'BINGAMMA'
         self['calc_qdstats'] = args.calc_qdstats
         self['max_quartet_enumeration_threshold'] = 0.333333
         self['just_clade'] = args.clade is not None
@@ -85,15 +93,22 @@ class ParamSet(dict):
                                "designating no nodes for processing.")
         # File Paths
         # print(args.temp_dir)
-        self['temp_wd'] = (os.path.abspath(args.temp_dir[0])
-                           if args.temp_dir is not None
-                           else os.path.abspath("temp"))
+        self['temp_wd'] = (os.path.abspath("./QuartetSampling") if
+                           args.temp_dir is None else
+                           os.path.abspath(args.temp_dir[0]))
+        print(self['temp_wd'])
+        if 'QuartetSampling' not in self['temp_wd']:
+            raise RuntimeError("Temporary directory name set by "
+                               "-e/--temp-dir must contain 'QuartetSampling' "
+                               "in the name to prevent accidental file "
+                               "deletion!")
         print("setting the temp working dir to {}".format(self["temp_wd"]))
         self['result_prefix'] = (args.result_prefix[0]
                                  if args.result_prefix is not None
                                  else "RESULT")
-        self['results_dir'] = os.path.abspath(args.results_dir is not None and
-                                              args.results_dir[0] or ".")
+        self['results_dir'] = (os.path.abspath(os.path.curdir) if
+                               args.results_dir is None else
+                               args.results_dir[0])
         self['score_result_file_path'] = os.path.join(
             self['results_dir'], "{}.node.scores.csv".format(
                 self['result_prefix']))

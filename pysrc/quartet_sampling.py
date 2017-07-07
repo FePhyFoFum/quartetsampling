@@ -77,19 +77,21 @@ def generate_argparser():
                               "likelihood (QU values are N/A in this case)."))
     parser.add_argument("-r", "--result-prefix", type=str, nargs=1,
                         help="A prefix to put on the result files.")
-    parser.add_argument("-A", "--amino-acid", action="store_true",
-                        help="use amino acids instead of nucleotides")
+    parser.add_argument("-d", "--data-type", choices=('nuc', 'amino', 'cat'),
+                        default=["nuc"], nargs=1,
+                        help=("(nuc)leotide, (amino) acid, "
+                              "or (cat)egorical data"))
     parser.add_argument("-O", "--min-overlap", type=int,
                         help=("The minimum sites required to be sampled for "
                               "all taxa in a given quartet."))
     parser.add_argument("-o", "--results-dir", type=os.path.abspath, nargs=1,
-                        default='.',
                         help=("A directory to which output files will "
                               "be saved. If not supplied, the current working "
-                              "directory will be used."))
+                              "directory will be used. (default is current "
+                              "folder)."))
     parser.add_argument("-V", "--verbout", action="store_true",
                         help=("Provide output of the frequencies of each "
-                              "topology and QC"))
+                              "topology and QC."))
     parser.add_argument("-q", "--partitions", type=os.path.abspath, nargs=1,
                         help=("Partitions file in RAxML format. If omitted "
                               "then the entire alignment will be treated "
@@ -101,10 +103,14 @@ def generate_argparser():
                               "Gene alignments will be sampled random for the "
                               "quartet topology searches."))
     parser.add_argument("-e", "--temp-dir", type=os.path.abspath, nargs=1,
-                        default="./temp",
                         help=("A directory to which temporary files will be "
-                              "saved. If not supplied, \"temp\" will be "
-                              "created in the current working directory."))
+                              "saved. If not supplied, 'QuartetSampling' "
+                              "will be created in the current "
+                              "working directory. "
+                              "When specifying a custom temporary output "
+                              "the characters 'QuartetSampling' must appear "
+                              "in the directory name to prevent accidental "
+                              "file deletion. (default='./QuartetSampling'"))
     parser.add_argument("--retain-temp", action="store_true",
                         help=("Do not remove temporary files"))
     parser.add_argument("-C", "--clade", type=str,
@@ -132,12 +138,14 @@ def generate_argparser():
                               "executable to be used for calculating "
                               "likelihoods on quartet topologies."
                               "(default='raxml')"))
+    parser.add_argument("--raxml-model", nargs=1,
+                        help=("Advanced: specify a custom RAxML model name "
+                              "for the raxml '-m' parameter"))
     parser.add_argument("-P", "--paup", action="store_true",
                         help="Use PAUP instead of RAxML.")
-    parser.add_argument("--paup-executable", nargs=1,
+    parser.add_argument("--paup-executable", nargs=1, default=["paup"],
                         help=("The name or path of the PAUP executable to "
-                              "be used for calculated quartets. "
-                              "(default='paup')"))
+                              "be used for calculated quartets."))
     parser.add_argument("--ignore-errors", action="store_true",
                         help=("Ignore RAxML and PAUP erroneous runs"))
     parser.add_argument("--low-mem", action="store_true",
@@ -159,7 +167,7 @@ def generate_argparser():
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="Provide more verbose output if specified.")
     parser.add_argument('--version', action='version',
-                        version='%(prog)s version 1.1')
+                        version='%(prog)s version 1.1.1')
     return parser
 
 
@@ -284,10 +292,16 @@ def main(arguments=None):
             file_path = os.path.join(params['temp_wd'], the_file)
             try:
                 if os.path.isfile(file_path):
-                    os.remove(file_path)
+                    if "QuartetSampling" not in file_path:
+                        print(file_path,
+                              " does not contain 'QuartetSampling' "
+                              "and will not be deleted for safety")
+                    else:
+                        os.remove(file_path)
             except FileNotFoundError as exc:
                 print(file_path, " not found")
-        os.rmdir(params['temp_wd'])
+        if 'QuartetSampling' in params['temp_wd']:
+            os.rmdir(params['temp_wd'])
     qf_scores = maindata.write_qf_scores(params["score_result_file_path"])
     treedata.write_figtree(params['figtree_file_path'], qf_scores)
     treedata.write_scoretrees(params)

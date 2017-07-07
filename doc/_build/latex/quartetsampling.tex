@@ -39,8 +39,8 @@
 
 
 \title{quartetsampling Documentation}
-\date{Jun 16, 2017}
-\release{1.1}
+\date{Jul 07, 2017}
+\release{1.1.1}
 \author{James B. Pease \\ Stephen A. Smith \\ Cody E. Hinchliff \\Joseph W. Brown \\ Joseph F. Walker}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -55,7 +55,7 @@
 
 
 \chapter{Getting Started}
-\label{\detokenize{intro:intro}}\label{\detokenize{intro:getting-started}}\label{\detokenize{intro::doc}}\label{\detokenize{intro:manual-for-quartetsampling}}
+\label{\detokenize{intro::doc}}\label{\detokenize{intro:getting-started}}\label{\detokenize{intro:manual-for-quartetsampling}}\label{\detokenize{intro:intro}}
 
 \section{What is Quartet Sampling?}
 \label{\detokenize{intro:what-is-quartet-sampling}}
@@ -228,11 +228,20 @@ phylogenetic branch support evaluation
 \sphinxstylestrong{Type:} boolean flag
 
 
+\subsubsection{\sphinxstyleliteralintitle{-d/-{-}data-type}}
+\label{\detokenize{prog_desc:d-data-type}}
+\sphinxstylestrong{Description:} (nuc)leotide, (amino) acid, or (cat)egorical data
+
+\sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} {[}‘nuc’{]}
+
+\sphinxstylestrong{Choices:} (‘nuc’, ‘amino’, ‘cat’)
+
+
 \subsubsection{\sphinxstyleliteralintitle{-e/-{-}temp-dir}}
 \label{\detokenize{prog_desc:e-temp-dir}}
-\sphinxstylestrong{Description:} A directory to which temporary files will be saved. If not supplied, “temp” will be created in the current working directory.
+\sphinxstylestrong{Description:} A directory to which temporary files will be saved. If not supplied, ‘QuartetSampling’ will be created in the current working directory. When specifying a custom temporary output the characters ‘QuartetSampling’ must appear in the directory name to prevent accidental file deletion. (default=’./QuartetSampling’
 
-\sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} ./temp
+\sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
 \subsubsection{\sphinxstyleliteralintitle{-g/-{-}genetrees}}
@@ -265,9 +274,9 @@ phylogenetic branch support evaluation
 
 \subsubsection{\sphinxstyleliteralintitle{-o/-{-}results-dir}}
 \label{\detokenize{prog_desc:o-results-dir}}
-\sphinxstylestrong{Description:} A directory to which output files will be saved. If not supplied, the current working directory will be used.
+\sphinxstylestrong{Description:} A directory to which output files will be saved. If not supplied, the current working directory will be used. (default is current folder).
 
-\sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} .
+\sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
 \subsubsection{\sphinxstyleliteralintitle{-p/-{-}stop-node-number}}
@@ -279,9 +288,9 @@ phylogenetic branch support evaluation
 
 \subsubsection{\sphinxstyleliteralintitle{-{-}paup-executable}}
 \label{\detokenize{prog_desc:paup-executable}}
-\sphinxstylestrong{Description:} The name or path of the PAUP executable to be used for calculated quartets. (default=’paup’)
+\sphinxstylestrong{Description:} The name or path of the PAUP executable to be used for calculated quartets.
 
-\sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
+\sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} {[}‘paup’{]}
 
 
 \subsubsection{\sphinxstyleliteralintitle{-q/-{-}partitions}}
@@ -296,6 +305,13 @@ phylogenetic branch support evaluation
 \sphinxstylestrong{Description:} A prefix to put on the result files.
 
 \sphinxstylestrong{Type:} string; \sphinxstylestrong{Default:} None
+
+
+\subsubsection{\sphinxstyleliteralintitle{-{-}raxml-model}}
+\label{\detokenize{prog_desc:raxml-model}}
+\sphinxstylestrong{Description:} Advanced: specify a custom RAxML model name for the raxml ‘-m’ parameter
+
+\sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
 
 
 \subsubsection{\sphinxstyleliteralintitle{-{-}retain-temp}}
@@ -315,13 +331,6 @@ phylogenetic branch support evaluation
 \subsubsection{\sphinxstyleliteralintitle{-v/-{-}verbose}}
 \label{\detokenize{prog_desc:v-verbose}}
 \sphinxstylestrong{Description:} Provide more verbose output if specified.
-
-\sphinxstylestrong{Type:} boolean flag
-
-
-\subsubsection{\sphinxstyleliteralintitle{-A/-{-}amino-acid}}
-\label{\detokenize{prog_desc:a-amino-acid}}
-\sphinxstylestrong{Description:} use amino acids instead of nucleotides
 
 \sphinxstylestrong{Type:} boolean flag
 
@@ -356,7 +365,7 @@ phylogenetic branch support evaluation
 
 \subsubsection{\sphinxstyleliteralintitle{-V/-{-}verbout}}
 \label{\detokenize{prog_desc:v-verbout}}
-\sphinxstylestrong{Description:} Provide output of the frequencies of each topology and QC
+\sphinxstylestrong{Description:} Provide output of the frequencies of each topology and QC.
 
 \sphinxstylestrong{Type:} boolean flag
 
@@ -566,7 +575,7 @@ from quartet\_sampling
 
 
 \chapter{Outputs}
-\label{\detokenize{output::doc}}\label{\detokenize{output:outputs}}\label{\detokenize{output:intro}}
+\label{\detokenize{output:outputs}}\label{\detokenize{output::doc}}\label{\detokenize{output:intro}}
 
 \section{RESULT.node.scores.csv}
 \label{\detokenize{output:result-node-scores-csv}}
@@ -598,7 +607,7 @@ A FigTree format phylogeny \textless{}\sphinxurl{http://tree.bio.ed.ac.uk/softwa
 
 
 \chapter{Frequently Asked Questions}
-\label{\detokenize{faq:faq}}\label{\detokenize{faq::doc}}\label{\detokenize{faq:frequently-asked-questions}}
+\label{\detokenize{faq::doc}}\label{\detokenize{faq:frequently-asked-questions}}\label{\detokenize{faq:faq}}
 
 \section{What is an appropriate \sphinxstyleliteralintitle{-L/-{-}lnlike-thresh} value to use?}
 \label{\detokenize{faq:what-is-an-appropriate-l-lnlike-thresh-value-to-use}}
@@ -610,14 +619,33 @@ More statistically, the log-likelihood threshold is equivalent to specifying a m
 
 
 \chapter{Releases}
-\label{\detokenize{releases:releases}}\label{\detokenize{releases::doc}}\label{\detokenize{releases:id1}}
-v1.0
-==
-First public release, concurrent with bioRxiv publication.
+\label{\detokenize{releases:id1}}\label{\detokenize{releases:releases}}\label{\detokenize{releases::doc}}
 
-v1.1
-==
+\section{v1.1.1}
+\label{\detokenize{releases:v1-1-1}}\begin{itemize}
+\item {} 
+Changed from -A/\textendash{}amino-acids to -d/\textendash{}data-type with ‘nuc’, ‘amino’, and ‘cat’ for binary/categorical data
+
+\item {} 
+Amino acid mode should now work in PAUP as well.
+
+\item {} 
+Fixed some issues with temp-dir and results-dir that were causing paths to revert to the root
+
+\item {} 
+\sphinxstylestrong{the -e/\textendash{}temp-dir parameter folder name now MUST contain ‘QuartetSampling’ to prevent file deletion}
+
+\end{itemize}
+
+
+\section{v1.1}
+\label{\detokenize{releases:v1-1}}
 Contains small fixes to enable efficient documentation and minor changes to argument documentation.
+
+
+\section{v1.0}
+\label{\detokenize{releases:v1-0}}
+First public release, concurrent with bioRxiv publication.
 
 
 \chapter{Indices and tables}

@@ -13,7 +13,7 @@ def run(test_name):
         raise OSError(
             "the specified test '{}' does not seem to exist.".format(
                 test_name))
-    args = ['python', '../../pysrc/quartet_sampling.py',
+    args = ['../../pysrc/quartet_sampling.py',
             'test.config']
     print('running command: \n'+' '.join(args)+'\n')
     subprocess.call(' '.join(args), shell=True)

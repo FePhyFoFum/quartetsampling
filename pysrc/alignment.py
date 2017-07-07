@@ -36,11 +36,17 @@ class Alignment(object):
         self.partitions = {}
         self.valid_sites = {}
         self.min_overlap = params['min_overlap']
-        self.valid_chars = ('AaCcDdEeFfGgHhIiKkLlMmNnPpQqRrSsTtVvWwYy'
-                            if params['amino_acid'] is True
-                            else 'ATGCatgcUu')
-        self.invalid_chars = ("Xx-?" if params['amino_acid'] is True
-                              else "NnXx-?")
+        self.valid_chars = 'AaCcGgTtUu'
+        self.invalid_chars = "NnXx-?"
+        if params['data_type'] == 'amino':
+            self.valid_chars = 'AaCcDdEeFfGgHhIiKkLlMmNnPpQqRrSsTtVvWwYy'
+            self.invalid_chars = "Xx-?"
+        elif params['data_type'] == 'cat':
+            self.valid_chars = (
+                '0123456789'
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                'abcdefghijklmnopqrstuvwxyz')
+            self.invalid_chars = "-?"
         self.genes = []
 
     def read_align(self, alnfile, params):

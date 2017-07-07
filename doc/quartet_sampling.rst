@@ -69,12 +69,22 @@ Parameters
 
 
 
+``-d/--data-type``
+^^^^^^^^^^^^^^^^^^
+
+**Description:** (nuc)leotide, (amino) acid, or (cat)egorical data
+
+**Type:** None; **Default:** ['nuc']
+
+**Choices:** ('nuc', 'amino', 'cat')
+
+
 ``-e/--temp-dir``
 ^^^^^^^^^^^^^^^^^
 
-**Description:** A directory to which temporary files will be saved. If not supplied, "temp" will be created in the current working directory.
+**Description:** A directory to which temporary files will be saved. If not supplied, 'QuartetSampling' will be created in the current working directory. When specifying a custom temporary output the characters 'QuartetSampling' must appear in the directory name to prevent accidental file deletion. (default='./QuartetSampling'
 
-**Type:** file path; **Default:** ./temp
+**Type:** file path; **Default:** None
 
 
 
@@ -117,9 +127,9 @@ Parameters
 ``-o/--results-dir``
 ^^^^^^^^^^^^^^^^^^^^
 
-**Description:** A directory to which output files will be saved. If not supplied, the current working directory will be used.
+**Description:** A directory to which output files will be saved. If not supplied, the current working directory will be used. (default is current folder).
 
-**Type:** file path; **Default:** .
+**Type:** file path; **Default:** None
 
 
 
@@ -135,9 +145,9 @@ Parameters
 ``--paup-executable``
 ^^^^^^^^^^^^^^^^^^^^^
 
-**Description:** The name or path of the PAUP executable to be used for calculated quartets. (default='paup')
+**Description:** The name or path of the PAUP executable to be used for calculated quartets.
 
-**Type:** None; **Default:** None
+**Type:** None; **Default:** ['paup']
 
 
 
@@ -156,6 +166,15 @@ Parameters
 **Description:** A prefix to put on the result files.
 
 **Type:** string; **Default:** None
+
+
+
+``--raxml-model``
+^^^^^^^^^^^^^^^^^
+
+**Description:** Advanced: specify a custom RAxML model name for the raxml '-m' parameter
+
+**Type:** None; **Default:** None
 
 
 
@@ -181,15 +200,6 @@ Parameters
 ^^^^^^^^^^^^^^^^
 
 **Description:** Provide more verbose output if specified.
-
-**Type:** boolean flag
-
-
-
-``-A/--amino-acid``
-^^^^^^^^^^^^^^^^^^^
-
-**Description:** use amino acids instead of nucleotides
 
 **Type:** boolean flag
 
@@ -234,7 +244,7 @@ Parameters
 ``-V/--verbout``
 ^^^^^^^^^^^^^^^^
 
-**Description:** Provide output of the frequencies of each topology and QC
+**Description:** Provide output of the frequencies of each topology and QC.
 
 **Type:** boolean flag
 

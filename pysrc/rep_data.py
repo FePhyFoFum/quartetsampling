@@ -429,7 +429,8 @@ def get_replicates_random(n_completed, results_queue, leafsets,
                 "temp_inseqs.{}".format(rep["unique_label"]))
             # write file for successful rep
             if rep['paup'] is True:
-                write_paup(rep["aln_fname"], rep["seqs"])
+                write_paup(rep["aln_fname"], rep["seqs"],
+                           datatype=rep['data_type'])
             else:
                 if params["low_mem"] is True:
                     cat_raxml(rep["aln_fname"], rep["seqs"], rep["seq_names"])
@@ -480,9 +481,7 @@ def process_replicate_raxml2lk(replicate):
     # test alignment readability by raxml, also filters missing columns
     base_raxml_args = [replicate['raxml_executable'],
                        "-s", replicate['aln_fname'],
-                       "-m", ("PROTGAMMAWAG"
-                              if replicate['amino_acid'] is True
-                              else "GTRGAMMA"),
+                       "-m", replicate['raxml_model'],
                        # "-T", "1",
                        "-p", "11341",
                        "--silent",
@@ -568,9 +567,7 @@ def process_replicate_raxml(replicate):
     temp_ml_search_label = "tts.{}".format(replicate["unique_label"])
     raxml_args = [replicate['raxml_executable'],
                   "-s", replicate['aln_fname'],
-                  "-m", ("PROTGAMMAWAG"
-                         if replicate['amino_acid'] is True
-                         else "GTRGAMMA"),
+                  "-m", replicate['raxml_model'],
                   "-T", "1",
                   "-p", "11341",
                   "--silent",
@@ -640,7 +637,7 @@ def process_replicate_paup(replicate):
     result["seq_names"] = replicate["seq_names"].copy()
     # write the alignment    result["label"] = replicate['unique_label']
     # this will test the three topologies
-    paup_args = ["paup", replicate['aln_fname']]
+    paup_args = [replicate["paup_executable"], replicate['aln_fname']]
     result["paup_args"] = " ".join(paup_args)
     if replicate['verbose']:
         print('calling: ', result['paup_args'])
@@ -703,8 +700,13 @@ def cat_raxml(fname, seqs, seqnames):
     return ''
 
 
-def write_paup(fpath, seqs):
+def write_paup(fpath, seqs, datatype="nuc"):
     """Write PAUP output"""
+    paup_datatype = 'dna'
+    if datatype == 'amino':
+        paup_datatype = 'protein'
+    elif datatype == 'cat':
+        paup_datatype = 'cat'
     test_trees = {0: "(R1,R2,(L1,L2));",
                   1: "(R1,L1,(L2,R2));",
                   2: "(R1,L2,(L1,R2));"}
@@ -713,7 +715,7 @@ def write_paup(fpath, seqs):
         pfile.write("#nexus\n"
                     "begin data;\n"
                     "  dimensions ntax=4 nchar="+str(slen)+";\n"
-                    "  format datatype=dna missing=-;\n"
+                    "  format datatype=" + str(paup_datatype) + " missing=-;\n"
                     "  matrix\n")
         for hdr in seqs:
             pfile.write("    {} {}\n".format(hdr, seqs[hdr]))
