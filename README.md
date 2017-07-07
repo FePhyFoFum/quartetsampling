@@ -7,7 +7,7 @@ Quartet Sampling is a method to analyze molecular phylogenies by calculating bra
 See the manual for Quartet Sampling (https://github.com/FePhyFoFum/quartetsampling/blob/master/quartetsampling.pdf).
 
 
-##How to Cite ##
+## How to Cite ##
 
 Quartet Sampling distinguishes lack of support from conflicting support in the plant tree of life
 James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith
