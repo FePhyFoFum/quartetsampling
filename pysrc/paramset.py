@@ -35,9 +35,6 @@ class ParamSet(dict):
         self['low_mem'] = args.low_mem
         self['retain_temp'] = args.retain_temp
         self['data_type'] = args.data_type[0]
-        if self['data_type'] == 'cat'and self['paup'] is False:
-            raise RuntimeError("-d/-datatype 'cat' only currently enabled "
-                               "for PAUP mode.")
         self['raxml_model'] = 'GTRGAMMA'
         if self['data_type'] == 'amino':
             self['raxml_model'] = 'PROTGAMMAWAG'
@@ -155,6 +152,11 @@ class ParamSet(dict):
         else:
             self['lnlikethresh'] = 0
         return ''
+
+        if self['data_type'] == 'cat' and not self.get('paup', False):
+            raise RuntimeError("-d/-datatype 'cat' only currently enabled "
+                               "for PAUP mode.")
+
 
     def __str__(self):
         """Print all parameters in alphabetical order"""
