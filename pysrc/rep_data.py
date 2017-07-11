@@ -706,7 +706,7 @@ def write_paup(fpath, seqs, datatype="nuc"):
     if datatype == 'amino':
         paup_datatype = 'protein'
     elif datatype == 'cat':
-        paup_datatype = 'cat'
+        paup_datatype = 'standard'
     test_trees = {0: "(R1,R2,(L1,L2));",
                   1: "(R1,L1,(L2,R2));",
                   2: "(R1,L2,(L1,R2));"}
