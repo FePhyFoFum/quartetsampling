@@ -142,7 +142,7 @@ class TreeData(object):
                 ('freq0', 'freq_file_path'),
                 ('qc_score', 'qc_tree_file_path'),
                 ('qd_score', 'qd_tree_file_path'),
-                ('qu_score', 'qu_tree_file_path')):
+                ('qi_score', 'qi_tree_file_path')):
             for i in self.tree.iternodes():
                 if (len(i.children) > 1 and
                         i is not self.tree and datakey in i.data):
@@ -174,17 +174,17 @@ class TreeData(object):
                         qfscores[xnode.label]))
                     xnode.label = lab
             elif len(xnode.data["freq0"]) > 0:
-                lab = ("[&label={},freq={},qc={},qd={},qu={},"
+                lab = ("[&label={},freq={},qc={},qd={},qi={},"
                        "reps={},score={}/{}/{}]").format(
                            xnode.label,
                            xnode.data["freq0"],
                            xnode.data["qc_score"],
                            xnode.data["qd_score"],
-                           xnode.data["qu_score"],
+                           xnode.data["qi_score"],
                            xnode.data["replicates"],
                            xnode.data["qc_score"],
                            xnode.data["qd_score"],
-                           xnode.data["qu_score"]
+                           xnode.data["qi_score"]
                            )
                 xnode.label = lab
             else:

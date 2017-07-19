@@ -74,7 +74,7 @@ def generate_argparser():
                               "likelihood evaluation mode and invokes tree "
                               "inference mode where a tree is simply inferred "
                               "from the alignment without considering "
-                              "likelihood (QU values are N/A in this case)."))
+                              "likelihood (QI values are N/A in this case)."))
     parser.add_argument("-r", "--result-prefix", type=str, nargs=1,
                         help="A prefix to put on the result files.")
     parser.add_argument("-d", "--data-type", choices=('nuc', 'amino', 'cat'),

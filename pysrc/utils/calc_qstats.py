@@ -80,21 +80,21 @@ def main(arguments=None):
     print("data read")
     data_qc = []
     data_qd = []
-    data_qu = []
+    data_qi = []
     data_qf = []
     nterm = 0
     nint = 0
     qc_index = hdr.index('qc')
     qd_index = hdr.index('qd')
-    qu_index = hdr.index('qu')
+    qi_index = hdr.index('qi')
     qf_index = hdr.index('qf')
     for entry in data:
         if data[entry][qc_index] != 'NA':
             data_qc.append(float(data[entry][qc_index]))
         if data[entry][qd_index] != 'NA':
             data_qd.append(float(data[entry][qd_index]))
-        if data[entry][qu_index] != 'NA':
-            data_qu.append(float(data[entry][qu_index]))
+        if data[entry][qi_index] != 'NA':
+            data_qi.append(float(data[entry][qi_index]))
         if data[entry][qf_index] != 'NA':
             nterm += 1
             data_qf.append(float(data[entry][qf_index]))
@@ -105,8 +105,8 @@ def main(arguments=None):
     basic_stats(data_qc)
     print("QD")
     basic_stats(data_qd)
-    print("QU")
-    basic_stats(data_qu)
+    print("QI")
+    basic_stats(data_qi)
     print("QF")
     basic_stats(data_qf)
     return ''

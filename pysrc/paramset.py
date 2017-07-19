@@ -123,14 +123,14 @@ class ParamSet(dict):
             self['tree_result_file_path'])
         self['qd_tree_file_path'] = "{}.qd".format(
             self['tree_result_file_path'])
-        self['qu_tree_file_path'] = "{}.qu".format(
+        self['qi_tree_file_path'] = "{}.qi".format(
             self['tree_result_file_path'])
         self['verbout'] = args.verbout
         if args.verbout is True:
             self['verbout_file_path'] = "{}/{}.verbout".format(
                 self['results_dir'], self['result_prefix'])
             with open(self['verbout_file_path'], "w") as verbout:
-                verbout.write("topo1,topo2,topo3,topou,qc,qd,qu\n")
+                verbout.write("topo1,topo2,topo3,topou,qc,qd,qi\n")
         self['max_random_sample_proportion'] = default_mrsp
         if args.max_random_sample_proportion:
             self['max_random_sample_proportion'] = (
@@ -156,7 +156,6 @@ class ParamSet(dict):
         if self['data_type'] == 'cat' and not self.get('paup', False):
             raise RuntimeError("-d/-datatype 'cat' only currently enabled "
                                "for PAUP mode.")
-
 
     def __str__(self):
         """Print all parameters in alphabetical order"""

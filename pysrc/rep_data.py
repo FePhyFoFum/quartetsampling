@@ -44,11 +44,11 @@ class DataStore():
                 print("creating {}".format(dirname))
                 os.mkdir(dirname)
         self.headers = {"main": ["node_label", "freq0",
-                                 "qc", "qd", "qu", "qf",
+                                 "qc", "qd", "qi", "qf",
                                  "qdsig",
                                  "diff", "num_replicates", "notes"],
                         "clade": ["taxon", "tree1", "tree2", "tree3", "treeu",
-                                  "qc", "qd", "qu",
+                                  "qc", "qd", "qi",
                                   "qdsig", "freq0"]}
 
     def write_headers(self, file_path, restype="main"):
@@ -88,7 +88,7 @@ class DataStore():
                 rep_info = result
             if rep_info['diff_exceeds_cutoff'] is False:
                 rep_info['best_tree'] = 3
-            # case of not exceeding the likelihood = tree 3 for QU calc
+            # case of not exceeding the likelihood = tree 3 for QI calc
             self.tree_counts[fnode][rep_info['best_tree']] = (
                 self.tree_counts[fnode].get(rep_info['best_tree'], 0) + 1)
             for seqname in result['seq_names'].values():
@@ -98,13 +98,13 @@ class DataStore():
                     self.leaf_counts[seqname].get(
                         rep_info['best_tree'], 0) + 1)
         # calcluate the q scores
-        # qc_score, qd_score, qu_score, freq0
-        qscores = calc_qc_qd_qu(
+        # qc_score, qd_score, qi_score, freq0
+        qscores = calc_qc_qd_qi(
             self.tree_counts[fnode], params)
         fnode.data["qc_score"] = na_fmt(qscores['qc'])
         fnode.data["qd_score"] = na_fmt(qscores['qd'])
         fnode.data["qd_sig"] = na_fmt(qscores['qdsig'])
-        fnode.data["qu_score"] = na_fmt(qscores['qu'])
+        fnode.data["qi_score"] = na_fmt(qscores['qi'])
         fnode.data['freq0'] = na_fmt(qscores['freq0'])
         fnode.data['replicates'] = na_fmt(nreplicates)
         # write the scores to the file
@@ -114,7 +114,7 @@ class DataStore():
              "freq0": qscores['freq0'],
              "qc": qscores['qc'], "qd": qscores['qd'],
              'qdsig': qscores['qdsig'],
-             "qu": qscores['qu'], "diff": rep_info['likelihood_diff'],
+             "qi": qscores['qi'], "diff": rep_info['likelihood_diff'],
              "num_replicates": nreplicates, "notes": notes})
         # this will record the taxa included and the tree
         tree_counts_detailed = tree_counts_detailed + (
@@ -140,7 +140,7 @@ class DataStore():
                         params['score_result_file_path']))
                 self.write_headers(clade_file_path, restype="clade")
                 for xnode in fnode_dict:
-                    nqscores = calc_qc_qd_qu(
+                    nqscores = calc_qc_qd_qi(
                         fnode_dict[xnode], params)
                     self.write_entry(clade_file_path, {
                         "taxon": entry,
@@ -151,7 +151,7 @@ class DataStore():
                         "qc": nqscores['qc'],
                         'qd': nqscores['qd'],
                         "qdsig": nqscores['qdsig'],
-                        "qu": nqscores['qu'],
+                        "qi": nqscores['qi'],
                         "freq0": nqscores['freq0']},
                                      restype="clade")
         return ''
@@ -161,7 +161,7 @@ class DataStore():
         fnode.data.update({
             "replicates": "{:.2g}".format(0),
             "freq0": "{:.2g}".format(0),
-            "qc_score": "NA", "qd_score": "NA", "qu_score": "NA",
+            "qc_score": "NA", "qd_score": "NA", "qi_score": "NA",
             'qd_sig': 'NA'})
         # write the scores to the file
         self.write_entry(
@@ -209,17 +209,17 @@ def chi2_test(val0, val1):
         return (0, 1)
 
 
-def calc_qc_qd_qu(counts, params):
-    """Calculate the QC, QD, and QU scores"""
+def calc_qc_qd_qi(counts, params):
+    """Calculate the QC, QD, and QI scores"""
     if params['verbose'] is True:
         print(counts)
     total = float(sum(counts.get(x, 0) for x in (0, 1, 2)))
     utotal = total + counts.get(3, 0)
     if utotal == 0:
-        qscores = {'qc': 'NA', 'qd': 'NA', 'qu': 'NA',
+        qscores = {'qc': 'NA', 'qd': 'NA', 'qi': 'NA',
                    'freq0': 'NA', 'qdsig': 'NA'}
     elif total == 0:
-        qscores = {'qc': 0, 'qd': 0, 'qu': 1, 'freq0': 0,
+        qscores = {'qc': 0, 'qd': 0, 'qi': 1, 'freq0': 0,
                    'qdsig': 'NA'}
     else:
         freqs = [counts.get(x, 0) / total for x in (0, 1, 2)]
@@ -232,23 +232,23 @@ def calc_qc_qd_qu(counts, params):
                              for i in (0, 1, 2)])
         if counts.get(0, 0) < max(counts.get(1, 0), counts.get(2, 0)):
             qc_score *= -1
-        qd_score = (abs(counts.get(1, 0) - counts.get(2, 0)) / (
-            counts.get(1, 0) + counts.get(2, 0))
+        qd_score = (1.0 - (abs(counts.get(1, 0) - counts.get(2, 0)) / (
+            counts.get(1, 0) + counts.get(2, 0)))
                     if counts.get(1, 0) + counts.get(2, 0) > 0 else "NA")
         if params['calc_qdstats'] is False:
             qd_sig = 'NA'
         else:
             _, qd_sig = chi2_test(counts.get(1, 0), counts.get(2, 0))
-        qu_score = ('NA' if params['lnlikethresh'] == 0
-                    else counts.get(3, 0) / utotal)
+        qi_score = ('NA' if params['lnlikethresh'] == 0
+                    else (1.0 - (counts.get(3, 0) / utotal)))
         if params['verbout'] is True:
             with open(params['verbout_file_path'], 'a') as vfile:
                 vfile.write('{}\n'.format(','.join([
                     str(x) for x in ufreqs + [
-                        qc_score, qd_score, qu_score]])))
+                        qc_score, qd_score, qi_score]])))
         qscores = {'qc': qc_score,
                    'qd': qd_score, 'qdsig': qd_sig,
-                   'qu': qu_score, 'freq0': freqs[0]}
+                   'qi': qi_score, 'freq0': freqs[0]}
     return qscores
 
 

@@ -123,7 +123,7 @@ def main(arguments=None):
             print("SCORE={}/{}/{}".format(
                 naround(mrca.data['qc']),
                 naround(mrca.data['qd']),
-                naround(mrca.data['qu']),
+                naround(mrca.data['qi']),
                 ))
             print("TREE divided in to four groups:")
 

@@ -71,7 +71,7 @@ def main(arguments=None):
         'freq_file_path': "{}.tre.freq".format(args.out[0]),
         'qc_tree_file_path': "{}.tre.qc".format(args.out[0]),
         'qd_tree_file_path': "{}.tre.qd".format(args.out[0]),
-        'qu_tree_file_path': "{}.tre.qu".format(args.out[0]),
+        'qi_tree_file_path': "{}.tre.qi".format(args.out[0]),
         'merged_file_path': "{}.nodes.scores.csv".format(args.out[0]),
         }
     for fpath in params.values():
@@ -132,14 +132,14 @@ def main(arguments=None):
             xnode.label = xlabel[:]
             xnode.data['freq0'] = scores[xlabel]['freq0']
             xnode.data['qc_score'] = scores[xlabel]['qc']
-            xnode.data['qd_score'] = scores[xlabel]['qc']
-            xnode.data['qu_score'] = scores[xlabel]['qc']
+            xnode.data['qd_score'] = scores[xlabel]['qd']
+            xnode.data['qi_score'] = scores[xlabel]['qi']
             xnode.data['replicates'] = scores[xlabel]['num_replicates']
             entry = {'node_label': xlabel,
                      'freq0': scores[xlabel]['freq0'],
                      'qc': scores[xlabel]['qc'],
                      'qd': scores[xlabel]['qd'],
-                     'qu': scores[xlabel]['qu'],
+                     'qi': scores[xlabel]['qi'],
                      'num_replicates': scores[xlabel]['num_replicates'],
                      'diff': scores[xlabel]['diff'],
                      'notes': scores[xlabel]['notes']}
