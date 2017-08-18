@@ -145,8 +145,8 @@ class ParamSet(dict):
                       "(or fail) when max proportion of quartets to sample "
                       "is greater than {}".format(
                           default_mrsp))
-        if args.lnlike_thresh:
-            self['lnlikethresh'] = args.lnlike_thresh[0]
+        if args.lnlike_thresh is not None:
+            self['lnlikethresh'] = args.lnlike_thresh
             print("setting the minimum lnL thresh to {}".format(
                 self['lnlikethresh']))
         else:
