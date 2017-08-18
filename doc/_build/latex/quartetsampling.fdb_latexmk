@@ -1,10 +1,10 @@
 # Fdb version 3
-["makeindex quartetsampling.idx"] 1497147510 "quartetsampling.idx" "quartetsampling.ind" "quartetsampling" 1499454074
-  "quartetsampling.idx" 1499454074 0 d41d8cd98f00b204e9800998ecf8427e ""
+["makeindex quartetsampling.idx"] 1497147510 "quartetsampling.idx" "quartetsampling.ind" "quartetsampling" 1503079654
+  "quartetsampling.idx" 1503079654 0 d41d8cd98f00b204e9800998ecf8427e ""
   (generated)
   "quartetsampling.ind"
   "quartetsampling.ilg"
-["pdflatex"] 1499454073 "quartetsampling.tex" "quartetsampling.pdf" "quartetsampling" 1499454074
+["pdflatex"] 1503079654 "quartetsampling.tex" "quartetsampling.pdf" "quartetsampling" 1503079654
   "/etc/texmf/web2c/texmf.cnf" 1496848412 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
@@ -147,19 +147,20 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1497284850 127805 5c3c5fac7370b5e0b4000550316abe76 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1496848418 718486 c5341c1c4b1a1deb6254a7a0daa7fe24 ""
   "footnotehyper-sphinx.sty" 1497447571 8841 e18cbb7bca599a223414f9b8a156abee ""
-  "quartetsampling.aux" 1499454074 19948 5d48fe6420cd96baa2483fcb5be09633 ""
+  "logo.png" 1503079472 5890 abd0d0c93663619ecdb7ae0ef11a167f ""
+  "quartetsampling.aux" 1503079654 20130 0db69864bc0e7c20fc0d0d5d2efb52a2 ""
   "quartetsampling.ind" 1497447571 0 d41d8cd98f00b204e9800998ecf8427e "makeindex quartetsampling.idx"
-  "quartetsampling.out" 1499454074 3347 4b7ddf4257c596424c9dceaa1f174c38 ""
-  "quartetsampling.tex" 1499454073 29292 ce0528f5eef3cac6788a6f1c4bd3ae98 ""
-  "quartetsampling.toc" 1499454074 7889 bb0a335dd588fd1a45b85f3cd5f72422 ""
+  "quartetsampling.out" 1503079654 3506 e439126e1e0e3074ad61472d76c202f0 ""
+  "quartetsampling.tex" 1503079653 29920 a3e0f4a16b872e79143800471bf5d014 ""
+  "quartetsampling.toc" 1503079654 7968 380f30c6f34f3f9910af56782649de70 ""
   "sphinx.sty" 1497447571 60341 c1d8deab494ae689ffd03d6489506838 ""
-  "sphinxhighlight.sty" 1499454073 8137 55a03d9dc074933ffa96877447e1a370 ""
+  "sphinxhighlight.sty" 1503079653 8137 20f2c0a9929f586c31189f27306fba53 ""
   "sphinxmanual.cls" 1497447571 3589 0b0aac49c6f36925cf5f9d524a75a978 ""
   "sphinxmulticell.sty" 1497447571 14618 0defbdc8536ad2e67f1eac6a1431bc55 ""
   (generated)
-  "quartetsampling.out"
   "quartetsampling.log"
-  "quartetsampling.idx"
   "quartetsampling.aux"
+  "quartetsampling.idx"
   "quartetsampling.toc"
   "quartetsampling.pdf"
+  "quartetsampling.out"

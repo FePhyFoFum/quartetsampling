@@ -83,7 +83,7 @@ Recommended Parameters
 
 ``-L/--lnlike-thresh``: log-likelihood threshold cutoff, determines the minimum difference by which the best likelihood tree must exceed the second-best likelihood tree when comparing the three possible topologies for a given quartet replicate.
 
-.. note:: If ``-L/--lnlike-thresh`` is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Uncertainty (QU) scores of 'NA' for all branches.
+.. note:: If ``-L/--lnlike-thresh`` is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Informativeness (QI) scores of 'NA' for all branches.
 
 
 

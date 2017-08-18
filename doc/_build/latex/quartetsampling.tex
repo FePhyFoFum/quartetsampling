@@ -39,10 +39,10 @@
 
 
 \title{quartetsampling Documentation}
-\date{Jul 07, 2017}
-\release{1.1.1}
+\date{Aug 18, 2017}
+\release{1.2}
 \author{James B. Pease \\ Stephen A. Smith \\ Cody E. Hinchliff \\Joseph W. Brown \\ Joseph F. Walker}
-\newcommand{\sphinxlogo}{\vbox{}}
+\newcommand{\sphinxlogo}{\sphinxincludegraphics{logo.png}\par}
 \renewcommand{\releasename}{Release}
 \makeindex
 
@@ -55,7 +55,7 @@
 
 
 \chapter{Getting Started}
-\label{\detokenize{intro::doc}}\label{\detokenize{intro:getting-started}}\label{\detokenize{intro:manual-for-quartetsampling}}\label{\detokenize{intro:intro}}
+\label{\detokenize{intro:getting-started}}\label{\detokenize{intro::doc}}\label{\detokenize{intro:manual-for-quartetsampling}}\label{\detokenize{intro:intro}}
 
 \section{What is Quartet Sampling?}
 \label{\detokenize{intro:what-is-quartet-sampling}}
@@ -165,7 +165,7 @@ python quartet\_sampling.py -t TREE.nwk -a ALIGNMENT.phy -N 100 -T 4 -L 2
 \sphinxcode{-L/-{-}lnlike-thresh}: log-likelihood threshold cutoff, determines the minimum difference by which the best likelihood tree must exceed the second-best likelihood tree when comparing the three possible topologies for a given quartet replicate.
 
 \begin{sphinxadmonition}{note}{Note:}
-If \sphinxcode{-L/-{-}lnlike-thresh} is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Uncertainty (QU) scores of ‘NA’ for all branches.
+If \sphinxcode{-L/-{-}lnlike-thresh} is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Informativeness (QI) scores of ‘NA’ for all branches.
 \end{sphinxadmonition}
 
 
@@ -344,7 +344,7 @@ phylogenetic branch support evaluation
 
 \subsubsection{\sphinxstyleliteralintitle{-L/-{-}lnlike-thresh}}
 \label{\detokenize{prog_desc:l-lnlike-thresh}}
-\sphinxstylestrong{Description:} The lnlike threshhold that is the minimum value by which the log-likelihood value of the best-likelihood tree must be higher than the second-best-likelihood tree for the replicate to register as the best-likelihood topology rather than ‘uncertain’. If set to zero, this turns off likelihood evaluation mode and invokes tree inference mode where a tree is simply inferred from the alignment without considering likelihood (QU values are N/A in this case).
+\sphinxstylestrong{Description:} The lnlike threshhold that is the minimum value by which the log-likelihood value of the best-likelihood tree must be higher than the second-best-likelihood tree for the replicate to register as the best-likelihood topology rather than ‘uncertain’. If set to zero, this turns off likelihood evaluation mode and invokes tree inference mode where a tree is simply inferred from the alignment without considering likelihood (QI values are N/A in this case).
 
 \sphinxstylestrong{Type:} float; \sphinxstylestrong{Default:} 2.0
 
@@ -584,7 +584,7 @@ A comma-separated values (CSV) file with
 * \sphinxstylestrong{freq0} The number of concordant replicates over the non-uncertain total
 * \sphinxstylestrong{qc} The Quartet Concordance score (internal branches only; measures frequency of concordant over discordant)
 * \sphinxstylestrong{qd} The Quartet Differential score (internal branches only; measures skew in the two discordant tree counts)
-* \sphinxstylestrong{qu} The Quartet Uncertainty score (internal branches only; measures number of replicates that fail likelihood cutoff)
+* \sphinxstylestrong{qi} The Quartet Informativeness score (internal branches only; measures number of replicates that fail likelihood cutoff)
 * \sphinxstylestrong{qf} The Quartet Fidelity score (terminal branches only; measures the number of replicates for which this branch produced concordant quartets)
 * \sphinxstylestrong{diff} Example likelihood differentinal from last replicate (used for diagnostic purposes)
 * \sphinxstylestrong{num\_replicates} Number of replicates actually sampled per branch (may not equal the number specified by \sphinxcode{-N} for internal branches when fewer replicates are possible, and will not equal that number for terminal branches).
@@ -598,28 +598,39 @@ A Newick tree with each internal branch labeled with their QS\#\# identifier.
 
 \section{RESULT.labeled.tre.freq/qc/qd/qu}
 \label{\detokenize{output:result-labeled-tre-freq-qc-qd-qu}}
-A Newick tree with the each internal branch labeled with frequency of concordant replicates or QC/QD/QU scores.
+A Newick tree with the each internal branch labeled with frequency of concordant replicates or QC/QD/QI scores.
 
 
 \section{RESULT.labeled.tre.figtree}
 \label{\detokenize{output:result-labeled-tre-figtree}}
-A FigTree format phylogeny \textless{}\sphinxurl{http://tree.bio.ed.ac.uk/software/figtree/}\textgreater{} that contains all QS scores and a “score” field with QC/QD/QU for internal branches.
+A FigTree format phylogeny \textless{}\sphinxurl{http://tree.bio.ed.ac.uk/software/figtree/}\textgreater{} that contains all QS scores and a “score” field with QC/QD/QI for internal branches.
 
 
 \chapter{Frequently Asked Questions}
-\label{\detokenize{faq::doc}}\label{\detokenize{faq:frequently-asked-questions}}\label{\detokenize{faq:faq}}
+\label{\detokenize{faq:faq}}\label{\detokenize{faq:frequently-asked-questions}}\label{\detokenize{faq::doc}}
 
 \section{What is an appropriate \sphinxstyleliteralintitle{-L/-{-}lnlike-thresh} value to use?}
 \label{\detokenize{faq:what-is-an-appropriate-l-lnlike-thresh-value-to-use}}
-The parameter \sphinxcode{-L} or \sphinxcode{-{-}lnlike-thresh} specifies a log-likelihood differential cutoff.  When the three possible topologies for a given quartet are evaluated using molecular data for that quartet by RAxML, three separate likelihood values are generated, which are then log-transformed.  When the cutoff value is specified this means that you want to ensure that the tree with the best likelihood exceeds the next-most likely tree’s likelihood by at least the value of the cutoff.  This prevents the method from selecting from two or three trees with nearly indistinguishable likelihoods.  These quartet replicates that fail the likelihood cutoff, are tabulated separated and calculated as the QU score.
+The parameter \sphinxcode{-L} or \sphinxcode{-{-}lnlike-thresh} specifies a log-likelihood differential cutoff.  When the three possible topologies for a given quartet are evaluated using molecular data for that quartet by RAxML, three separate likelihood values are generated, which are then log-transformed.  When the cutoff value is specified this means that you want to ensure that the tree with the best likelihood exceeds the next-most likely tree’s likelihood by at least the value of the cutoff.  This prevents the method from selecting from two or three trees with nearly indistinguishable likelihoods.  These quartet replicates that pass the likelihood cutoff are tabulated separated and calculated as the QI score.
 
-On a practical level, increasing the \sphinxcode{-L} parameter will increase QU and decrease the number of replicates counted as part of QC and QD.  Lowering the \sphinxcode{-L} parameter will decrease the QU score, but increase the number of potentially arbitrary counts in QC and QD.
+On a practical level, increasing the \sphinxcode{-L} parameter will decrease QI and increase the number of replicates counted as part of QC and QD.  Lowering the \sphinxcode{-L} parameter will increase the QI score, but increase the number of potentially arbitrary counts in QC and QD.
 
 More statistically, the log-likelihood threshold is equivalent to specifying a minimum likelihood ratio (subtracting log-likelihoods is equivalent to dividing raw likelihoods). Let the null hypothesis be zero difference between the tree likelihoods (i.e., any difference is random noise). For each of the two likelihood estimates compared, if error is distributed in a standard normal distribution N(0,1), then 95\% of the distribution lies within \textasciitilde{}2 standard deviations. This means the difference in the two log-likelihoods is chi-square distributed with the critical value for 1 degree of freedom at 3.8414 for a 95\% confidence cutoff.  Therefore, log-likelihood values that differ by 3.84 divided by 2 (for a two-tailed test) equals 3.84/2 = 1.92, which is approximately equal to 2.  Therefore, a \sphinxcode{-L/-{-}lnlikethresh} value of 2 conservatively evaluates that the two likelihoods differ significantly at the alpha =0.05 level.
 
 
 \chapter{Releases}
-\label{\detokenize{releases:id1}}\label{\detokenize{releases:releases}}\label{\detokenize{releases::doc}}
+\label{\detokenize{releases:id1}}\label{\detokenize{releases::doc}}\label{\detokenize{releases:releases}}
+
+\section{v1.2 - Major Update}
+\label{\detokenize{releases:v1-2-major-update}}\begin{itemize}
+\item {} 
+In order to make all four QS components have a “perfect” score of 1, the Quartet Uncertainty (QU) and Quartet Differential (QD) scores have been inverted. QU is now known Quartet as Informativeness (QI) is the inverse measure (where QI = 1 - QU).  QD is also now inverted in scale, so that 1.0 means no differential in the discordant trees, and 0 means all one discdorant option.
+
+\item {} 
+This version is consistent with the release of the updated bioRxiv manuscript.
+
+\end{itemize}
+
 
 \section{v1.1.1}
 \label{\detokenize{releases:v1-1-1}}\begin{itemize}

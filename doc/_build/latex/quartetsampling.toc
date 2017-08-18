@@ -81,7 +81,8 @@
 \contentsline {chapter}{\numberline {4}Frequently Asked Questions}{17}{chapter.4}
 \contentsline {section}{\numberline {4.1}What is an appropriate \sphinxstyleliteralintitle {-L/-{-}lnlike-thresh} value to use?}{17}{section.4.1}
 \contentsline {chapter}{\numberline {5}Releases}{19}{chapter.5}
-\contentsline {section}{\numberline {5.1}v1.1.1}{19}{section.5.1}
-\contentsline {section}{\numberline {5.2}v1.1}{19}{section.5.2}
-\contentsline {section}{\numberline {5.3}v1.0}{19}{section.5.3}
+\contentsline {section}{\numberline {5.1}v1.2 - Major Update}{19}{section.5.1}
+\contentsline {section}{\numberline {5.2}v1.1.1}{19}{section.5.2}
+\contentsline {section}{\numberline {5.3}v1.1}{19}{section.5.3}
+\contentsline {section}{\numberline {5.4}v1.0}{20}{section.5.4}
 \contentsline {chapter}{\numberline {6}Indices and tables}{21}{chapter.6}
