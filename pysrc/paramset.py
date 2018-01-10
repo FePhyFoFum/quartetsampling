@@ -146,7 +146,7 @@ class ParamSet(dict):
                       "is greater than {}".format(
                           default_mrsp))
         if args.lnlike_thresh is not None:
-            self['lnlikethresh'] = args.lnlike_thresh
+            self['lnlikethresh'] = args.lnlike_thresh[0]
             print("setting the minimum lnL thresh to {}".format(
                 self['lnlikethresh']))
         else:
