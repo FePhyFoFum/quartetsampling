@@ -482,7 +482,7 @@ def process_replicate_raxml2lk(replicate):
     base_raxml_args = [replicate['raxml_executable'],
                        "-s", replicate['aln_fname'],
                        "-m", replicate['raxml_model'],
-                       # "-T", "1",
+                       "-T", "1",
                        "-p", "11341",
                        "--silent",
                        "-F",
