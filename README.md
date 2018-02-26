@@ -9,9 +9,9 @@ See the manual for Quartet Sampling (https://github.com/FePhyFoFum/quartetsampli
 
 ## How to Cite ##
 
-Quartet Sampling distinguishes lack of support from conflicting support in the plant tree of life
-James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith
-bioRxiv 148536; doi: https://doi.org/10.1101/148536 
+James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith. 2018. Quartet Sampling distinguishes lack of support from conflicting support in the green plant tree of life. American Journal of Botany. doi:10.1002/ajb2.1016
+
+Link to publication: http://dx.doi.org/1002/ajb2.1016
 
 Please also include the URL (https://www.github.com/fephyfofum/quartetsampling).
 

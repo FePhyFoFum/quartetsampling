@@ -7,9 +7,22 @@
 
 \usepackage[utf8]{inputenc}
 \ifdefined\DeclareUnicodeCharacter
- \ifdefined\DeclareUnicodeCharacterAsOptional\else
+ \ifdefined\DeclareUnicodeCharacterAsOptional
+  \DeclareUnicodeCharacter{"00A0}{\nobreakspace}
+  \DeclareUnicodeCharacter{"2500}{\sphinxunichar{2500}}
+  \DeclareUnicodeCharacter{"2502}{\sphinxunichar{2502}}
+  \DeclareUnicodeCharacter{"2514}{\sphinxunichar{2514}}
+  \DeclareUnicodeCharacter{"251C}{\sphinxunichar{251C}}
+  \DeclareUnicodeCharacter{"2572}{\textbackslash}
+ \else
   \DeclareUnicodeCharacter{00A0}{\nobreakspace}
-\fi\fi
+  \DeclareUnicodeCharacter{2500}{\sphinxunichar{2500}}
+  \DeclareUnicodeCharacter{2502}{\sphinxunichar{2502}}
+  \DeclareUnicodeCharacter{2514}{\sphinxunichar{2514}}
+  \DeclareUnicodeCharacter{251C}{\sphinxunichar{251C}}
+  \DeclareUnicodeCharacter{2572}{\textbackslash}
+ \fi
+\fi
 \usepackage{cmap}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amstext}
@@ -32,6 +45,9 @@
 \addto\captionsenglish{\renewcommand{\tablename}{Table}}
 \addto\captionsenglish{\renewcommand{\literalblockname}{Listing}}
 
+\addto\captionsenglish{\renewcommand{\literalblockcontinuedname}{continued from previous page}}
+\addto\captionsenglish{\renewcommand{\literalblockcontinuesname}{continues on next page}}
+
 \addto\extrasenglish{\def\pageautorefname{page}}
 
 \setcounter{tocdepth}{1}
@@ -39,7 +55,7 @@
 
 
 \title{quartetsampling Documentation}
-\date{Aug 18, 2017}
+\date{Feb 25, 2018}
 \release{1.2}
 \author{James B. Pease \\ Stephen A. Smith \\ Cody E. Hinchliff \\Joseph W. Brown \\ Joseph F. Walker}
 \newcommand{\sphinxlogo}{\sphinxincludegraphics{logo.png}\par}
@@ -55,7 +71,7 @@
 
 
 \chapter{Getting Started}
-\label{\detokenize{intro:getting-started}}\label{\detokenize{intro::doc}}\label{\detokenize{intro:manual-for-quartetsampling}}\label{\detokenize{intro:intro}}
+\label{\detokenize{intro:intro}}\label{\detokenize{intro::doc}}\label{\detokenize{intro:manual-for-quartetsampling}}\label{\detokenize{intro:getting-started}}
 
 \section{What is Quartet Sampling?}
 \label{\detokenize{intro:what-is-quartet-sampling}}
@@ -64,9 +80,7 @@ Quartet Sampling (QS) is a method for quantifying branch support values for a ph
 
 \section{How do I cite this program?}
 \label{\detokenize{intro:how-do-i-cite-this-program}}
-Quartet Sampling distinguishes lack of support from conflicting support in the plant tree of life
-James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith
-bioRxiv 148536; doi: \sphinxurl{https://doi.org/10.1101/148536}
+James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith. 2018. Quartet Sampling distinguishes lack of support from conflicting support in the green plant tree of life. American Journal of Botany. doi:10.1002/ajb2.1016
 
 Please also include the URL \textless{}\sphinxurl{https://www.github.com/fephyfofum/quartetsampling}\textgreater{} in your methods section where the program is referenced.
 
@@ -170,7 +184,7 @@ If \sphinxcode{-L/-{-}lnlike-thresh} is omitted, this will invoke an alternative
 
 
 \chapter{Program Parameter Descriptions}
-\label{\detokenize{prog_desc::doc}}\label{\detokenize{prog_desc:program-parameter-descriptions}}
+\label{\detokenize{prog_desc:program-parameter-descriptions}}\label{\detokenize{prog_desc::doc}}
 
 \section{quartet\_sampling}
 \label{\detokenize{prog_desc:quartet-sampling}}
@@ -575,7 +589,7 @@ from quartet\_sampling
 
 
 \chapter{Outputs}
-\label{\detokenize{output:outputs}}\label{\detokenize{output::doc}}\label{\detokenize{output:intro}}
+\label{\detokenize{output:intro}}\label{\detokenize{output:outputs}}\label{\detokenize{output::doc}}
 
 \section{RESULT.node.scores.csv}
 \label{\detokenize{output:result-node-scores-csv}}
@@ -607,7 +621,7 @@ A FigTree format phylogeny \textless{}\sphinxurl{http://tree.bio.ed.ac.uk/softwa
 
 
 \chapter{Frequently Asked Questions}
-\label{\detokenize{faq:faq}}\label{\detokenize{faq:frequently-asked-questions}}\label{\detokenize{faq::doc}}
+\label{\detokenize{faq:faq}}\label{\detokenize{faq::doc}}\label{\detokenize{faq:frequently-asked-questions}}
 
 \section{What is an appropriate \sphinxstyleliteralintitle{-L/-{-}lnlike-thresh} value to use?}
 \label{\detokenize{faq:what-is-an-appropriate-l-lnlike-thresh-value-to-use}}
@@ -619,7 +633,7 @@ More statistically, the log-likelihood threshold is equivalent to specifying a m
 
 
 \chapter{Releases}
-\label{\detokenize{releases:id1}}\label{\detokenize{releases::doc}}\label{\detokenize{releases:releases}}
+\label{\detokenize{releases::doc}}\label{\detokenize{releases:releases}}\label{\detokenize{releases:id1}}
 
 \section{v1.2 - Major Update}
 \label{\detokenize{releases:v1-2-major-update}}\begin{itemize}
