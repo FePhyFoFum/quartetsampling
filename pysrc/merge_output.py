@@ -94,9 +94,9 @@ def main(arguments=None):
     with open(args.nodedata[0]) as nfile:
         for line in nfile:
             filepaths.append(line.strip())
-    firstline = True
     for fname in filepaths:
         with open(fname, 'r') as infile:
+            firstline = True
             for line in infile:
                 if firstline is True:
                     hdrs = line.rstrip().split(',')
