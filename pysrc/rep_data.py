@@ -311,7 +311,7 @@ def get_replicates_exhaustive(n_completed, results_queue, leafsets,
             "temp_inseqs.{}".format(rep["unique_label"]))
         # write file for successful rep
         if rep['paup'] is True:
-            write_paup(rep["aln_fname"], rep["seqs"])
+            write_paup(rep["aln_fname"], rep["seqs"], datatype=rep["data_type"])
         else:
             if params["low_mem"] is True:
                 # print(rep['seqs'], rep['seq_names'])
