@@ -71,11 +71,11 @@
 
 
 \chapter{Getting Started}
-\label{\detokenize{intro:intro}}\label{\detokenize{intro:getting-started}}\label{\detokenize{intro::doc}}\label{\detokenize{intro:manual-for-quartetsampling}}
+\label{\detokenize{intro::doc}}\label{\detokenize{intro:manual-for-quartetsampling}}\label{\detokenize{intro:getting-started}}\label{\detokenize{intro:intro}}
 
 \section{What is Quartet Sampling?}
 \label{\detokenize{intro:what-is-quartet-sampling}}
-Quartet Sampling (QS) is a method for quantifying branch support values for a phylogenetic tree.  The software requires an input tree topology (branch lengths not required or used) and a molecular alignment in phylip format.  A RAxML-formatted partition file may (optionally) be also used.  The Quartet Sampling method takes a phylogenetic topology and considers each internal (i.e., non-terminal) branch.  Each internal branch has four branches connected to it that lead to one or more taxa.  For each replicate, Quartet Sampling randomly selects one taxon from each of the four groups and evaluates the likelihoods of the three possible topological arrangements of the four taxa.  These replicates then form the basis of branch scores for the QS method.  Full details about the scientific background and equations behind QS can be found in the Quartet Sampling paper at \textless{}\sphinxurl{http://biorxiv.org/content/early/2017/06/10/148536.1}\textgreater{}.
+Quartet Sampling (QS) is a method for quantifying branch support values for a phylogenetic tree.  The software requires an input tree topology (branch lengths not required or used) and a molecular alignment in phylip format.  Optionally, a RAxML-formatted partition file may be used for either a concatenated alignment in partitioned mode or to establish gene barriers for using individual gene trees.  The Quartet Sampling method takes a phylogenetic topology and considers each internal (i.e., non-terminal) branch.  Each internal branch has four branches connected to it that lead to one or more taxa.  For each replicate, Quartet Sampling randomly selects one taxon from each of the four groups and evaluates the likelihoods of the three possible topological arrangements of the four taxa.  These replicates then form the basis of branch scores for the QS method.  Full details about the scientific background and equations behind QS can be found in the Quartet Sampling paper in the American Journal of Botany at \textless{}\sphinxurl{http://dx.doi.org/10.1002/ajb2.1016}\textgreater{}.
 
 
 \section{How do I cite this program?}
@@ -184,7 +184,7 @@ If \sphinxcode{-L/-{-}lnlike-thresh} is omitted, this will invoke an alternative
 
 
 \chapter{Program Parameter Descriptions}
-\label{\detokenize{prog_desc:program-parameter-descriptions}}\label{\detokenize{prog_desc::doc}}
+\label{\detokenize{prog_desc::doc}}\label{\detokenize{prog_desc:program-parameter-descriptions}}
 
 \section{quartet\_sampling}
 \label{\detokenize{prog_desc:quartet-sampling}}
@@ -589,7 +589,7 @@ from quartet\_sampling
 
 
 \chapter{Outputs}
-\label{\detokenize{output:outputs}}\label{\detokenize{output:intro}}\label{\detokenize{output::doc}}
+\label{\detokenize{output::doc}}\label{\detokenize{output:outputs}}\label{\detokenize{output:intro}}
 
 \section{RESULT.node.scores.csv}
 \label{\detokenize{output:result-node-scores-csv}}
@@ -621,7 +621,7 @@ A FigTree format phylogeny \textless{}\sphinxurl{http://tree.bio.ed.ac.uk/softwa
 
 
 \chapter{Frequently Asked Questions}
-\label{\detokenize{faq:faq}}\label{\detokenize{faq::doc}}\label{\detokenize{faq:frequently-asked-questions}}
+\label{\detokenize{faq::doc}}\label{\detokenize{faq:frequently-asked-questions}}\label{\detokenize{faq:faq}}
 
 \section{What is an appropriate \sphinxstyleliteralintitle{-L/-{-}lnlike-thresh} value to use?}
 \label{\detokenize{faq:what-is-an-appropriate-l-lnlike-thresh-value-to-use}}
@@ -633,7 +633,7 @@ More statistically, the log-likelihood threshold is equivalent to specifying a m
 
 
 \chapter{Releases}
-\label{\detokenize{releases:id1}}\label{\detokenize{releases::doc}}\label{\detokenize{releases:releases}}
+\label{\detokenize{releases::doc}}\label{\detokenize{releases:releases}}\label{\detokenize{releases:id1}}
 
 \section{v1.2.1 - Efficiency update}
 \label{\detokenize{releases:v1-2-1-efficiency-update}}\begin{itemize}
