@@ -362,9 +362,9 @@ def write_test_trees(temp_wd="."):
     topos = ("(L1,L2,(R1,R2));\n",
              "(L1,R1,(L2,R2));\n",
              "(L1,R2,(L2,R1));\n")
-    for i, topo in enumerate(topos):
-        with open("{}/test.trees.{}".format(temp_wd, i), "w") as xtrees:
-            xtrees.write(topo)
+    # for i, topo in enumerate(topos)OB:
+    with open("{}/test.trees".format(temp_wd), "w") as xtrees:
+        xtrees.write(''.join(topos))
     return ''
 
 

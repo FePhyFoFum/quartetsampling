@@ -311,7 +311,8 @@ def get_replicates_exhaustive(n_completed, results_queue, leafsets,
             "temp_inseqs.{}".format(rep["unique_label"]))
         # write file for successful rep
         if rep['paup'] is True:
-            write_paup(rep["aln_fname"], rep["seqs"], datatype=rep["data_type"])
+            write_paup(rep["aln_fname"], rep["seqs"],
+                       datatype=rep["data_type"])
         else:
             if params["low_mem"] is True:
                 # print(rep['seqs'], rep['seq_names'])
@@ -494,35 +495,40 @@ def process_replicate_raxml2lk(replicate):
     treelikelihoods = {0: 0, 1: 0, 2: 0}
     likelihood_diff_exceeds_cutoff = False
     # correct = None
-    for i in range(3):
-        raxml_args = base_raxml_args + [
-            "-n", "{}.{}".format(temp_ml_search_label, i),
-            "-z", "test.trees.{}".format(i),
-            ]
-        result["raxml_args"] = " ".join(raxml_args)
-        if replicate['verbose']:
-            print('calling: {}'.format(result["raxml_args"]))
-        proc = subprocess.Popen(raxml_args, stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
-        serr, sout = proc.communicate()
-        if replicate['verbose'] is True:
-            if "fix your data" in serr.decode('utf-8'):
-                print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
-        lpath = os.path.join(replicate['temp_wd'],
-                             "RAxML_info.tts.{}.{}".format(
-                                 result["label"], i))
-        tpath = os.path.join(replicate['temp_wd'],
-                             "RAxML_result.tts.{}.{}".format(
-                                 result["label"], i))
-        temp_file_paths.extend([lpath, tpath])
-        if not os.path.exists(lpath):
-            if replicate['ignore_error'] is False:
-                raise RuntimeError("'{}' does not exist".format(lpath))
-        with open(lpath, "r") as info_result:
-            for line in info_result:
-                if "Tree 0 Likelihood " in line:
-                    treelikelihoods[i] = (
-                        -1 * float(line.split(" ")[3]))
+    raxml_args = base_raxml_args + [
+        "-n", "{}".format(temp_ml_search_label),
+        "-z", "test.trees"
+        ]
+    result["raxml_args"] = " ".join(raxml_args)
+    if replicate['verbose']:
+        print('calling: {}'.format(result["raxml_args"]))
+    proc = subprocess.Popen(raxml_args, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    serr, sout = proc.communicate()
+    if replicate['verbose'] is True:
+        if "fix your data" in serr.decode('utf-8'):
+            print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
+    lpath = os.path.join(replicate['temp_wd'],
+                         "RAxML_info.tts.{}".format(
+                             result["label"]))
+    tpath = os.path.join(replicate['temp_wd'],
+                         "RAxML_result.tts.{}".format(
+                             result["label"]))
+    temp_file_paths.extend([lpath, tpath])
+    if not os.path.exists(lpath):
+        if replicate['ignore_error'] is False:
+            raise RuntimeError("'{}' does not exist".format(lpath))
+    with open(lpath, "r") as info_result:
+        for line in info_result:
+            if "Tree 0 Likelihood " in line:
+                treelikelihoods[0] = (
+                    -1 * float(line.split(" ")[3]))
+            if "Tree 1 Likelihood " in line:
+                treelikelihoods[1] = (
+                    -1 * float(line.split(" ")[3]))
+            if "Tree 2 Likelihood " in line:
+                treelikelihoods[2] = (
+                    -1 * float(line.split(" ")[3]))
     srt_likelihoods = [(treelikelihoods[x], x) for x in (0, 1, 2)]
     srt_likelihoods.sort()
     likelihood_diff = abs(srt_likelihoods[0][0] - srt_likelihoods[1][0])

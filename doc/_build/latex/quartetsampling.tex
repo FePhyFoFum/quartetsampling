@@ -55,8 +55,8 @@
 
 
 \title{quartetsampling Documentation}
-\date{Feb 25, 2018}
-\release{1.2}
+\date{Nov 10, 2018}
+\release{1.2.1}
 \author{James B. Pease \\ Stephen A. Smith \\ Cody E. Hinchliff \\Joseph W. Brown \\ Joseph F. Walker}
 \newcommand{\sphinxlogo}{\sphinxincludegraphics{logo.png}\par}
 \renewcommand{\releasename}{Release}
@@ -71,7 +71,7 @@
 
 
 \chapter{Getting Started}
-\label{\detokenize{intro:intro}}\label{\detokenize{intro::doc}}\label{\detokenize{intro:manual-for-quartetsampling}}\label{\detokenize{intro:getting-started}}
+\label{\detokenize{intro:intro}}\label{\detokenize{intro:getting-started}}\label{\detokenize{intro::doc}}\label{\detokenize{intro:manual-for-quartetsampling}}
 
 \section{What is Quartet Sampling?}
 \label{\detokenize{intro:what-is-quartet-sampling}}
@@ -93,10 +93,10 @@ No installation is required, quartetsampling scripts should work as long as Pyth
 \subsection{Requirements}
 \label{\detokenize{intro:requirements}}\begin{itemize}
 \item {} 
-Python 3.x (2.7 should also work, but 3.x recommended) \sphinxurl{https://www.python.org/downloads/}
+Python 3.x (2.7 should also work, but 3.x strongly recommended for optimal parallelization) \sphinxurl{https://www.python.org/downloads/}
 
 \item {} 
-RAxML 8.x (7.x should also work, but 8.x recommended) \sphinxurl{https://sco.h-its.org/exelixis/web/software/raxml/index.html}
+RAxML 8.1+ (8.0.x and 7.x will not work) \sphinxurl{https://sco.h-its.org/exelixis/web/software/raxml/index.html}
 
 \end{itemize}
 
@@ -109,7 +109,7 @@ PAUP  \sphinxurl{http://people.sc.fsu.edu/~dswofford/paup\_test/} (required only
 Numpy \sphinxurl{http://www.numpy.org} (required only for \sphinxcode{calc\_qs\_stats.py})
 
 \item {} 
-Scipy \sphinxurl{https://www.scipy.org} (required only if \sphinxcode{-{-}calc-qdstats.py} is activated)
+Scipy \sphinxurl{https://www.scipy.org} (required only if \sphinxcode{-{-}calc-qdstats} is activated)
 
 \item {} 
 Figtree \sphinxurl{http://tree.bio.ed.ac.uk/software/figtree/} (required to view FigTree output)
@@ -589,7 +589,7 @@ from quartet\_sampling
 
 
 \chapter{Outputs}
-\label{\detokenize{output:intro}}\label{\detokenize{output:outputs}}\label{\detokenize{output::doc}}
+\label{\detokenize{output:outputs}}\label{\detokenize{output:intro}}\label{\detokenize{output::doc}}
 
 \section{RESULT.node.scores.csv}
 \label{\detokenize{output:result-node-scores-csv}}
@@ -633,7 +633,18 @@ More statistically, the log-likelihood threshold is equivalent to specifying a m
 
 
 \chapter{Releases}
-\label{\detokenize{releases::doc}}\label{\detokenize{releases:releases}}\label{\detokenize{releases:id1}}
+\label{\detokenize{releases:id1}}\label{\detokenize{releases::doc}}\label{\detokenize{releases:releases}}
+
+\section{v1.2.1 - Efficiency update}
+\label{\detokenize{releases:v1-2-1-efficiency-update}}\begin{itemize}
+\item {} 
+RAxML now evaluates all three tree configurations in the same program call.  This reduces RAxML calls and increases efficiency.
+
+\item {} 
+Clarification in the manual that RAxML 8.1+ is required for the program to execute correctly.
+
+\end{itemize}
+
 
 \section{v1.2 - Major Update}
 \label{\detokenize{releases:v1-2-major-update}}\begin{itemize}

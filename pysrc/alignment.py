@@ -109,7 +109,6 @@ class Alignment(object):
         with open(params['genetrees_file_path']) as gfile:
             for line in gfile:
                 entry = [x.strip() for x in line.rstrip().split(',')]
-                # print(entry)
                 gname = entry[1].split("=")[0].strip()
                 coords = entry[1].split("=")[1].strip().split('-')
                 self.partitions[gname] = (int(coords[0]), int(coords[1]))

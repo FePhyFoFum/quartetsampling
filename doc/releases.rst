@@ -4,6 +4,11 @@
 Releases
 ########
 
+v1.2.1 - Efficiency update
+======
+* RAxML now evaluates all three tree configurations in the same program call.  This reduces RAxML calls and increases efficiency.
+* Clarification in the manual that RAxML 8.1+ is required for the program to execute correctly.
+
 v1.2 - Major Update
 ======
 * In order to make all four QS components have a "perfect" score of 1, the Quartet Uncertainty (QU) and Quartet Differential (QD) scores have been inverted. QU is now known Quartet as Informativeness (QI) is the inverse measure (where QI = 1 - QU).  QD is also now inverted in scale, so that 1.0 means no differential in the discordant trees, and 0 means all one discdorant option.

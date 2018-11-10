@@ -20,14 +20,14 @@ No installation is required, quartetsampling scripts should work as long as Pyth
 
 Requirements
 ------------
-* Python 3.x (2.7 should also work, but 3.x recommended) https://www.python.org/downloads/
-* RAxML 8.x (7.x should also work, but 8.x recommended) https://sco.h-its.org/exelixis/web/software/raxml/index.html
+* Python 3.x (2.7 should also work, but 3.x strongly recommended for optimal parallelization) https://www.python.org/downloads/
+* RAxML 8.1+ (8.0.x and 7.x will not work) https://sco.h-its.org/exelixis/web/software/raxml/index.html
 
 **Optional, but recommended:**
 
 * PAUP  http://people.sc.fsu.edu/~dswofford/paup_test/ (required only if PAUP is used instead of RAxML)
 * Numpy http://www.numpy.org (required only for ``calc_qs_stats.py``)
-* Scipy https://www.scipy.org (required only if ``--calc-qdstats.py`` is activated)
+* Scipy https://www.scipy.org (required only if ``--calc-qdstats`` is activated)
 * Figtree http://tree.bio.ed.ac.uk/software/figtree/ (required to view FigTree output)
 
 Preparing your data
