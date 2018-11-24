@@ -56,6 +56,10 @@ class Alignment(object):
         firstentry = True
         self.min_overlap = params['min_overlap']
         for line in alnfile:
+            if line[0] == ">":
+                raise IOError("ERROR: The alignment file appears to be FASTA "
+                              "formatted!  Please use the utils/fasta2phy.py "
+                              "script to convert it to PHYLIP.")
             if firstline:
                 firstline = False
                 continue
