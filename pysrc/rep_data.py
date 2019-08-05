@@ -81,7 +81,7 @@ class DataStore():
             if params['verbose']:
                 print("---")
                 print("Seqnames: ", result['seq_names'])
-            if params['paup']:
+            if params['engine'] == 'paup':
                 # using paup
                 rep_info = result
             else:
@@ -310,7 +310,7 @@ def get_replicates_exhaustive(n_completed, results_queue, leafsets,
             params['temp_wd'],
             "temp_inseqs.{}".format(rep["unique_label"]))
         # write file for successful rep
-        if rep['paup'] is True:
+        if rep['engine'] == 'paup':
             write_paup(rep["aln_fname"], rep["seqs"],
                        datatype=rep["data_type"])
         else:
@@ -429,7 +429,7 @@ def get_replicates_random(n_completed, results_queue, leafsets,
                 params['temp_wd'],
                 "temp_inseqs.{}".format(rep["unique_label"]))
             # write file for successful rep
-            if rep['paup'] is True:
+            if rep['engine'] == 'paup':
                 write_paup(rep["aln_fname"], rep["seqs"],
                            datatype=rep['data_type'])
             else:
@@ -466,7 +466,78 @@ def get_replicates_random(n_completed, results_queue, leafsets,
     return replicates, repstats
 
 
-def process_replicate_raxml2lk(replicate):
+def process_replicate_raxml(replicate):
+    """Process individual replicate sampling"""
+    os.chdir(replicate["temp_wd"])
+    temp_file_paths = [replicate['aln_fname'],
+                       "{}.reduced".format(replicate['aln_fname'])]
+    # just alias dictionary elements for convenience
+    result = {"label": replicate['unique_label']}
+    result["seq_names"] = replicate["seq_names"].copy()
+    # generate a label that will be unique within this run
+    #  (but probably not among runs!)
+    temp_ml_search_label = "tts.{}".format(replicate["unique_label"])
+    engine_args = [replicate['engine_executable'],
+                   "-s", replicate['aln_fname'],
+                   "-m", replicate['engine_model'],
+                   "-T", "1",
+                   "-p", "11341",
+                   "--silent",
+                   "-F",
+                   "-n", temp_ml_search_label]
+    if replicate['using_partitions']:
+        temp_file_paths.extend([replicate['part_fname'],
+                                "{}.reduced".format(replicate['part_fname'])])
+        engine_args.extend(["-q", replicate["part_fname"]])
+    result["engine_args"] = " ".join(engine_args)
+    proc = subprocess.Popen(engine_args, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    serr, sout = proc.communicate()
+    if replicate['verbose'] is True:
+        if "fix your data" in serr.decode('utf-8'):
+            print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
+    if replicate['verbose']:
+        print('calling:{}'.format(result["engine_args"]))
+    result["label"] = replicate['unique_label']
+    best_tree = None
+    lpath = os.path.join(replicate['temp_wd'],
+                         "RAXML_info.tts.{}".format(result["label"]))
+    tpath = os.path.join(replicate['temp_wd'],
+                         "RAxML_result.tts.{}".format(result["label"]))
+    temp_file_paths.extend([lpath, tpath])
+    with open(tpath, "r") as tfile:
+        tline = tfile.readline()
+    restree = tree_reader.read_tree_string(tline)
+    likelihood1, likelihood2 = tree_utils.calc_biparts(restree)
+    if ("L1" in likelihood1[0] and "L2" in likelihood1[0]) or (
+            "R1" in likelihood1[0] and "R2" in likelihood1[0]):
+        best_tree = 0
+    elif ("L1" in likelihood1[0] and "R1" in likelihood1[0]) or (
+            "L2" in likelihood1[0] and "R2" in likelihood1[0]):
+        best_tree = 1
+    elif ("L1" in likelihood1[0] and "R2" in likelihood1[0]) or (
+            "L2" in likelihood1[0] and "R1" in likelihood1[0]):
+        best_tree = 2
+    if replicate['verbose']:
+        print("---")
+        print(best_tree, likelihood1, likelihood2)
+    result['diff_exceeds_cutoff'] = True
+    result['best_tree'] = best_tree
+    result['likelihood_diff'] = 0
+    if replicate['retain_temp'] is False:
+        for fpath in temp_file_paths:
+            if os.path.exists(fpath):
+                os.remove(fpath)
+    replicate["queue"].put(result)
+    # increment counter and update user feedback
+    replicate["n_completed"].value += 1
+    replicate["lock"].acquire()
+    sys.stdout.flush()
+    replicate['lock'].release()
+    return ''
+
+
+def process_replicate_raxml_lrt(replicate):
     """Process individual replicate sampling"""
     os.chdir(replicate["temp_wd"])
     # just alias dictionary elements for convenience
@@ -480,29 +551,29 @@ def process_replicate_raxml2lk(replicate):
     temp_ml_search_label = "tts.{}".format(replicate["unique_label"])
     # this will test the three topologies
     # test alignment readability by raxml, also filters missing columns
-    base_raxml_args = [replicate['raxml_executable'],
-                       "-s", replicate['aln_fname'],
-                       "-m", replicate['raxml_model'],
-                       "-T", "1",
-                       "-p", "11341",
-                       "--silent",
-                       "-F",
-                       "-f", "N"]
+    base_engine_args = [replicate['engine_executable'],
+                        "-s", replicate['aln_fname'],
+                        "-m", replicate['engine_model'],
+                        "-T", "1",
+                        "-p", "11341",
+                        "--silent",
+                        "-F",
+                        "-f", "N"]
     if replicate['using_partitions']:
         temp_file_paths.extend([replicate['part_fname'],
                                 "{}.reduced".format(replicate['part_fname'])])
-        base_raxml_args.extend(["-q", replicate["part_fname"]])
+        base_engine_args.extend(["-q", replicate["part_fname"]])
     treelikelihoods = {0: 0, 1: 0, 2: 0}
     likelihood_diff_exceeds_cutoff = False
     # correct = None
-    raxml_args = base_raxml_args + [
+    engine_args = base_engine_args + [
         "-n", "{}".format(temp_ml_search_label),
         "-z", "test.trees"
         ]
-    result["raxml_args"] = " ".join(raxml_args)
+    result["engine_args"] = " ".join(engine_args)
     if replicate['verbose']:
-        print('calling: {}'.format(result["raxml_args"]))
-    proc = subprocess.Popen(raxml_args, stdout=subprocess.PIPE,
+        print('calling: {}'.format(result["engine_args"]))
+    proc = subprocess.Popen(engine_args, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     serr, sout = proc.communicate()
     if replicate['verbose'] is True:
@@ -560,7 +631,7 @@ def process_replicate_raxml2lk(replicate):
     return ''
 
 
-def process_replicate_raxml(replicate):
+def process_replicate_raxmlng(replicate):
     """Process individual replicate sampling"""
     os.chdir(replicate["temp_wd"])
     temp_file_paths = [replicate['aln_fname'],
@@ -570,34 +641,32 @@ def process_replicate_raxml(replicate):
     result["seq_names"] = replicate["seq_names"].copy()
     # generate a label that will be unique within this run
     #  (but probably not among runs!)
-    temp_ml_search_label = "tts.{}".format(replicate["unique_label"])
-    raxml_args = [replicate['raxml_executable'],
-                  "-s", replicate['aln_fname'],
-                  "-m", replicate['raxml_model'],
-                  "-T", "1",
-                  "-p", "11341",
-                  "--silent",
-                  "-F",
-                  "-n", temp_ml_search_label]
+    # temp_ml_search_label = "tts.{}".format(replicate["unique_label"])
+    engine_args = [replicate['engine_executable'],
+                   "--msa", replicate['aln_fname'],
+                   "--threads", "1",
+                   "--seed", "11341"]
     if replicate['using_partitions']:
         temp_file_paths.extend([replicate['part_fname'],
                                 "{}.reduced".format(replicate['part_fname'])])
-        raxml_args.extend(["-q", replicate["part_fname"]])
-    result["raxml_args"] = " ".join(raxml_args)
-    proc = subprocess.Popen(raxml_args, stdout=subprocess.PIPE,
+        engine_args.extend(["--model", replicate["part_fname"]])
+    else:
+        engine_args.extend(["--model", replicate['engine_model']])
+    result["engine_args"] = " ".join(engine_args)
+    proc = subprocess.Popen(engine_args, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     serr, sout = proc.communicate()
     if replicate['verbose'] is True:
         if "fix your data" in serr.decode('utf-8'):
             print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
     if replicate['verbose']:
-        print('calling:{}'.format(result["raxml_args"]))
+        print('calling:{}'.format(result["engine_args"]))
     result["label"] = replicate['unique_label']
     best_tree = None
     lpath = os.path.join(replicate['temp_wd'],
-                         "RAXML_info.tts.{}".format(result["label"]))
+                         "{}.raxml.log".format(replicate['aln_fname']))
     tpath = os.path.join(replicate['temp_wd'],
-                         "RAxML_result.tts.{}".format(result["label"]))
+                         "{}.raxml.bestTree".format(replicate['aln_fname']))
     temp_file_paths.extend([lpath, tpath])
     with open(tpath, "r") as tfile:
         tline = tfile.readline()
@@ -631,6 +700,94 @@ def process_replicate_raxml(replicate):
     return ''
 
 
+def process_replicate_raxmlng_lrt(replicate):
+    """Process individual replicate sampling"""
+    os.chdir(replicate["temp_wd"])
+    # just alias dictionary elements for convenience
+    result = {}
+    result["label"] = replicate['unique_label']
+    temp_file_paths = [replicate['aln_fname'],
+                       "{}.reduced".format(replicate['aln_fname'])]
+    result["seq_names"] = replicate["seq_names"].copy()
+    # generate a label that will be unique within this run
+    #  (but probably not among runs!)
+    # temp_ml_search_label = "tts.{}".format(replicate["unique_label"])
+    # this will test the three topologies
+    # test alignment readability by raxml, also filters missing columns
+    base_engine_args = [replicate['engine_executable'],
+                        "--evaluate",
+                        "--msa", replicate['aln_fname'],
+                        "--threads", "1",
+                        "--seed", "11341",
+                        "--tree", "test.trees"]
+    if replicate['using_partitions']:
+        temp_file_paths.extend([replicate['part_fname'],
+                                "{}.reduced".format(replicate['part_fname'])])
+        base_engine_args.extend(["-q", replicate["part_fname"]])
+    else:
+        base_engine_args.extend(["--model", replicate['engine_model']])
+    treelikelihoods = {0: 0, 1: 0, 2: 0}
+    likelihood_diff_exceeds_cutoff = False
+    # correct = None
+    result["engine_args"] = " ".join(base_engine_args)
+    if replicate['verbose']:
+        print('calling: {}'.format(result["engine_args"]))
+    proc = subprocess.Popen(base_engine_args, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    serr, sout = proc.communicate()
+    if replicate['verbose'] is True:
+        if "fix your data" in serr.decode('utf-8'):
+            print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
+    lpath = os.path.join(replicate['temp_wd'],
+                         "{}.raxml.log".format(replicate['aln_fname']))
+    tpath = os.path.join(replicate['temp_wd'],
+                         "{}.raxml.bestTree".format(replicate['aln_fname']))
+    temp_file_paths.extend([lpath, tpath])
+    if not os.path.exists(lpath):
+        if replicate['ignore_error'] is False:
+            raise RuntimeError("'{}' does not exist".format(lpath))
+    with open(lpath, "r") as info_result:
+        for line in info_result:
+            if "Tree #1, final logLikelihood:" in line:
+                treelikelihoods[0] = (
+                    -1 * float(line.split(" ")[5]))
+            if "Tree #2, final logLikelihood:" in line:
+                treelikelihoods[1] = (
+                    -1 * float(line.split(" ")[5]))
+            if "Tree #3, final logLikelihood:" in line:
+                treelikelihoods[2] = (
+                    -1 * float(line.split(" ")[5]))
+    srt_likelihoods = [(treelikelihoods[x], x) for x in (0, 1, 2)]
+    srt_likelihoods.sort()
+    likelihood_diff = abs(srt_likelihoods[0][0] - srt_likelihoods[1][0])
+    if likelihood_diff > replicate['lnlikethresh']:
+        likelihood_diff_exceeds_cutoff = True
+    if replicate['verbose']:
+        print("-" * 5)
+        print("Filename: ", lpath)
+        print("Likelihoods:", treelikelihoods)
+        print("Lowest L:", srt_likelihoods[0][1], "; Diff = ", likelihood_diff,
+              "; Exceeds cutoff = ", likelihood_diff_exceeds_cutoff)
+    result["diff_exceeds_cutoff"] = likelihood_diff_exceeds_cutoff
+    result["best_tree"] = srt_likelihoods[0][1]
+    result["likelihood_diff"] = likelihood_diff
+    if replicate['retain_temp'] is False:
+        for fpath in temp_file_paths:
+            if os.path.exists(fpath):
+                if replicate['verbose'] is True:
+                    print("REMOVED", fpath)
+                os.remove(fpath)
+            elif replicate['verbose'] is True:
+                print("NOTFOUND", fpath)
+    replicate["queue"].put(result)
+    # increment counter and update user feedback
+    replicate["n_completed"].value += 1
+    replicate["lock"].acquire()
+    sys.stdout.flush()
+    replicate['lock'].release()
+    return ''
+
+
 def process_replicate_paup(replicate):
     """Process individual replicate sampling"""
     os.chdir(replicate["temp_wd"])
@@ -643,7 +800,7 @@ def process_replicate_paup(replicate):
     result["seq_names"] = replicate["seq_names"].copy()
     # write the alignment    result["label"] = replicate['unique_label']
     # this will test the three topologies
-    paup_args = [replicate["paup_executable"], replicate['aln_fname']]
+    paup_args = [replicate["engine_executable"], replicate['aln_fname']]
     result["paup_args"] = " ".join(paup_args)
     if replicate['verbose']:
         print('calling: ', result['paup_args'])
@@ -678,6 +835,167 @@ def process_replicate_paup(replicate):
         for fpath in temp_file_paths:
             if os.path.exists(fpath):
                 os.remove(fpath)
+    replicate["queue"].put(result)
+    # increment counter and update user feedback
+    replicate["n_completed"].value += 1
+    replicate["lock"].acquire()
+    sys.stdout.flush()
+    replicate['lock'].release()
+    return ''
+
+
+def process_replicate_iqtree(replicate):
+    """Process individual replicate sampling"""
+    os.chdir(replicate["temp_wd"])
+    temp_file_paths = [replicate['aln_fname']]
+    # just alias dictionary elements for convenience
+    result = {"label": replicate['unique_label']}
+    result["seq_names"] = replicate["seq_names"].copy()
+    # generate a label that will be unique within this run
+    #  (but probably not among runs!)
+    # temp_ml_search_label = "tts.{}".format(replicate["unique_label"])
+    engine_args = [replicate['engine_executable'],
+                   "-s", replicate['aln_fname'],
+                   "-nt", "1",
+                   "-seed", "11341",
+                   "-m", replicate['engine_model']]
+    if replicate['using_partitions']:
+        temp_file_paths.extend([replicate['part_fname']])
+                               #"{}.reduced".format(replicate['part_fname'])])
+        engine_args.extend(["-q", replicate["part_fname"]])
+    result["engine_args"] = " ".join(engine_args)
+    proc = subprocess.Popen(engine_args, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    serr, sout = proc.communicate()
+    if replicate['verbose'] is True:
+        if "fix your data" in serr.decode('utf-8'):
+            print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
+    if replicate['verbose']:
+        print('calling:{}'.format(result["engine_args"]))
+    result["label"] = replicate['unique_label']
+    best_tree = None
+    lpath = os.path.join(replicate['temp_wd'],
+                         "{}.iqtree".format(replicate['aln_fname']))
+    tpath = os.path.join(replicate['temp_wd'],
+                         "{}.iqtree.treefile".format(replicate['aln_fname']))
+    temp_file_paths.extend([lpath, tpath])
+    temp_file_paths.extend([
+        os.path.join(replicate['temp_wd'],
+                     "{}.{}".format(replicate['aln_fname'], x))
+        for x in ('bionj', 'mldist', 'trees', 'ckp.gz', 'log')])
+    with open(tpath, "r") as tfile:
+        tline = tfile.readline()
+    restree = tree_reader.read_tree_string(tline)
+    likelihood1, likelihood2 = tree_utils.calc_biparts(restree)
+    if ("L1" in likelihood1[0] and "L2" in likelihood1[0]) or (
+            "R1" in likelihood1[0] and "R2" in likelihood1[0]):
+        best_tree = 0
+    elif ("L1" in likelihood1[0] and "R1" in likelihood1[0]) or (
+            "L2" in likelihood1[0] and "R2" in likelihood1[0]):
+        best_tree = 1
+    elif ("L1" in likelihood1[0] and "R2" in likelihood1[0]) or (
+            "L2" in likelihood1[0] and "R1" in likelihood1[0]):
+        best_tree = 2
+    if replicate['verbose']:
+        print("---")
+        print(best_tree, likelihood1, likelihood2)
+    result['diff_exceeds_cutoff'] = True
+    result['best_tree'] = best_tree
+    result['likelihood_diff'] = 0
+    if replicate['retain_temp'] is False:
+        for fpath in temp_file_paths:
+            if os.path.exists(fpath):
+                os.remove(fpath)
+    replicate["queue"].put(result)
+    # increment counter and update user feedback
+    replicate["n_completed"].value += 1
+    replicate["lock"].acquire()
+    sys.stdout.flush()
+    replicate['lock'].release()
+    return ''
+
+
+def process_replicate_iqtree_lrt(replicate):
+    """Process individual replicate sampling"""
+    os.chdir(replicate["temp_wd"])
+    # just alias dictionary elements for convenience
+    result = {}
+    result["label"] = replicate['unique_label']
+    temp_file_paths = [replicate['aln_fname']]
+    result["seq_names"] = replicate["seq_names"].copy()
+    # generate a label that will be unique within this run
+    #  (but probably not among runs!)
+    # temp_ml_search_label = "tts.{}".format(replicate["unique_label"])
+    # this will test the three topologies
+    # test alignment readability by raxml, also filters missing columns
+    base_engine_args = [replicate['engine_executable'],
+                        "-s", replicate['aln_fname'],
+                        "-nt", "1",
+                        "-seed", "11341",
+                        "-z", "test.trees"]
+    if replicate['using_partitions']:
+        temp_file_paths.extend([replicate['part_fname'],
+                                "{}.reduced".format(replicate['part_fname'])])
+        base_engine_args.extend(["-q", replicate["part_fname"]])
+    else:
+        base_engine_args.extend(["-m", replicate['engine_model']])
+    treelikelihoods = {0: 0, 1: 0, 2: 0}
+    likelihood_diff_exceeds_cutoff = False
+    # correct = None
+    result["engine_args"] = " ".join(base_engine_args)
+    if replicate['verbose']:
+        print('calling: {}'.format(result["engine_args"]))
+    proc = subprocess.Popen(base_engine_args, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    serr, sout = proc.communicate()
+    if replicate['verbose'] is True:
+        if "fix your data" in serr.decode('utf-8'):
+            print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
+    lpath = os.path.join(replicate['temp_wd'],
+                         "{}.log".format(replicate['aln_fname']))
+    tpath = os.path.join(replicate['temp_wd'],
+                         "{}.iqtree".format(replicate['aln_fname']))
+    temp_file_paths.extend([lpath, tpath])
+    temp_file_paths.extend([
+        os.path.join(replicate['temp_wd'],
+                     "{}.{}".format(replicate['aln_fname'], x))
+        for x in ('bionj', 'mldist', 'trees', 'ckp.gz')])
+    if not os.path.exists(lpath):
+        if replicate['ignore_error'] is False:
+            raise RuntimeError("'{}' does not exist".format(lpath))
+    with open(lpath, "r") as info_result:
+        for line in info_result:
+            if "Tree 1 / LogL:" in line:
+                treelikelihoods[0] = (
+                    -1 * float(line.split(" ")[4]))
+            if "Tree 2 / LogL:" in line:
+                treelikelihoods[1] = (
+                    -1 * float(line.split(" ")[4]))
+            if "Tree 3 / LogL:" in line:
+                treelikelihoods[2] = (
+                    -1 * float(line.split(" ")[4]))
+    srt_likelihoods = [(treelikelihoods[x], x) for x in (0, 1, 2)]
+    srt_likelihoods.sort()
+    likelihood_diff = abs(srt_likelihoods[0][0] - srt_likelihoods[1][0])
+    if likelihood_diff > replicate['lnlikethresh']:
+        likelihood_diff_exceeds_cutoff = True
+    if replicate['verbose']:
+        print("-" * 5)
+        print("Filename: ", lpath)
+        print("Likelihoods:", treelikelihoods)
+        print("Lowest L:", srt_likelihoods[0][1], "; Diff = ", likelihood_diff,
+              "; Exceeds cutoff = ", likelihood_diff_exceeds_cutoff)
+    result["diff_exceeds_cutoff"] = likelihood_diff_exceeds_cutoff
+    result["best_tree"] = srt_likelihoods[0][1]
+    result["likelihood_diff"] = likelihood_diff
+    if replicate['retain_temp'] is False:
+        for fpath in temp_file_paths:
+            if os.path.exists(fpath):
+                if replicate['verbose'] is True:
+                    print("REMOVED", fpath)
+                os.remove(fpath)
+            elif replicate['verbose'] is True:
+                print("NOTFOUND", fpath)
     replicate["queue"].put(result)
     # increment counter and update user feedback
     replicate["n_completed"].value += 1

@@ -27,8 +27,8 @@ Parameters
 
 
 
-``-a/--alignment`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``--align/--alignment`` (required)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** Alignment file in "relaxed phylip" format, as used by RAxML.
 
@@ -36,17 +36,8 @@ Parameters
 
 
 
-``-t/--tree`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-**Description:** The input tree in Newick (parenthetical) format.
-
-**Type:** file path; **Default:** None
-
-
-
-``-N/--number-of-reps`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``--reps/--number-of-reps`` (required)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** The number of replicate quartet topology searches to be performed at each node.
 
@@ -54,12 +45,21 @@ Parameters
 
 
 
-``-T/--number-of-threads`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``--threads/--number-of-threads`` (required)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** The number of parallel threads to be used by Python for quartet topology searches.
 
 **Type:** integer; **Default:** 1
+
+
+
+``--tree`` (required)
+^^^^^^^^^^^^^^^^^^^^^
+
+**Description:** The input tree in Newick (parenthetical) format.
+
+**Type:** file path; **Default:** None
 
 
 
@@ -72,8 +72,17 @@ Parameters
 
 
 
-``-d/--data-type``
-^^^^^^^^^^^^^^^^^^
+``--clade``
+^^^^^^^^^^^
+
+**Description:** Conduct analysis on specific clade identified by CSV taxon list
+
+**Type:** string; **Default:** None
+
+
+
+``--data-type``
+^^^^^^^^^^^^^^^
 
 **Description:** (nuc)leotide, (amino) acid, or (cat)egorical data
 
@@ -82,17 +91,36 @@ Parameters
 **Choices:** ('nuc', 'amino', 'cat')
 
 
-``-e/--temp-dir``
+``--engine``
+^^^^^^^^^^^^
+
+**Description:** Name of the program to use to infer trees or evaluate tree model likelihoods.
+
+**Type:** None; **Default:** ('raxml-ng',)
+
+**Choices:** ('raxml-ng', 'raxml', 'paup', 'iqtree')
+
+
+``--engine-exec``
 ^^^^^^^^^^^^^^^^^
 
-**Description:** A directory to which temporary files will be saved. If not supplied, 'QuartetSampling' will be created in the current working directory. When specifying a custom temporary output the characters 'QuartetSampling' must appear in the directory name to prevent accidental file deletion. (default='./QuartetSampling'
+**Description:** Full file path of the tree inference or likelihood evaluation engine.
 
-**Type:** file path; **Default:** None
+**Type:** None; **Default:** None
 
 
 
-``-g/--genetrees``
+``--engine-model``
 ^^^^^^^^^^^^^^^^^^
+
+**Description:** Advanced: specify a custom model name for the tree engine
+
+**Type:** None; **Default:** None
+
+
+
+``--genetrees``
+^^^^^^^^^^^^^^^
 
 **Description:** Use partitions file (RAxML format) to divide the alignment into separate gene tree regions. Gene alignments will be sampled random for the quartet topology searches.
 
@@ -106,6 +134,15 @@ Parameters
 **Description:** Ignore RAxML and PAUP erroneous runs
 
 **Type:** boolean flag
+
+
+
+``--lnlike/--lnlike-thresh``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Description:** The lnlike threshhold that is the minimum value by which the log-likelihood value of the best-likelihood tree must be higher than the second-best-likelihood tree for the replicate to register as the best-likelihood topology rather than 'uncertain'. If set to zero, this turns off likelihood evaluation mode and invokes tree inference mode where a tree is simply inferred from the alignment without considering likelihood (QI values are N/A in this case).
+
+**Type:** float; **Default:** 2.0
 
 
 
@@ -127,35 +164,17 @@ Parameters
 
 
 
-``-o/--results-dir``
-^^^^^^^^^^^^^^^^^^^^
+``--min-overlap``
+^^^^^^^^^^^^^^^^^
 
-**Description:** A directory to which output files will be saved. If not supplied, the current working directory will be used. (default is current folder).
-
-**Type:** file path; **Default:** None
-
-
-
-``-p/--stop-node-number``
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-**Description:** An integer denoting the node at which to stop. Will include nodes with indices <= the stop node number. This argument may be used to limit the length of a given run in case only a certain part of the tree is of interest. Nodes will be read from topologically identical (and isomorphic!) input trees in deterministic order.
+**Description:** The minimum sites required to be sampled for all taxa in a given quartet.
 
 **Type:** integer; **Default:** None
 
 
 
-``--paup-executable``
-^^^^^^^^^^^^^^^^^^^^^
-
-**Description:** The name or path of the PAUP executable to be used for calculated quartets.
-
-**Type:** None; **Default:** ['paup']
-
-
-
-``-q/--partitions``
-^^^^^^^^^^^^^^^^^^^
+``--partitions``
+^^^^^^^^^^^^^^^^
 
 **Description:** Partitions file in RAxML format. If omitted then the entire alignment will be treated as one partition for all quartet replicate topology searches.
 
@@ -163,8 +182,8 @@ Parameters
 
 
 
-``-r/--result-prefix``
-^^^^^^^^^^^^^^^^^^^^^^
+``--result-prefix``
+^^^^^^^^^^^^^^^^^^^
 
 **Description:** A prefix to put on the result files.
 
@@ -172,12 +191,12 @@ Parameters
 
 
 
-``--raxml-model``
+``--results-dir``
 ^^^^^^^^^^^^^^^^^
 
-**Description:** Advanced: specify a custom RAxML model name for the raxml '-m' parameter
+**Description:** A directory to which output files will be saved. If not supplied, the current working directory will be used. (default is current folder).
 
-**Type:** None; **Default:** None
+**Type:** file path; **Default:** None
 
 
 
@@ -190,8 +209,8 @@ Parameters
 
 
 
-``-s/--start-node-number``
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+``--start-node-number``
+^^^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** An integer denoting the node to which to start from. Nodes will be read from topologically identical (and isomorphic!) input trees in deterministic order, so this argument may be  used to restart at an intermediate position (in case the previous run was canceled before completion, for example).
 
@@ -199,8 +218,26 @@ Parameters
 
 
 
-``-v/--verbose``
-^^^^^^^^^^^^^^^^
+``--stop-node-number``
+^^^^^^^^^^^^^^^^^^^^^^
+
+**Description:** An integer denoting the node at which to stop. Will include nodes with indices <= the stop node number. This argument may be used to limit the length of a given run in case only a certain part of the tree is of interest. Nodes will be read from topologically identical (and isomorphic!) input trees in deterministic order.
+
+**Type:** integer; **Default:** None
+
+
+
+``--temp-dir``
+^^^^^^^^^^^^^^
+
+**Description:** A directory to which temporary files will be saved. If not supplied, 'QuartetSampling' will be created in the current working directory. When specifying a custom temporary output the characters 'QuartetSampling' must appear in the directory name to prevent accidental file deletion. (default='./QuartetSampling'
+
+**Type:** file path; **Default:** None
+
+
+
+``--verbose``
+^^^^^^^^^^^^^
 
 **Description:** Provide more verbose output if specified.
 
@@ -208,57 +245,12 @@ Parameters
 
 
 
-``-C/--clade``
-^^^^^^^^^^^^^^
-
-**Description:** Conduct analysis on specific clade identified by CSV taxon list
-
-**Type:** string; **Default:** None
-
-
-
-``-L/--lnlike-thresh``
-^^^^^^^^^^^^^^^^^^^^^^
-
-**Description:** The lnlike threshhold that is the minimum value by which the log-likelihood value of the best-likelihood tree must be higher than the second-best-likelihood tree for the replicate to register as the best-likelihood topology rather than 'uncertain'. If set to zero, this turns off likelihood evaluation mode and invokes tree inference mode where a tree is simply inferred from the alignment without considering likelihood (QI values are N/A in this case).
-
-**Type:** float; **Default:** 2.0
-
-
-
-``-O/--min-overlap``
-^^^^^^^^^^^^^^^^^^^^
-
-**Description:** The minimum sites required to be sampled for all taxa in a given quartet.
-
-**Type:** integer; **Default:** None
-
-
-
-``-P/--paup``
+``--verbout``
 ^^^^^^^^^^^^^
-
-**Description:** Use PAUP instead of RAxML.
-
-**Type:** boolean flag
-
-
-
-``-V/--verbout``
-^^^^^^^^^^^^^^^^
 
 **Description:** Provide output of the frequencies of each topology and QC.
 
 **Type:** boolean flag
-
-
-
-``-X/--raxml-executable``
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-**Description:** The name (or absolute path) of the raxml executable to be used for calculating likelihoods on quartet topologies.(default='raxml')
-
-**Type:** None; **Default:** None
 
 
 .. merge_output:
@@ -287,8 +279,8 @@ Parameters
 
 
 
-``-d/--nodedata`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``--nodedata`` (required)
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** file containing paths of one or moreRESULT.node.score.csv files
 
@@ -296,8 +288,8 @@ Parameters
 
 
 
-``-o/--out`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^
+``--out`` (required)
+^^^^^^^^^^^^^^^^^^^^
 
 **Description:** new output files prefix
 
@@ -305,8 +297,8 @@ Parameters
 
 
 
-``-t/--tree`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^
+``--tree`` (required)
+^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** tree file in Newick format
 
@@ -314,8 +306,8 @@ Parameters
 
 
 
-``-c/--clade``
-^^^^^^^^^^^^^^
+``--clade``
+^^^^^^^^^^^
 
 **Description:** ==SUPPRESS==
 
@@ -323,17 +315,8 @@ Parameters
 
 
 
-``-p/--stopk``
-^^^^^^^^^^^^^^
-
-**Description:** ==SUPPRESS==
-
-**Type:** integer; **Default:** None
-
-
-
-``-s/--startk``
-^^^^^^^^^^^^^^^
+``--startk``
+^^^^^^^^^^^^
 
 **Description:** ==SUPPRESS==
 
@@ -341,8 +324,17 @@ Parameters
 
 
 
-``-v/--verbose``
-^^^^^^^^^^^^^^^^
+``--stopk``
+^^^^^^^^^^^
+
+**Description:** ==SUPPRESS==
+
+**Type:** integer; **Default:** None
+
+
+
+``--verbose``
+^^^^^^^^^^^^^
 
 **Description:** None
 
@@ -375,8 +367,8 @@ Parameters
 
 
 
-``-c/--clade``
-^^^^^^^^^^^^^^
+``--clade``
+^^^^^^^^^^^
 
 **Description:** ==SUPPRESS==
 
@@ -384,8 +376,8 @@ Parameters
 
 
 
-``-d/--data``
-^^^^^^^^^^^^^
+``--data``
+^^^^^^^^^^
 
 **Description:** CSV output from quartet_sampling (RESULT.node.score.csv)
 
@@ -393,17 +385,8 @@ Parameters
 
 
 
-``-p/--stopk``
-^^^^^^^^^^^^^^
-
-**Description:** ==SUPPRESS==
-
-**Type:** integer; **Default:** None
-
-
-
-``-s/--startk``
-^^^^^^^^^^^^^^^
+``--startk``
+^^^^^^^^^^^^
 
 **Description:** ==SUPPRESS==
 
@@ -411,8 +394,17 @@ Parameters
 
 
 
-``-t/--tree``
-^^^^^^^^^^^^^
+``--stopk``
+^^^^^^^^^^^
+
+**Description:** ==SUPPRESS==
+
+**Type:** integer; **Default:** None
+
+
+
+``--tree``
+^^^^^^^^^^
 
 **Description:** input tree in newick format
 
@@ -420,8 +412,8 @@ Parameters
 
 
 
-``-v/--verbose``
-^^^^^^^^^^^^^^^^
+``--verbose``
+^^^^^^^^^^^^^
 
 **Description:** verbose screen output
 
@@ -452,8 +444,8 @@ Parameters
 
 
 
-``-d/--data`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^
+``--data`` (required)
+^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** RESULT.node.score.csv file output fromquartet_sampling.py
 
@@ -461,8 +453,8 @@ Parameters
 
 
 
-``-c/--clade``
-^^^^^^^^^^^^^^
+``--clade``
+^^^^^^^^^^^
 
 **Description:** specify a clade using a comma-separatedlist of 2+ descendant taxa
 
@@ -470,8 +462,8 @@ Parameters
 
 
 
-``-o/--out``
-^^^^^^^^^^^^
+``--out``
+^^^^^^^^^
 
 **Description:** output file path for statistics
 
@@ -479,17 +471,8 @@ Parameters
 
 
 
-``-p/--stopk``
-^^^^^^^^^^^^^^
-
-**Description:** stopping branch numerical index
-
-**Type:** integer; **Default:** None
-
-
-
-``-s/--startk``
-^^^^^^^^^^^^^^^
+``--startk``
+^^^^^^^^^^^^
 
 **Description:** starting branch numerical index
 
@@ -497,8 +480,17 @@ Parameters
 
 
 
-``-v/--verbose``
-^^^^^^^^^^^^^^^^
+``--stopk``
+^^^^^^^^^^^
+
+**Description:** stopping branch numerical index
+
+**Type:** integer; **Default:** None
+
+
+
+``--verbose``
+^^^^^^^^^^^^^
 
 **Description:** verbose screen output
 

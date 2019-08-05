@@ -6,17 +6,18 @@ Quartet Sampling is a method to analyze molecular phylogenies by calculating bra
 
 ## Usage ##
 
-See the manual for Quartet Sampling (https://github.com/FePhyFoFum/quartetsampling/blob/master/quartetsampling.pdf).
+For complete details, see the manual for Quartet Sampling (https://github.com/FePhyFoFum/quartetsampling/blob/master/quartetsampling.pdf).
 
 
 ## How to Cite ##
 
-James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith. 2018. Quartet Sampling distinguishes lack of support from conflicting support in the green plant tree of life. American Journal of Botany. doi:10.1002/ajb2.1016
+James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith. 2018. Quartet Sampling distinguishes lack of support from conflicting support in the green plant tree of life. American Journal of Botany. 105(3): 385–403. doi:10.1002/ajb2.1016
 
 Link to publication: http://dx.doi.org/10.1002/ajb2.1016
 
 Please also include the URL (https://www.github.com/fephyfofum/quartetsampling).
 
+**Be sure also to cite RAxML-ng, RAxML, PAUP, or IQ-TREE** (depending on which engine you use).
 
 ## Contributors ##
 

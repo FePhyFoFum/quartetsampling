@@ -24,8 +24,8 @@ Parameters
 
 
 
-``-c/--clade``
-^^^^^^^^^^^^^^
+``--clade``
+^^^^^^^^^^^
 
 **Description:** ==SUPPRESS==
 
@@ -33,8 +33,8 @@ Parameters
 
 
 
-``-d/--data``
-^^^^^^^^^^^^^
+``--data``
+^^^^^^^^^^
 
 **Description:** CSV output from quartet_sampling (RESULT.node.score.csv)
 
@@ -42,17 +42,8 @@ Parameters
 
 
 
-``-p/--stopk``
-^^^^^^^^^^^^^^
-
-**Description:** ==SUPPRESS==
-
-**Type:** integer; **Default:** None
-
-
-
-``-s/--startk``
-^^^^^^^^^^^^^^^
+``--startk``
+^^^^^^^^^^^^
 
 **Description:** ==SUPPRESS==
 
@@ -60,8 +51,17 @@ Parameters
 
 
 
-``-t/--tree``
-^^^^^^^^^^^^^
+``--stopk``
+^^^^^^^^^^^
+
+**Description:** ==SUPPRESS==
+
+**Type:** integer; **Default:** None
+
+
+
+``--tree``
+^^^^^^^^^^
 
 **Description:** input tree in newick format
 
@@ -69,8 +69,8 @@ Parameters
 
 
 
-``-v/--verbose``
-^^^^^^^^^^^^^^^^
+``--verbose``
+^^^^^^^^^^^^^
 
 **Description:** verbose screen output
 

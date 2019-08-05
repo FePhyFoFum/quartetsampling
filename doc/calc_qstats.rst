@@ -22,8 +22,8 @@ Parameters
 
 
 
-``-d/--data`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^
+``--data`` (required)
+^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** RESULT.node.score.csv file output fromquartet_sampling.py
 
@@ -31,8 +31,8 @@ Parameters
 
 
 
-``-c/--clade``
-^^^^^^^^^^^^^^
+``--clade``
+^^^^^^^^^^^
 
 **Description:** specify a clade using a comma-separatedlist of 2+ descendant taxa
 
@@ -40,8 +40,8 @@ Parameters
 
 
 
-``-o/--out``
-^^^^^^^^^^^^
+``--out``
+^^^^^^^^^
 
 **Description:** output file path for statistics
 
@@ -49,17 +49,8 @@ Parameters
 
 
 
-``-p/--stopk``
-^^^^^^^^^^^^^^
-
-**Description:** stopping branch numerical index
-
-**Type:** integer; **Default:** None
-
-
-
-``-s/--startk``
-^^^^^^^^^^^^^^^
+``--startk``
+^^^^^^^^^^^^
 
 **Description:** starting branch numerical index
 
@@ -67,8 +58,17 @@ Parameters
 
 
 
-``-v/--verbose``
-^^^^^^^^^^^^^^^^
+``--stopk``
+^^^^^^^^^^^
+
+**Description:** stopping branch numerical index
+
+**Type:** integer; **Default:** None
+
+
+
+``--verbose``
+^^^^^^^^^^^^^
 
 **Description:** verbose screen output
 

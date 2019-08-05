@@ -17,10 +17,3 @@ Manual for quartetsampling
    faq
    releases
 
-******************
-Indices and tables
-******************
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

@@ -23,6 +23,13 @@ along with 'quartetsampling'.  If not, see <http://www.gnu.org/licenses/>.
 import os
 
 
+STANDARD_EXEC = {
+    'raxml-ng': 'raxml-ng',
+    'raxml': 'raxml',
+    'paup': 'paup',
+    'iqtree': 'iqtree'}
+
+
 class ParamSet(dict):
     """Parameter container dictionary"""
 
@@ -35,15 +42,10 @@ class ParamSet(dict):
         self['low_mem'] = args.low_mem
         self['retain_temp'] = args.retain_temp
         self['data_type'] = args.data_type[0]
-        self['raxml_model'] = 'GTRGAMMA'
-        if self['data_type'] == 'amino':
-            self['raxml_model'] = 'PROTGAMMAWAG'
-        elif self['data_type'] == 'cat':
-            self['raxml_model'] = 'BINGAMMA'
         self['calc_qdstats'] = args.calc_qdstats
         self['max_quartet_enumeration_threshold'] = 0.333333
         self['just_clade'] = args.clade is not None
-        self['nprocs'] = args.number_of_threads[0]
+        self['nprocs'] = args.threads[0]
         if args.partitions is not None and args.genetrees is not None:
             raise RuntimeError("Cannot use -g (--genetrees)"
                                "and -q (--partitions) simultaneously")
@@ -58,13 +60,34 @@ class ParamSet(dict):
         self['using_genetrees'] = self['genetrees_file_path'] is not None
         # RAxML and PAUP Settings
         self['ignore_error'] = args.ignore_errors
-        self['raxml_executable'] = (args.raxml_executable[0] if
-                                    args.raxml_executable is not None else
-                                    'raxml')
-        self['paup'] = bool(args.paup)
-        self['paup_executable'] = (args.paup_executable[0] if
-                                   args.paup_executable is not None else
-                                   'paup')
+        self['engine'] = (args.engine[0] if args.engine is not None else
+                          'raxml-ng')
+        self['engine_executable'] = (
+            args.engine_exec[0] if
+            args.engine_exec is not None else
+            STANDARD_EXEC[self['engine']])
+        if self['engine'] == 'raxml':
+            self['engine_model'] = 'GTRGAMMA'
+            if self['data_type'] == 'amino':
+                self['engine_model'] = 'PROTGAMMAWAG'
+            elif self['data_type'] == 'cat':
+                self['engine_model'] = 'BINGAMMA'
+        elif self['engine'] == 'iqtree':
+            self['engine_model'] = 'GTR+G4'
+            if self['data_type'] == 'amino':
+                self['engine_model'] = 'LG+G4'
+            elif self['data_type'] == 'cat':
+                self['engine_model'] = 'JC2'
+        else:
+            self['engine_model'] = 'GTR+G'
+            if self['data_type'] == 'cat':
+                self['engine_model'] = 'BIN+G'
+        if args.engine_model is not None:
+            self['engine_model'] = args.engine_model[0]
+        # Retained for backwards compat -- To be removed
+        #################################################
+        self['paup'] = bool(args.engine == 'paup')
+        ################################################
         if self['using_genetrees'] is True and self['low_mem']:
             raise RuntimeError("Cannot use -g (--genetrees) and"
                                "--low-mem simultaneously")
@@ -73,7 +96,7 @@ class ParamSet(dict):
         # sampling
 
         print("setting the number of threads to {}".format(self['nprocs']))
-        self['nreps'] = args.number_of_reps[0]
+        self['nreps'] = args.reps[0]
         print("setting the number of replicates to {}".format(self['nreps']))
         self['min_overlap'] = (args.min_overlap if
                                args.min_overlap is not None else 1)
@@ -145,11 +168,11 @@ class ParamSet(dict):
                       "(or fail) when max proportion of quartets to sample "
                       "is greater than {}".format(
                           default_mrsp))
-        if args.lnlike_thresh is not None:
-            if isinstance(args.lnlike_thresh, list):
-                self['lnlikethresh'] = args.lnlike_thresh[0]
+        if args.lnlike is not None:
+            if isinstance(args.lnlike, list):
+                self['lnlikethresh'] = args.lnlike[0]
             else:
-                self['lnlikethresh'] = args.lnlike_thresh
+                self['lnlikethresh'] = args.lnlike
             print("setting the minimum lnL thresh to {}".format(
                 self['lnlikethresh']))
         else:

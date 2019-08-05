@@ -10,9 +10,11 @@ Quartet Sampling (QS) is a method for quantifying branch support values for a ph
 
 How do I cite this program?
 ===========================
-James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith. 2018. Quartet Sampling distinguishes lack of support from conflicting support in the green plant tree of life. American Journal of Botany. doi:10.1002/ajb2.1016
+James B Pease, Joseph W Brown, Joseph F Walker, Cody E Hinchliff, Stephen A Smith. 2018. Quartet Sampling distinguishes lack of support from conflicting support in the green plant tree of life. American Journal of Botany. 105(3): 385–403. doi:10.1002/ajb2.1016
 
 Please also include the URL <https://www.github.com/fephyfofum/quartetsampling> in your methods section where the program is referenced.
+
+***Please also be sure to cite RAxML-ng, RAxML, PAUP, or IQ-TREE*** depending on which engine you use (the default is RAxML-ng).
 
 Installation
 ============
@@ -20,15 +22,19 @@ No installation is required, quartetsampling scripts should work as long as Pyth
 
 Requirements
 ------------
-* Python 3.x (2.7 should also work, but 3.x strongly recommended for optimal parallelization) https://www.python.org/downloads/
+* Python 3.x (2.7 may also work, but **3.x strongly recommended** for optimal parallelization) https://www.python.org/downloads/
+* RAxML-ng 0.9.0 (beta versions not guaranteed) https://github.com/amkozlov/raxml-ng
+
+*Alternative likelihood engines available*
 * RAxML 8.1+ (8.0.x and 7.x will not work) https://sco.h-its.org/exelixis/web/software/raxml/index.html
+* PAUP  http://people.sc.fsu.edu/~dswofford/paup_test/
+* IQ-TREE 1.6.x (earlier versions may not work) http://www.iqtree.org
 
-**Optional, but recommended:**
+*Optional, but recommended:**
 
-* PAUP  http://people.sc.fsu.edu/~dswofford/paup_test/ (required only if PAUP is used instead of RAxML)
 * Numpy http://www.numpy.org (required only for ``calc_qs_stats.py``)
 * Scipy https://www.scipy.org (required only if ``--calc-qdstats`` is activated)
-* Figtree http://tree.bio.ed.ac.uk/software/figtree/ (required to view FigTree output)
+* Figtree http://tree.bio.ed.ac.uk/software/figtree/ (view FigTree output)
 
 Preparing your data
 ===================
@@ -43,7 +49,7 @@ A phylogenetic tree in Newick (parenthetical) format should be used.  Branch len
 Sequence Alignment
 ------------------
 
-An alignment in Relaxed Phylip format (such as used for RAxML) is required.  The alignment can be DNA nucleotides or amino acids (use ``-A/--amino-acid`` in that case). If you have an alignment in FASTA format, we also include a script called ``utils/fasta2phy.py`` that will convert FASTA alignments to Relaxed Phylip. 
+An alignment in Relaxed Phylip format (such as used for RAxML) is required.  The alignment can be DNA nucleotides or amino acids (use ``--amino-acid`` in that case). If you have an alignment in FASTA format, we also include a script called ``utils/fasta2phy.py`` that will convert FASTA alignments to Relaxed Phylip. 
 
 .. important:: Labels for the alignment sequences must match the labels on tree terminal branches exactly. All tips in the phylogeny must have a sequence represented in the alignment.  Sequences appearing in the alignment, but not in the tree are allowed, and will be ignored.
 
@@ -64,24 +70,24 @@ Basic usage
 ===========
 
 ::
-  python quartet_sampling.py -t TREE.nwk -a ALIGNMENT.phy -N 100 -T 4 -L 2
+  python3 quartet_sampling.py --tree TREE.nwk --align ALIGNMENT.phy --reps 100 --threads 4 --lnlike 2
 
 Required Paramters
 ------------------
-``-t/--tree``: File containing a single Newick-formatted phylogeny.  
+``--tree``: File containing a single Newick-formatted phylogeny.  
 
-``-a/--alignment`` Phylip-formatted alignment containing one sequence for each tip in the phylogeny provided.
+``--align`` Phylip-formatted alignment containing one sequence for each tip in the phylogeny provided.
 
-``-N/--number-of-reps`` Number of replicates per branch to perform.
+``--reps`` Number of replicates per branch to perform.
 
-``-T/--number-of-threads`` Number of threads for Python to use in parallel (does not pass through to RAxML, this is for Python multiprocessing of per-branch replicates in parallel)
+``--threads`` Number of threads for Python to use in parallel (does not pass through to RAxML, this is for Python multiprocessing of per-branch replicates in parallel)
 
 Recommended Parameters
 ----------------------
 
-``-L/--lnlike-thresh``: log-likelihood threshold cutoff, determines the minimum difference by which the best likelihood tree must exceed the second-best likelihood tree when comparing the three possible topologies for a given quartet replicate.
+``--lnlike``: log-likelihood threshold cutoff, determines the minimum difference by which the best likelihood tree must exceed the second-best likelihood tree when comparing the three possible topologies for a given quartet replicate.
 
-.. note:: If ``-L/--lnlike-thresh`` is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Informativeness (QI) scores of 'NA' for all branches.
+.. note:: If ``--lnlike`` is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Informativeness (QI) scores of 'NA' for all branches.
 
 
 

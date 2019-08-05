@@ -16,15 +16,18 @@ import time
 from multiprocessing import Manager, Pool
 from shutil import copyfile
 from tree_data import TreeData, write_test_trees
-from rep_data import DataStore, process_replicate_raxml
-from rep_data import process_replicate_raxml2lk, process_replicate_paup
+from rep_data import DataStore
+from rep_data import process_replicate_raxml, process_replicate_raxml_lrt
+from rep_data import process_replicate_raxmlng, process_replicate_raxmlng_lrt
+from rep_data import process_replicate_iqtree, process_replicate_iqtree_lrt
+from rep_data import process_replicate_paup
 from rep_data import get_replicates_exhaustive, get_replicates_random
 from rep_data import write_run_stats
 from paramset import ParamSet, read_config
 from alignment import Alignment
 
 
-LICENSE = """
+LICENSE = """from rep_data import
 This file is part of 'quartetsampling'.
 
 'quartetsampling' is free software: you can redistribute it and/or modify
@@ -48,22 +51,28 @@ def generate_argparser():
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog=LICENSE)
-    parser.add_argument("-t", "--tree", type=open, nargs=1, required=True,
+    parser.add_argument("--tree", type=open, nargs=1, required=True,
+                        # Prev -t
                         help=("The input tree in Newick "
                               "(parenthetical) format."))
-    parser.add_argument("-a", "--alignment", type=open, nargs=1, required=True,
+    parser.add_argument("--align", "--alignment", type=open, nargs=1,
+                        # Prev -a
+                        required=True, dest="align",
                         help=("Alignment file in \"relaxed phylip\" format, "
                               "as used by RAxML."))
-    parser.add_argument("-N", "--number-of-reps", type=int, nargs=1,
-                        required=True, default=100,
+    parser.add_argument("--reps", "--number-of-reps", type=int, nargs=1,
+                        # Prev -N
+                        required=True, default=100, dest="reps",
                         help=("The number of replicate quartet topology "
                               "searches to be performed at each node."))
-    parser.add_argument("-T", "--number-of-threads", type=int, nargs=1,
-                        required=True, default=1,
+    parser.add_argument("--threads", "--number-of-threads", type=int, nargs=1,
+                        # Prev -T
+                        required=True, default=1, dest="threads",
                         help=("The number of parallel threads to be used "
                               "by Python for quartet topology searches."))
-    parser.add_argument("-L", "--lnlike-thresh", type=float, nargs=1,
-                        default=2.0,
+    parser.add_argument("--lnlike", "--lnlike-thresh", type=float, nargs=1,
+                        # Prev -L
+                        default=2.0, dest="lnlike",
                         help=("The lnlike threshhold that is the minimum "
                               "value by which the log-likelihood value "
                               "of the best-likelihood tree must be "
@@ -75,34 +84,42 @@ def generate_argparser():
                               "inference mode where a tree is simply inferred "
                               "from the alignment without considering "
                               "likelihood (QI values are N/A in this case)."))
-    parser.add_argument("-r", "--result-prefix", type=str, nargs=1,
+    parser.add_argument("--result-prefix", type=str, nargs=1,
+                        # Prev -r
                         help="A prefix to put on the result files.")
-    parser.add_argument("-d", "--data-type", choices=('nuc', 'amino', 'cat'),
+    parser.add_argument("--data-type", choices=('nuc', 'amino', 'cat'),
+                        # Prev -d
                         default=["nuc"], nargs=1,
                         help=("(nuc)leotide, (amino) acid, "
                               "or (cat)egorical data"))
-    parser.add_argument("-O", "--min-overlap", type=int,
+    parser.add_argument("--min-overlap", type=int,
+                        # Prev -O
                         help=("The minimum sites required to be sampled for "
                               "all taxa in a given quartet."))
-    parser.add_argument("-o", "--results-dir", type=os.path.abspath, nargs=1,
+    parser.add_argument("--results-dir", type=os.path.abspath, nargs=1,
+                        # Prev -o
                         help=("A directory to which output files will "
                               "be saved. If not supplied, the current working "
                               "directory will be used. (default is current "
                               "folder)."))
-    parser.add_argument("-V", "--verbout", action="store_true",
+    parser.add_argument("--verbout", action="store_true",
+                        # Prev -V
                         help=("Provide output of the frequencies of each "
                               "topology and QC."))
-    parser.add_argument("-q", "--partitions", type=os.path.abspath, nargs=1,
+    parser.add_argument("--partitions", type=os.path.abspath, nargs=1,
+                        # Prev -q
                         help=("Partitions file in RAxML format. If omitted "
                               "then the entire alignment will be treated "
                               "as one partition for all quartet replicate "
                               "topology searches."))
-    parser.add_argument("-g", "--genetrees", type=os.path.abspath, nargs=1,
+    parser.add_argument("--genetrees", type=os.path.abspath, nargs=1,
+                        # Prev -g
                         help=("Use partitions file (RAxML format) to divide "
                               "the alignment into separate gene tree regions. "
                               "Gene alignments will be sampled random for the "
                               "quartet topology searches."))
-    parser.add_argument("-e", "--temp-dir", type=os.path.abspath, nargs=1,
+    parser.add_argument("--temp-dir", type=os.path.abspath, nargs=1,
+                        # Prev -e
                         help=("A directory to which temporary files will be "
                               "saved. If not supplied, 'QuartetSampling' "
                               "will be created in the current "
@@ -113,10 +130,12 @@ def generate_argparser():
                               "file deletion. (default='./QuartetSampling'"))
     parser.add_argument("--retain-temp", action="store_true",
                         help=("Do not remove temporary files"))
-    parser.add_argument("-C", "--clade", type=str,
+    parser.add_argument("--clade", type=str,
+                        # Prev: -C
                         help=("Conduct analysis on specific clade identified "
                               "by CSV taxon list"))
-    parser.add_argument("-s", "--start-node-number", type=int, nargs=1,
+    parser.add_argument("--start-node-number", type=int, nargs=1,
+                        # Prev -s
                         help=("An integer denoting the node to which to start "
                               "from. Nodes will be read from topologically "
                               "identical (and isomorphic!) input trees in "
@@ -124,7 +143,8 @@ def generate_argparser():
                               "used to restart at an intermediate position "
                               "(in case the previous run was canceled before "
                               "completion, for example)."))
-    parser.add_argument("-p", "--stop-node-number", type=int, nargs=1,
+    parser.add_argument("--stop-node-number", type=int, nargs=1,
+                        # Prev -p
                         help=("An integer denoting the node at which to stop. "
                               "Will include nodes with indices <= the stop "
                               "node number. This argument may be used to "
@@ -133,19 +153,32 @@ def generate_argparser():
                               "Nodes will be read from topologically "
                               "identical (and isomorphic!) input trees "
                               "in deterministic order."))
-    parser.add_argument("-X", "--raxml-executable", nargs=1,
-                        help=("The name (or absolute path) of the raxml "
-                              "executable to be used for calculating "
-                              "likelihoods on quartet topologies."
-                              "(default='raxml')"))
-    parser.add_argument("--raxml-model", nargs=1,
-                        help=("Advanced: specify a custom RAxML model name "
-                              "for the raxml '-m' parameter"))
-    parser.add_argument("-P", "--paup", action="store_true",
-                        help="Use PAUP instead of RAxML.")
-    parser.add_argument("--paup-executable", nargs=1, default=["paup"],
-                        help=("The name or path of the PAUP executable to "
-                              "be used for calculated quartets."))
+    parser.add_argument("--engine", nargs=1, default=('raxml-ng',),
+                        choices=('raxml-ng', 'raxml', 'paup', 'iqtree'),
+                        help=("Name of the program to use to infer trees or"
+                              " evaluate tree model likelihoods."))
+    parser.add_argument("--engine-exec", nargs=1,
+                        help=("Full file path of the tree inference or"
+                              " likelihood evaluation engine."))
+    parser.add_argument("--engine-model", nargs=1,
+                        help=("Advanced: specify a custom model name "
+                              "for the tree engine"))
+    # parser.add_argument("--raxml-model", nargs=1,
+    #                    help=("Advanced: specify a custom RAxML model name "
+    #                          "for the raxml '-m' parameter"))
+    # parser.add_argument("-X", "--raxml-executable", nargs=1,
+    #                    help=("The name (or absolute path) of the raxml "
+    #                          "executable to be used for calculating "
+    #                          "likelihoods on quartet topologies."
+    #                          "(default='raxml')"))
+    # parser.add_argument("--raxml-model", nargs=1,
+    #                    help=("Advanced: specify a custom RAxML model name "
+    #                          "for the raxml '-m' parameter"))
+    # parser.add_argument("-P", "--paup", action="store_true",
+    #                    help="Use PAUP instead of RAxML.")
+    # parser.add_argument("--paup-executable", nargs=1, default=["paup"],
+    #                    help=("The name or path of the PAUP executable to "
+    #                          "be used for calculated quartets."))
     parser.add_argument("--ignore-errors", action="store_true",
                         help=("Ignore RAxML and PAUP erroneous runs"))
     parser.add_argument("--low-mem", action="store_true",
@@ -164,10 +197,10 @@ def generate_argparser():
                               "for QD tree frequencies. Use only "
                               " if Scipy is available. "
                               "Will increase running time."))
-    parser.add_argument("-v", "--verbose", action="store_true",
+    parser.add_argument("--verbose", action="store_true",
                         help="Provide more verbose output if specified.")
     parser.add_argument('--version', action='version',
-                        version='%(prog)s version 1.2.1')
+                        version='%(prog)s version 1.3.0')
     return parser
 
 
@@ -197,9 +230,9 @@ def main(arguments=None):
     lock = manager.RLock()
     aln = Alignment(params)
     if params['using_genetrees']:
-        aln.read_genes(args.alignment[0], params)
+        aln.read_genes(args.align[0], params)
     else:
-        aln.read_align(args.alignment[0], params)
+        aln.read_align(args.align[0], params)
     params['min_overlap'] = aln.min_overlap
     # k is the node counter
     k = 1
@@ -245,7 +278,7 @@ def main(arguments=None):
                 params['max_quartet_enumeration_threshold'] < params['nreps']):
             if params['verbose'] is True:
                 print('Number of possible quartets is close enough to the '
-                      'total number to be sampled, so will generate all'
+                      'total number to be sampled, so will generate all '
                       'and do a random draw')
             replicates, repstats = get_replicates_exhaustive(
                 n_completed, results_queue, leafsets,
@@ -268,12 +301,28 @@ def main(arguments=None):
             # important to do outside node loop. garbage collecting does not
             # apply to threads! set maxtasksperchild to release mem and files
             pool = Pool(params['nprocs'], maxtasksperchild=1)
-            if params['paup'] is True:
+            # PAUP Case
+            if params['engine'] == 'paup':
                 pool.map(process_replicate_paup, replicates)
-            elif params['lnlikethresh'] > 0:
-                pool.map(process_replicate_raxml2lk, replicates)
-            else:
+            # IQ-TREE with likelihood threshold
+            elif params['lnlikethresh'] > 0 and params['engine'] == 'iqtree':
+                pool.map(process_replicate_iqtree_lrt, replicates)
+            # IQ-TREE with likelihood threshold
+            elif params['engine'] == 'iqtree':
+                pool.map(process_replicate_iqtree, replicates)
+            # RAxML Classic with likelihood threshold
+            elif params['lnlikethresh'] > 0 and params['engine'] == 'raxml':
+                pool.map(process_replicate_raxml_lrt, replicates)
+            # RAxML Classic without likelihood threshold
+            elif params['engine'] == 'raxml':
                 pool.map(process_replicate_raxml, replicates)
+            # RAxML-ng with likelihood threshold
+            elif params['lnlikethresh'] > 0:
+                pool.map(process_replicate_raxmlng_lrt, replicates)
+            # RAxML-ng without likelihood threshold
+            else:
+                pool.map(process_replicate_raxmlng, replicates)
+
             pool.close()
             pool.join()
             del pool

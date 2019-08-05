@@ -24,8 +24,8 @@ Parameters
 
 
 
-``-d/--nodedata`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``--nodedata`` (required)
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** file containing paths of one or moreRESULT.node.score.csv files
 
@@ -33,8 +33,8 @@ Parameters
 
 
 
-``-o/--out`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^
+``--out`` (required)
+^^^^^^^^^^^^^^^^^^^^
 
 **Description:** new output files prefix
 
@@ -42,8 +42,8 @@ Parameters
 
 
 
-``-t/--tree`` (required)
-^^^^^^^^^^^^^^^^^^^^^^^^
+``--tree`` (required)
+^^^^^^^^^^^^^^^^^^^^^
 
 **Description:** tree file in Newick format
 
@@ -51,8 +51,8 @@ Parameters
 
 
 
-``-c/--clade``
-^^^^^^^^^^^^^^
+``--clade``
+^^^^^^^^^^^
 
 **Description:** ==SUPPRESS==
 
@@ -60,17 +60,8 @@ Parameters
 
 
 
-``-p/--stopk``
-^^^^^^^^^^^^^^
-
-**Description:** ==SUPPRESS==
-
-**Type:** integer; **Default:** None
-
-
-
-``-s/--startk``
-^^^^^^^^^^^^^^^
+``--startk``
+^^^^^^^^^^^^
 
 **Description:** ==SUPPRESS==
 
@@ -78,8 +69,17 @@ Parameters
 
 
 
-``-v/--verbose``
-^^^^^^^^^^^^^^^^
+``--stopk``
+^^^^^^^^^^^
+
+**Description:** ==SUPPRESS==
+
+**Type:** integer; **Default:** None
+
+
+
+``--verbose``
+^^^^^^^^^^^^^
 
 **Description:** None
 

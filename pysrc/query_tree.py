@@ -40,17 +40,17 @@ def generate_argparser():
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog=LICENSE)
-    parser.add_argument('-t', '--tree', type=open, nargs=1,
+    parser.add_argument('--tree', type=open, nargs=1,
                         help="input tree in newick format")
-    parser.add_argument('-d', '--data', type=os.path.abspath, nargs=1,
+    parser.add_argument('--data', type=os.path.abspath, nargs=1,
                         help=("CSV output from quartet_sampling"
                               " (RESULT.node.score.csv)"))
-    parser.add_argument("-c", "--clade", nargs=1, help=argparse.SUPPRESS)
-    parser.add_argument("-v", "--verbose", action="store_true",
+    parser.add_argument("--clade", nargs=1, help=argparse.SUPPRESS)
+    parser.add_argument("--verbose", action="store_true",
                         help="verbose screen output")
-    parser.add_argument("-s", "--startk", type=int, default=0,
+    parser.add_argument("--startk", type=int, default=0,
                         help=argparse.SUPPRESS)
-    parser.add_argument("-p", "--stopk", type=int, help=argparse.SUPPRESS)
+    parser.add_argument("--stopk", type=int, help=argparse.SUPPRESS)
     return parser
 
 

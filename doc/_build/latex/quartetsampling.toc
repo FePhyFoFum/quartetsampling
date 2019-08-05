@@ -2,7 +2,7 @@
 \contentsline {chapter}{\numberline {1}Getting Started}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}What is Quartet Sampling?}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}How do I cite this program?}{1}{section.1.2}
-\contentsline {section}{\numberline {1.3}Installation}{1}{section.1.3}
+\contentsline {section}{\numberline {1.3}Installation}{2}{section.1.3}
 \contentsline {subsection}{\numberline {1.3.1}Requirements}{2}{subsection.1.3.1}
 \contentsline {section}{\numberline {1.4}Preparing your data}{2}{section.1.4}
 \contentsline {subsection}{\numberline {1.4.1}Phylogeny}{2}{subsection.1.4.1}
@@ -16,74 +16,74 @@
 \contentsline {subsection}{\numberline {2.1.1}Description}{5}{subsection.2.1.1}
 \contentsline {subsection}{\numberline {2.1.2}Parameters}{5}{subsection.2.1.2}
 \contentsline {subsubsection}{\sphinxstyleliteralintitle {-h/-{-}help}}{5}{subsubsection*.3}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-a/-{-}alignment} (required)}{5}{subsubsection*.4}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-t/-{-}tree} (required)}{5}{subsubsection*.5}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-N/-{-}number-of-reps} (required)}{6}{subsubsection*.6}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-T/-{-}number-of-threads} (required)}{6}{subsubsection*.7}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}align/-{-}alignment} (required)}{5}{subsubsection*.4}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}reps/-{-}number-of-reps} (required)}{5}{subsubsection*.5}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}threads/-{-}number-of-threads} (required)}{6}{subsubsection*.6}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}tree} (required)}{6}{subsubsection*.7}
 \contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}calc-qdstats}}{6}{subsubsection*.8}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-d/-{-}data-type}}{6}{subsubsection*.9}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-e/-{-}temp-dir}}{6}{subsubsection*.10}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-g/-{-}genetrees}}{6}{subsubsection*.11}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}ignore-errors}}{7}{subsubsection*.12}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}low-mem}}{7}{subsubsection*.13}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}max-random-sample-proportion}}{7}{subsubsection*.14}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-o/-{-}results-dir}}{7}{subsubsection*.15}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-p/-{-}stop-node-number}}{7}{subsubsection*.16}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}paup-executable}}{7}{subsubsection*.17}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-q/-{-}partitions}}{8}{subsubsection*.18}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-r/-{-}result-prefix}}{8}{subsubsection*.19}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}raxml-model}}{8}{subsubsection*.20}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}retain-temp}}{8}{subsubsection*.21}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-s/-{-}start-node-number}}{8}{subsubsection*.22}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-v/-{-}verbose}}{8}{subsubsection*.23}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-C/-{-}clade}}{9}{subsubsection*.24}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-L/-{-}lnlike-thresh}}{9}{subsubsection*.25}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-O/-{-}min-overlap}}{9}{subsubsection*.26}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-P/-{-}paup}}{9}{subsubsection*.27}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-V/-{-}verbout}}{9}{subsubsection*.28}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-X/-{-}raxml-executable}}{9}{subsubsection*.29}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}clade}}{6}{subsubsection*.9}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}data-type}}{6}{subsubsection*.10}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}engine}}{6}{subsubsection*.11}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}engine-exec}}{7}{subsubsection*.12}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}engine-model}}{7}{subsubsection*.13}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}genetrees}}{7}{subsubsection*.14}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}ignore-errors}}{7}{subsubsection*.15}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}lnlike/-{-}lnlike-thresh}}{7}{subsubsection*.16}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}low-mem}}{7}{subsubsection*.17}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}max-random-sample-proportion}}{8}{subsubsection*.18}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}min-overlap}}{8}{subsubsection*.19}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}partitions}}{8}{subsubsection*.20}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}result-prefix}}{8}{subsubsection*.21}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}results-dir}}{8}{subsubsection*.22}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}retain-temp}}{8}{subsubsection*.23}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}start-node-number}}{9}{subsubsection*.24}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}stop-node-number}}{9}{subsubsection*.25}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}temp-dir}}{9}{subsubsection*.26}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}verbose}}{9}{subsubsection*.27}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}verbout}}{9}{subsubsection*.28}
 \contentsline {section}{\numberline {2.2}merge\_output}{10}{section.2.2}
 \contentsline {subsection}{\numberline {2.2.1}Description}{10}{subsection.2.2.1}
 \contentsline {subsection}{\numberline {2.2.2}Parameters}{10}{subsection.2.2.2}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-h/-{-}help}}{10}{subsubsection*.30}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-d/-{-}nodedata} (required)}{10}{subsubsection*.31}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-o/-{-}out} (required)}{10}{subsubsection*.32}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-t/-{-}tree} (required)}{10}{subsubsection*.33}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-c/-{-}clade}}{10}{subsubsection*.34}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-p/-{-}stopk}}{11}{subsubsection*.35}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-s/-{-}startk}}{11}{subsubsection*.36}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-v/-{-}verbose}}{11}{subsubsection*.37}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-h/-{-}help}}{10}{subsubsection*.29}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}nodedata} (required)}{10}{subsubsection*.30}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}out} (required)}{10}{subsubsection*.31}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}tree} (required)}{10}{subsubsection*.32}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}clade}}{10}{subsubsection*.33}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}startk}}{11}{subsubsection*.34}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}stopk}}{11}{subsubsection*.35}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}verbose}}{11}{subsubsection*.36}
 \contentsline {section}{\numberline {2.3}query\_tree}{11}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Description}{11}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}Parameters}{11}{subsection.2.3.2}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-h/-{-}help}}{11}{subsubsection*.38}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-c/-{-}clade}}{11}{subsubsection*.39}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-d/-{-}data}}{12}{subsubsection*.40}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-p/-{-}stopk}}{12}{subsubsection*.41}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-s/-{-}startk}}{12}{subsubsection*.42}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-t/-{-}tree}}{12}{subsubsection*.43}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-v/-{-}verbose}}{12}{subsubsection*.44}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-h/-{-}help}}{11}{subsubsection*.37}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}clade}}{11}{subsubsection*.38}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}data}}{12}{subsubsection*.39}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}startk}}{12}{subsubsection*.40}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}stopk}}{12}{subsubsection*.41}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}tree}}{12}{subsubsection*.42}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}verbose}}{12}{subsubsection*.43}
 \contentsline {section}{\numberline {2.4}calc\_qstats}{12}{section.2.4}
 \contentsline {subsection}{\numberline {2.4.1}Description}{12}{subsection.2.4.1}
 \contentsline {subsection}{\numberline {2.4.2}Parameters}{12}{subsection.2.4.2}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-h/-{-}help}}{12}{subsubsection*.45}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-d/-{-}data} (required)}{13}{subsubsection*.46}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-c/-{-}clade}}{13}{subsubsection*.47}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-o/-{-}out}}{13}{subsubsection*.48}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-p/-{-}stopk}}{13}{subsubsection*.49}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-s/-{-}startk}}{13}{subsubsection*.50}
-\contentsline {subsubsection}{\sphinxstyleliteralintitle {-v/-{-}verbose}}{13}{subsubsection*.51}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-h/-{-}help}}{12}{subsubsection*.44}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}data} (required)}{13}{subsubsection*.45}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}clade}}{13}{subsubsection*.46}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}out}}{13}{subsubsection*.47}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}startk}}{13}{subsubsection*.48}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}stopk}}{13}{subsubsection*.49}
+\contentsline {subsubsection}{\sphinxstyleliteralintitle {-{-}verbose}}{13}{subsubsection*.50}
 \contentsline {chapter}{\numberline {3}Outputs}{15}{chapter.3}
 \contentsline {section}{\numberline {3.1}RESULT.node.scores.csv}{15}{section.3.1}
 \contentsline {section}{\numberline {3.2}RESULT.labeled.tre}{15}{section.3.2}
 \contentsline {section}{\numberline {3.3}RESULT.labeled.tre.freq/qc/qd/qu}{15}{section.3.3}
 \contentsline {section}{\numberline {3.4}RESULT.labeled.tre.figtree}{16}{section.3.4}
 \contentsline {chapter}{\numberline {4}Frequently Asked Questions}{17}{chapter.4}
-\contentsline {section}{\numberline {4.1}What is an appropriate \sphinxstyleliteralintitle {-L/-{-}lnlike-thresh} value to use?}{17}{section.4.1}
+\contentsline {section}{\numberline {4.1}What is an appropriate \sphinxstyleliteralintitle {-{-}lnlike} value to use?}{17}{section.4.1}
+\contentsline {section}{\numberline {4.2}My partitioned data is not working properly, and is a sparse partitioned set.}{18}{section.4.2}
 \contentsline {chapter}{\numberline {5}Releases}{19}{chapter.5}
-\contentsline {section}{\numberline {5.1}v1.2.1 - Efficiency update}{19}{section.5.1}
-\contentsline {section}{\numberline {5.2}v1.2 - Major Update}{19}{section.5.2}
-\contentsline {section}{\numberline {5.3}v1.1.1}{19}{section.5.3}
-\contentsline {section}{\numberline {5.4}v1.1}{20}{section.5.4}
-\contentsline {section}{\numberline {5.5}v1.0}{20}{section.5.5}
-\contentsline {chapter}{\numberline {6}Indices and tables}{21}{chapter.6}
+\contentsline {section}{\numberline {5.1}v1.3 - Change to RAxML-ng, modernization of flags}{19}{section.5.1}
+\contentsline {section}{\numberline {5.2}v1.2.1 - Efficiency update}{19}{section.5.2}
+\contentsline {section}{\numberline {5.3}v1.2 - Major Update}{19}{section.5.3}
+\contentsline {section}{\numberline {5.4}v1.1.1}{20}{section.5.4}
+\contentsline {section}{\numberline {5.5}v1.1}{20}{section.5.5}
+\contentsline {section}{\numberline {5.6}v1.0}{20}{section.5.6}

@@ -39,21 +39,21 @@ def generate_argparser():
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog=LICENSE)
-    parser.add_argument('-d', '--nodedata', required=True, nargs=1,
+    parser.add_argument('--nodedata', required=True, nargs=1,
                         help=("file containing paths of one or more"
                               "RESULT.node.score.csv files"))
-    parser.add_argument('-t', '--tree', required=True, type=open,
+    parser.add_argument('--tree', required=True, type=open,
                         nargs=1,
                         help="tree file in Newick format")
-    parser.add_argument('-o', '--out', required=True,
+    parser.add_argument('--out', required=True,
                         nargs=1,
                         help="new output files prefix")
-    parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("--verbose", action="store_true")
     # These args are hidden to pass through to the treedata object
-    parser.add_argument("-c", "--clade", nargs=1, help=argparse.SUPPRESS)
-    parser.add_argument("-s", "--startk", type=int, default=0,
+    parser.add_argument("--clade", nargs=1, help=argparse.SUPPRESS)
+    parser.add_argument("--startk", type=int, default=0,
                         help=argparse.SUPPRESS)
-    parser.add_argument("-p", "--stopk", type=int, help=argparse.SUPPRESS)
+    parser.add_argument("--stopk", type=int, help=argparse.SUPPRESS)
     return parser
 
 
