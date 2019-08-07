@@ -21,7 +21,7 @@ Please also include the URL (https://www.github.com/fephyfofum/quartetsampling).
 
 ## Contributors ##
 
-* James B. Pease - [peaselab.github.io](http://peaselab.github.io)
+* James B. Pease - [www.peaselab.org](http://www.peaselab.org)
 * Stephen A. Smith [blackrim.org](http://blackrim.org)
 * Cody Hinchliff 
 * Joseph W. Brown
