@@ -2,7 +2,10 @@
 
 ![alt text](https://github.com/FePhyFoFum/quartetsampling/blob/master/doc/logo.png)
 
-Quartet Sampling is a method to analyze molecular phylogenies by calculating branch support using repeated sampling of quartets.  Quartet Sampling differs from other support methods by combining a set of of tests into a single, efficient framework to address phylogenetic discordance.  QS is particularly useful for very largv and data-sparse aligmments or large phylogenomic datasets.
+Quartet Sampling is a method to analyze molecular phylogenies by calculating branch support using repeated sampling of quartets.  Quartet Sampling differs from other support methods by combining a set of of tests into a single, efficient framework to address phylogenetic discordance.  QS is particularly useful for very large and data-sparse alignments or large phylogenomic datasets.
+
+## Latest Update ##
+Version 1.3.1 - Adds RESULTS.node.count.csv that provides counts and representative topologies for the three quartet arragements.  This is useful when QD is low in determining the more common discordant option.
 
 ## Usage ##
 

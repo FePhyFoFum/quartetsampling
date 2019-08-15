@@ -5,23 +5,17 @@
    \let\sphinxpxdimen\pdfpxdimen\else\newdimen\sphinxpxdimen
 \fi \sphinxpxdimen=.75bp\relax
 
+\PassOptionsToPackage{warn}{textcomp}
 \usepackage[utf8]{inputenc}
 \ifdefined\DeclareUnicodeCharacter
- \ifdefined\DeclareUnicodeCharacterAsOptional
-  \DeclareUnicodeCharacter{"00A0}{\nobreakspace}
-  \DeclareUnicodeCharacter{"2500}{\sphinxunichar{2500}}
-  \DeclareUnicodeCharacter{"2502}{\sphinxunichar{2502}}
-  \DeclareUnicodeCharacter{"2514}{\sphinxunichar{2514}}
-  \DeclareUnicodeCharacter{"251C}{\sphinxunichar{251C}}
-  \DeclareUnicodeCharacter{"2572}{\textbackslash}
- \else
-  \DeclareUnicodeCharacter{00A0}{\nobreakspace}
-  \DeclareUnicodeCharacter{2500}{\sphinxunichar{2500}}
-  \DeclareUnicodeCharacter{2502}{\sphinxunichar{2502}}
-  \DeclareUnicodeCharacter{2514}{\sphinxunichar{2514}}
-  \DeclareUnicodeCharacter{251C}{\sphinxunichar{251C}}
-  \DeclareUnicodeCharacter{2572}{\textbackslash}
- \fi
+% support both utf8 and utf8x syntaxes
+\edef\sphinxdqmaybe{\ifdefined\DeclareUnicodeCharacterAsOptional\string"\fi}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe00A0}{\nobreakspace}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe2500}{\sphinxunichar{2500}}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe2502}{\sphinxunichar{2502}}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe2514}{\sphinxunichar{2514}}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe251C}{\sphinxunichar{251C}}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe2572}{\textbackslash}
 \fi
 \usepackage{cmap}
 \usepackage[T1]{fontenc}
@@ -29,8 +23,9 @@
 \usepackage{babel}
 \usepackage{times}
 \usepackage[Bjarne]{fncychap}
-\usepackage[dontkeepoldnames]{sphinx}
+\usepackage{sphinx}
 
+\fvset{fontsize=\small}
 \usepackage{geometry}
 
 % Include hyperref last.
@@ -41,12 +36,21 @@
 \urlstyle{same}
 \addto\captionsenglish{\renewcommand{\contentsname}{Contents:}}
 
-\addto\captionsenglish{\renewcommand{\figurename}{Fig.}}
-\addto\captionsenglish{\renewcommand{\tablename}{Table}}
+\addto\captionsenglish{\renewcommand{\figurename}{Fig.\@ }}
+\makeatletter
+\def\fnum@figure{\figurename\thefigure{}}
+\makeatother
+\addto\captionsenglish{\renewcommand{\tablename}{Table }}
+\makeatletter
+\def\fnum@table{\tablename\thetable{}}
+\makeatother
 \addto\captionsenglish{\renewcommand{\literalblockname}{Listing}}
 
 \addto\captionsenglish{\renewcommand{\literalblockcontinuedname}{continued from previous page}}
 \addto\captionsenglish{\renewcommand{\literalblockcontinuesname}{continues on next page}}
+\addto\captionsenglish{\renewcommand{\sphinxnonalphabeticalgroupname}{Non-alphabetical}}
+\addto\captionsenglish{\renewcommand{\sphinxsymbolsname}{Symbols}}
+\addto\captionsenglish{\renewcommand{\sphinxnumbersname}{Numbers}}
 
 \addto\extrasenglish{\def\pageautorefname{page}}
 
@@ -55,23 +59,25 @@
 
 
 \title{quartetsampling Documentation}
-\date{Aug 05, 2019}
-\release{1.3.0}
+\date{Aug 15, 2019}
+\release{1.3.1}
 \author{James B. Pease \\ Stephen A. Smith \\ Cody E. Hinchliff \\Joseph W. Brown \\ Joseph F. Walker}
 \newcommand{\sphinxlogo}{\sphinxincludegraphics{logo.png}\par}
 \renewcommand{\releasename}{Release}
 \makeindex
-
 \begin{document}
 
-\maketitle
+\pagestyle{empty}
+\sphinxmaketitle
+\pagestyle{plain}
 \sphinxtableofcontents
+\pagestyle{normal}
 \phantomsection\label{\detokenize{index::doc}}
 
 
 
 \chapter{Getting Started}
-\label{\detokenize{intro:manual-for-quartetsampling}}\label{\detokenize{intro::doc}}\label{\detokenize{intro:intro}}\label{\detokenize{intro:getting-started}}
+\label{\detokenize{intro:getting-started}}\label{\detokenize{intro:intro}}\label{\detokenize{intro::doc}}
 
 \section{What is Quartet Sampling?}
 \label{\detokenize{intro:what-is-quartet-sampling}}
@@ -110,10 +116,10 @@ RAxML-ng 0.9.0 (beta versions not guaranteed) \sphinxurl{https://github.com/amko
 \sphinxstyleemphasis{Optional, but recommended:*}
 \begin{itemize}
 \item {} 
-Numpy \sphinxurl{http://www.numpy.org} (required only for \sphinxcode{calc\_qs\_stats.py})
+Numpy \sphinxurl{http://www.numpy.org} (required only for \sphinxcode{\sphinxupquote{calc\_qs\_stats.py}})
 
 \item {} 
-Scipy \sphinxurl{https://www.scipy.org} (required only if \sphinxcode{-{-}calc-qdstats} is activated)
+Scipy \sphinxurl{https://www.scipy.org} (required only if \sphinxcode{\sphinxupquote{-{-}calc-qdstats}} is activated)
 
 \item {} 
 Figtree \sphinxurl{http://tree.bio.ed.ac.uk/software/figtree/} (view FigTree output)
@@ -135,7 +141,7 @@ Internal branch labels will be replaced in output trees.
 
 \subsection{Sequence Alignment}
 \label{\detokenize{intro:sequence-alignment}}
-An alignment in Relaxed Phylip format (such as used for RAxML) is required.  The alignment can be DNA nucleotides or amino acids (use \sphinxcode{-{-}amino-acid} in that case). If you have an alignment in FASTA format, we also include a script called \sphinxcode{utils/fasta2phy.py} that will convert FASTA alignments to Relaxed Phylip.
+An alignment in Relaxed Phylip format (such as used for RAxML) is required.  The alignment can be DNA nucleotides or amino acids (use \sphinxcode{\sphinxupquote{-{-}amino-acid}} in that case). If you have an alignment in FASTA format, we also include a script called \sphinxcode{\sphinxupquote{utils/fasta2phy.py}} that will convert FASTA alignments to Relaxed Phylip.
 
 \begin{sphinxadmonition}{important}{Important:}
 Labels for the alignment sequences must match the labels on tree terminal branches exactly. All tips in the phylogeny must have a sequence represented in the alignment.  Sequences appearing in the alignment, but not in the tree are allowed, and will be ignored.
@@ -144,7 +150,7 @@ Labels for the alignment sequences must match the labels on tree terminal branch
 
 \subsection{Partitions File (Optional)}
 \label{\detokenize{intro:partitions-file-optional}}
-A partitions file in the style of RAxML may also be used either for a partitioned analysis of likelihood or separate gene tree evaluation.  DNA partitions should use the \sphinxcode{DNA} prefix, and proteins should use the \sphinxcode{WAG} prefix instead of \sphinxcode{DNA} in the example below.  Note that partition names are arbitrary in this case and that number ranges are inclusive.
+A partitions file in the style of RAxML may also be used either for a partitioned analysis of likelihood or separate gene tree evaluation.  DNA partitions should use the \sphinxcode{\sphinxupquote{DNA}} prefix, and proteins should use the \sphinxcode{\sphinxupquote{WAG}} prefix instead of \sphinxcode{\sphinxupquote{DNA}} in the example below.  Note that partition names are arbitrary in this case and that number ranges are inclusive.
 \begin{description}
 \item[{Example file::}] \leavevmode
 DNA, p1=1-30
@@ -155,7 +161,7 @@ DNA, p3=61-90
 \end{description}
 
 \begin{sphinxadmonition}{important}{Important:}
-If your alignment is sparse and you use partitioned most, such that you will frequently have partitions with no sequence data for randomly selected quartets of taxa, you may wish to invoke the \sphinxcode{-{-}ignore-error} option in \sphinxcode{quartet\_sampling.py} to ignore the RAxML errors that will result from these empty partitions.
+If your alignment is sparse and you use partitioned most, such that you will frequently have partitions with no sequence data for randomly selected quartets of taxa, you may wish to invoke the \sphinxcode{\sphinxupquote{-{-}ignore-error}} option in \sphinxcode{\sphinxupquote{quartet\_sampling.py}} to ignore the RAxML errors that will result from these empty partitions.
 \end{sphinxadmonition}
 
 
@@ -169,21 +175,21 @@ python3 quartet\_sampling.py \textendash{}tree TREE.nwk \textendash{}align ALIGN
 
 \subsection{Required Paramters}
 \label{\detokenize{intro:required-paramters}}
-\sphinxcode{-{-}tree}: File containing a single Newick-formatted phylogeny.
+\sphinxcode{\sphinxupquote{-{-}tree}}: File containing a single Newick-formatted phylogeny.
 
-\sphinxcode{-{-}align} Phylip-formatted alignment containing one sequence for each tip in the phylogeny provided.
+\sphinxcode{\sphinxupquote{-{-}align}} Phylip-formatted alignment containing one sequence for each tip in the phylogeny provided.
 
-\sphinxcode{-{-}reps} Number of replicates per branch to perform.
+\sphinxcode{\sphinxupquote{-{-}reps}} Number of replicates per branch to perform.
 
-\sphinxcode{-{-}threads} Number of threads for Python to use in parallel (does not pass through to RAxML, this is for Python multiprocessing of per-branch replicates in parallel)
+\sphinxcode{\sphinxupquote{-{-}threads}} Number of threads for Python to use in parallel (does not pass through to RAxML, this is for Python multiprocessing of per-branch replicates in parallel)
 
 
 \subsection{Recommended Parameters}
 \label{\detokenize{intro:recommended-parameters}}
-\sphinxcode{-{-}lnlike}: log-likelihood threshold cutoff, determines the minimum difference by which the best likelihood tree must exceed the second-best likelihood tree when comparing the three possible topologies for a given quartet replicate.
+\sphinxcode{\sphinxupquote{-{-}lnlike}}: log-likelihood threshold cutoff, determines the minimum difference by which the best likelihood tree must exceed the second-best likelihood tree when comparing the three possible topologies for a given quartet replicate.
 
 \begin{sphinxadmonition}{note}{Note:}
-If \sphinxcode{-{-}lnlike} is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Informativeness (QI) scores of ‘NA’ for all branches.
+If \sphinxcode{\sphinxupquote{-{-}lnlike}} is omitted, this will invoke an alternative mode where a tree is simply inferred from the sequence data by RAxML (or PAUP*) and likelihoods are not evaluated.  This will result in Quartet Informativeness (QI) scores of ‘NA’ for all branches.
 \end{sphinxadmonition}
 
 
@@ -204,56 +210,56 @@ phylogenetic branch support evaluation
 \subsection{Parameters}
 \label{\detokenize{prog_desc:parameters}}
 
-\subsubsection{\sphinxstyleliteralintitle{-h/-{-}help}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-h/-{-}help}}}
 \label{\detokenize{prog_desc:h-help}}
 \sphinxstylestrong{Description:} show this help message and exit
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}align/-{-}alignment} (required)}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}align/-{-}alignment}} (required)}
 \label{\detokenize{prog_desc:align-alignment-required}}
 \sphinxstylestrong{Description:} Alignment file in “relaxed phylip” format, as used by RAxML.
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}reps/-{-}number-of-reps} (required)}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}reps/-{-}number-of-reps}} (required)}
 \label{\detokenize{prog_desc:reps-number-of-reps-required}}
 \sphinxstylestrong{Description:} The number of replicate quartet topology searches to be performed at each node.
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} 100
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}threads/-{-}number-of-threads} (required)}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}threads/-{-}number-of-threads}} (required)}
 \label{\detokenize{prog_desc:threads-number-of-threads-required}}
 \sphinxstylestrong{Description:} The number of parallel threads to be used by Python for quartet topology searches.
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} 1
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}tree} (required)}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}tree}} (required)}
 \label{\detokenize{prog_desc:tree-required}}
 \sphinxstylestrong{Description:} The input tree in Newick (parenthetical) format.
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}calc-qdstats}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}calc-qdstats}}}
 \label{\detokenize{prog_desc:calc-qdstats}}
 \sphinxstylestrong{Description:} EXPERIMENTAL: Calculates Chi-square test for QD tree frequencies. Use only  if Scipy is available. Will increase running time.
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}clade}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}clade}}}
 \label{\detokenize{prog_desc:clade}}
 \sphinxstylestrong{Description:} Conduct analysis on specific clade identified by CSV taxon list
 
 \sphinxstylestrong{Type:} string; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}data-type}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}data-type}}}
 \label{\detokenize{prog_desc:data-type}}
 \sphinxstylestrong{Description:} (nuc)leotide, (amino) acid, or (cat)egorical data
 
@@ -262,7 +268,7 @@ phylogenetic branch support evaluation
 \sphinxstylestrong{Choices:} (‘nuc’, ‘amino’, ‘cat’)
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}engine}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}engine}}}
 \label{\detokenize{prog_desc:engine}}
 \sphinxstylestrong{Description:} Name of the program to use to infer trees or evaluate tree model likelihoods.
 
@@ -271,119 +277,119 @@ phylogenetic branch support evaluation
 \sphinxstylestrong{Choices:} (‘raxml-ng’, ‘raxml’, ‘paup’, ‘iqtree’)
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}engine-exec}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}engine-exec}}}
 \label{\detokenize{prog_desc:engine-exec}}
 \sphinxstylestrong{Description:} Full file path of the tree inference or likelihood evaluation engine.
 
 \sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}engine-model}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}engine-model}}}
 \label{\detokenize{prog_desc:engine-model}}
 \sphinxstylestrong{Description:} Advanced: specify a custom model name for the tree engine
 
 \sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}genetrees}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}genetrees}}}
 \label{\detokenize{prog_desc:genetrees}}
 \sphinxstylestrong{Description:} Use partitions file (RAxML format) to divide the alignment into separate gene tree regions. Gene alignments will be sampled random for the quartet topology searches.
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}ignore-errors}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}ignore-errors}}}
 \label{\detokenize{prog_desc:ignore-errors}}
 \sphinxstylestrong{Description:} Ignore RAxML and PAUP erroneous runs
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}lnlike/-{-}lnlike-thresh}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}lnlike/-{-}lnlike-thresh}}}
 \label{\detokenize{prog_desc:lnlike-lnlike-thresh}}
 \sphinxstylestrong{Description:} The lnlike threshhold that is the minimum value by which the log-likelihood value of the best-likelihood tree must be higher than the second-best-likelihood tree for the replicate to register as the best-likelihood topology rather than ‘uncertain’. If set to zero, this turns off likelihood evaluation mode and invokes tree inference mode where a tree is simply inferred from the alignment without considering likelihood (QI values are N/A in this case).
 
 \sphinxstylestrong{Type:} float; \sphinxstylestrong{Default:} 2.0
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}low-mem}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}low-mem}}}
 \label{\detokenize{prog_desc:low-mem}}
 \sphinxstylestrong{Description:} Do not store large alignment in memory for whole-alignment (non-genetree) mode
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}max-random-sample-proportion}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}max-random-sample-proportion}}}
 \label{\detokenize{prog_desc:max-random-sample-proportion}}
 \sphinxstylestrong{Description:} The proportion of possible replicates explored unsuccessfully by the random generation procedure before it gives up. Because this generates random replicates, it takes progressively longer as it proceeds. To avoid long runtimes, the recommended range is \textless{} 0.5 (which is the default).
 
 \sphinxstylestrong{Type:} float; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}min-overlap}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}min-overlap}}}
 \label{\detokenize{prog_desc:min-overlap}}
 \sphinxstylestrong{Description:} The minimum sites required to be sampled for all taxa in a given quartet.
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}partitions}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}partitions}}}
 \label{\detokenize{prog_desc:partitions}}
 \sphinxstylestrong{Description:} Partitions file in RAxML format. If omitted then the entire alignment will be treated as one partition for all quartet replicate topology searches.
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}result-prefix}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}result-prefix}}}
 \label{\detokenize{prog_desc:result-prefix}}
 \sphinxstylestrong{Description:} A prefix to put on the result files.
 
 \sphinxstylestrong{Type:} string; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}results-dir}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}results-dir}}}
 \label{\detokenize{prog_desc:results-dir}}
 \sphinxstylestrong{Description:} A directory to which output files will be saved. If not supplied, the current working directory will be used. (default is current folder).
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}retain-temp}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}retain-temp}}}
 \label{\detokenize{prog_desc:retain-temp}}
 \sphinxstylestrong{Description:} Do not remove temporary files
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}start-node-number}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}start-node-number}}}
 \label{\detokenize{prog_desc:start-node-number}}
 \sphinxstylestrong{Description:} An integer denoting the node to which to start from. Nodes will be read from topologically identical (and isomorphic!) input trees in deterministic order, so this argument may be  used to restart at an intermediate position (in case the previous run was canceled before completion, for example).
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}stop-node-number}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}stop-node-number}}}
 \label{\detokenize{prog_desc:stop-node-number}}
 \sphinxstylestrong{Description:} An integer denoting the node at which to stop. Will include nodes with indices \textless{}= the stop node number. This argument may be used to limit the length of a given run in case only a certain part of the tree is of interest. Nodes will be read from topologically identical (and isomorphic!) input trees in deterministic order.
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}temp-dir}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}temp-dir}}}
 \label{\detokenize{prog_desc:temp-dir}}
 \sphinxstylestrong{Description:} A directory to which temporary files will be saved. If not supplied, ‘QuartetSampling’ will be created in the current working directory. When specifying a custom temporary output the characters ‘QuartetSampling’ must appear in the directory name to prevent accidental file deletion. (default=’./QuartetSampling’
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}verbose}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}verbose}}}
 \label{\detokenize{prog_desc:verbose}}
 \sphinxstylestrong{Description:} Provide more verbose output if specified.
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}verbout}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}verbout}}}
 \label{\detokenize{prog_desc:verbout}}
 \sphinxstylestrong{Description:} Provide output of the frequencies of each topology and QC.
 
@@ -404,56 +410,56 @@ runs for the same phylogeny into a single set of csv and tree outputs.
 \subsection{Parameters}
 \label{\detokenize{prog_desc:id2}}
 
-\subsubsection{\sphinxstyleliteralintitle{-h/-{-}help}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-h/-{-}help}}}
 \label{\detokenize{prog_desc:id3}}
 \sphinxstylestrong{Description:} show this help message and exit
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}nodedata} (required)}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}nodedata}} (required)}
 \label{\detokenize{prog_desc:nodedata-required}}
 \sphinxstylestrong{Description:} file containing paths of one or moreRESULT.node.score.csv files
 
 \sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}out} (required)}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}out}} (required)}
 \label{\detokenize{prog_desc:out-required}}
 \sphinxstylestrong{Description:} new output files prefix
 
 \sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}tree} (required)}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}tree}} (required)}
 \label{\detokenize{prog_desc:id4}}
 \sphinxstylestrong{Description:} tree file in Newick format
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}clade}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}clade}}}
 \label{\detokenize{prog_desc:id5}}
 \sphinxstylestrong{Description:} ==SUPPRESS==
 
 \sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}startk}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}startk}}}
 \label{\detokenize{prog_desc:startk}}
 \sphinxstylestrong{Description:} ==SUPPRESS==
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} 0
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}stopk}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}stopk}}}
 \label{\detokenize{prog_desc:stopk}}
 \sphinxstylestrong{Description:} ==SUPPRESS==
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}verbose}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}verbose}}}
 \label{\detokenize{prog_desc:id6}}
 \sphinxstylestrong{Description:} None
 
@@ -474,49 +480,49 @@ when using the post-run annotated trees.
 \subsection{Parameters}
 \label{\detokenize{prog_desc:id8}}
 
-\subsubsection{\sphinxstyleliteralintitle{-h/-{-}help}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-h/-{-}help}}}
 \label{\detokenize{prog_desc:id9}}
 \sphinxstylestrong{Description:} show this help message and exit
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}clade}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}clade}}}
 \label{\detokenize{prog_desc:id10}}
 \sphinxstylestrong{Description:} ==SUPPRESS==
 
 \sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}data}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}data}}}
 \label{\detokenize{prog_desc:data}}
 \sphinxstylestrong{Description:} CSV output from quartet\_sampling (RESULT.node.score.csv)
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}startk}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}startk}}}
 \label{\detokenize{prog_desc:id11}}
 \sphinxstylestrong{Description:} ==SUPPRESS==
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} 0
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}stopk}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}stopk}}}
 \label{\detokenize{prog_desc:id12}}
 \sphinxstylestrong{Description:} ==SUPPRESS==
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}tree}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}tree}}}
 \label{\detokenize{prog_desc:tree}}
 \sphinxstylestrong{Description:} input tree in newick format
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}verbose}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}verbose}}}
 \label{\detokenize{prog_desc:id13}}
 \sphinxstylestrong{Description:} verbose screen output
 
@@ -538,49 +544,49 @@ from quartet\_sampling
 \subsection{Parameters}
 \label{\detokenize{prog_desc:id15}}
 
-\subsubsection{\sphinxstyleliteralintitle{-h/-{-}help}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-h/-{-}help}}}
 \label{\detokenize{prog_desc:id16}}
 \sphinxstylestrong{Description:} show this help message and exit
 
 \sphinxstylestrong{Type:} boolean flag
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}data} (required)}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}data}} (required)}
 \label{\detokenize{prog_desc:data-required}}
 \sphinxstylestrong{Description:} RESULT.node.score.csv file output fromquartet\_sampling.py
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}clade}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}clade}}}
 \label{\detokenize{prog_desc:id17}}
 \sphinxstylestrong{Description:} specify a clade using a comma-separatedlist of 2+ descendant taxa
 
 \sphinxstylestrong{Type:} None; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}out}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}out}}}
 \label{\detokenize{prog_desc:out}}
 \sphinxstylestrong{Description:} output file path for statistics
 
 \sphinxstylestrong{Type:} file path; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}startk}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}startk}}}
 \label{\detokenize{prog_desc:id18}}
 \sphinxstylestrong{Description:} starting branch numerical index
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} 0
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}stopk}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}stopk}}}
 \label{\detokenize{prog_desc:id19}}
 \sphinxstylestrong{Description:} stopping branch numerical index
 
 \sphinxstylestrong{Type:} integer; \sphinxstylestrong{Default:} None
 
 
-\subsubsection{\sphinxstyleliteralintitle{-{-}verbose}}
+\subsubsection{\sphinxstyleliteralintitle{\sphinxupquote{-{-}verbose}}}
 \label{\detokenize{prog_desc:id20}}
 \sphinxstylestrong{Description:} verbose screen output
 
@@ -588,20 +594,64 @@ from quartet\_sampling
 
 
 \chapter{Outputs}
-\label{\detokenize{output::doc}}\label{\detokenize{output:output}}\label{\detokenize{output:outputs}}
+\label{\detokenize{output:outputs}}\label{\detokenize{output:output}}\label{\detokenize{output::doc}}
 
 \section{RESULT.node.scores.csv}
 \label{\detokenize{output:result-node-scores-csv}}
-A comma-separated values (CSV) file with
-* \sphinxstylestrong{node\_label} The label of the internal branch (QS\#\#\#) or terminal branch (original label)
-* \sphinxstylestrong{freq0} The number of concordant replicates over the non-uncertain total
-* \sphinxstylestrong{qc} The Quartet Concordance score (internal branches only; measures frequency of concordant over discordant)
-* \sphinxstylestrong{qd} The Quartet Differential score (internal branches only; measures skew in the two discordant tree counts)
-* \sphinxstylestrong{qi} The Quartet Informativeness score (internal branches only; measures number of replicates that fail likelihood cutoff)
-* \sphinxstylestrong{qf} The Quartet Fidelity score (terminal branches only; measures the number of replicates for which this branch produced concordant quartets)
-* \sphinxstylestrong{diff} Example likelihood differentinal from last replicate (used for diagnostic purposes)
-* \sphinxstylestrong{num\_replicates} Number of replicates actually sampled per branch (may not equal the number specified by \sphinxcode{-N} for internal branches when fewer replicates are possible, and will not equal that number for terminal branches).
-* \sphinxstylestrong{notes} Additional notes (enables user to add custom notes to their output after running; e.g., labeling key branches)
+A comma-separated values (CSV) file with:
+\begin{itemize}
+\item {} 
+\sphinxstylestrong{node\_label} The label of the internal branch (QS\#\#\#) or terminal branch (original label)
+
+\item {} 
+\sphinxstylestrong{freq0} The number of concordant replicates over the non-uncertain total
+
+\item {} 
+\sphinxstylestrong{qc} The Quartet Concordance score (internal branches only; measures frequency of concordant over discordant)
+
+\item {} 
+\sphinxstylestrong{qd} The Quartet Differential score (internal branches only; measures skew in the two discordant tree counts)
+
+\item {} 
+\sphinxstylestrong{qi} The Quartet Informativeness score (internal branches only; measures number of replicates that fail likelihood cutoff)
+
+\item {} 
+\sphinxstylestrong{qf} The Quartet Fidelity score (terminal branches only; measures the number of replicates for which this branch produced concordant quartets)
+
+\item {} 
+\sphinxstylestrong{diff} Example likelihood differential from last replicate (used for diagnostic purposes)
+
+\item {} 
+\sphinxstylestrong{num\_replicates} Number of replicates actually sampled per branch (may not equal the number specified by \sphinxcode{\sphinxupquote{-N}} for internal branches when fewer replicates are possible, and will not equal that number for terminal branches).
+
+\item {} 
+\sphinxstylestrong{notes} Additional notes (enables user to add custom notes to their output after running; e.g., labeling key branches)
+
+\end{itemize}
+
+
+\section{RESULT.node.counts.csv}
+\label{\detokenize{output:result-node-counts-csv}}
+A tab-separated values (TSV) file with:
+\begin{itemize}
+\item {} 
+\sphinxstylestrong{node\_label} The label of the internal branch (QS\#\#\#) or terminal branch (original label)
+
+\item {} 
+\sphinxstylestrong{count0} The count of the number of QS replicates for the concordant quartet arrangement.
+
+\item {} 
+\sphinxstylestrong{count1} The count of the number of QS replicates for one of the discordant quartet arrangements.
+
+\item {} 
+\sphinxstylestrong{count2} The count of the number of QS replicates for the other discordant quartet arrangement.
+
+\item {} 
+\sphinxstylestrong{topo0}, \sphinxstylestrong{topo1}, and \sphinxstylestrong{topo2} provide example quartet trees (in parenthetical notation) showing the arragement of a representative quartet of taxa spanning the node for the arragements corresponding to the counts.
+
+\end{itemize}
+
+This file allows you to check at a node which discordant option is more common in cases where QD is low, indicating higher presence of one discordant option.
 
 
 \section{RESULT.labeled.tre}
@@ -620,15 +670,15 @@ A FigTree format phylogeny \textless{}\sphinxurl{http://tree.bio.ed.ac.uk/softwa
 
 
 \chapter{Frequently Asked Questions}
-\label{\detokenize{faq::doc}}\label{\detokenize{faq:frequently-asked-questions}}\label{\detokenize{faq:faq}}
+\label{\detokenize{faq:frequently-asked-questions}}\label{\detokenize{faq:faq}}\label{\detokenize{faq::doc}}
 
-\section{What is an appropriate \sphinxstyleliteralintitle{-{-}lnlike} value to use?}
+\section{What is an appropriate \sphinxstyleliteralintitle{\sphinxupquote{-{-}lnlike}} value to use?}
 \label{\detokenize{faq:what-is-an-appropriate-lnlike-value-to-use}}
-The parameter \sphinxcode{-{-}lnlike} or \sphinxcode{-{-}lnlike-thresh} specifies a log-likelihood differential cutoff.  When the three possible topologies for a given quartet are evaluated using molecular data for that quartet by RAxML, three separate likelihood values are generated, which are then log-transformed.  When the cutoff value is specified this means that you want to ensure that the tree with the best likelihood exceeds the next-most likely tree’s likelihood by at least the value of the cutoff.  This prevents the method from selecting from two or three trees with nearly indistinguishable likelihoods.  These quartet replicates that pass the likelihood cutoff are tabulated separated and calculated as the QI score.
+The parameter \sphinxcode{\sphinxupquote{-{-}lnlike}} or \sphinxcode{\sphinxupquote{-{-}lnlike-thresh}} specifies a log-likelihood differential cutoff.  When the three possible topologies for a given quartet are evaluated using molecular data for that quartet by RAxML, three separate likelihood values are generated, which are then log-transformed.  When the cutoff value is specified this means that you want to ensure that the tree with the best likelihood exceeds the next-most likely tree’s likelihood by at least the value of the cutoff.  This prevents the method from selecting from two or three trees with nearly indistinguishable likelihoods.  These quartet replicates that pass the likelihood cutoff are tabulated separated and calculated as the QI score.
 
-On a practical level, increasing the \sphinxcode{-{-}lnlike} parameter will decrease QI and increase the number of replicates counted as part of QC and QD.  Lowering the \sphinxcode{-{-}lnlike} parameter will increase the QI score, but increase the number of potentially arbitrary counts in QC and QD.
+On a practical level, increasing the \sphinxcode{\sphinxupquote{-{-}lnlike}} parameter will decrease QI and increase the number of replicates counted as part of QC and QD.  Lowering the \sphinxcode{\sphinxupquote{-{-}lnlike}} parameter will increase the QI score, but increase the number of potentially arbitrary counts in QC and QD.
 
-More statistically, the log-likelihood threshold is equivalent to specifying a minimum likelihood ratio (subtracting log-likelihoods is equivalent to dividing raw likelihoods). Let the null hypothesis be zero difference between the tree likelihoods (i.e., any difference is random noise). For each of the two likelihood estimates compared, if error is distributed in a standard normal distribution N(0,1), then 95\% of the distribution lies within \textasciitilde{}2 standard deviations. This means the difference in the two log-likelihoods is chi-square distributed with the critical value for 1 degree of freedom at 3.8414 for a 95\% confidence cutoff.  Therefore, log-likelihood values that differ by 3.84 divided by 2 (for a two-tailed test) equals 3.84/2 = 1.92, which is approximately equal to 2.  Therefore, a \sphinxcode{-{-}lnlike} value of 2 conservatively evaluates that the two likelihoods differ significantly at the alpha =0.05 level.
+More statistically, the log-likelihood threshold is equivalent to specifying a minimum likelihood ratio (subtracting log-likelihoods is equivalent to dividing raw likelihoods). Let the null hypothesis be zero difference between the tree likelihoods (i.e., any difference is random noise). For each of the two likelihood estimates compared, if error is distributed in a standard normal distribution N(0,1), then 95\% of the distribution lies within \textasciitilde{}2 standard deviations. This means the difference in the two log-likelihoods is chi-square distributed with the critical value for 1 degree of freedom at 3.8414 for a 95\% confidence cutoff.  Therefore, log-likelihood values that differ by 3.84 divided by 2 (for a two-tailed test) equals 3.84/2 = 1.92, which is approximately equal to 2.  Therefore, a \sphinxcode{\sphinxupquote{-{-}lnlike}} value of 2 conservatively evaluates that the two likelihoods differ significantly at the alpha =0.05 level.
 
 
 \section{My partitioned data is not working properly, and is a sparse partitioned set.}
@@ -637,7 +687,12 @@ RAxML and RAxML-ng both require that none of data partitions being evaluated are
 
 
 \chapter{Releases}
-\label{\detokenize{releases::doc}}\label{\detokenize{releases:id1}}\label{\detokenize{releases:releases}}
+\label{\detokenize{releases:releases}}\label{\detokenize{releases:id1}}\label{\detokenize{releases::doc}}
+
+\section{v1.3.1 - Added RESULTS.node.counts.csv}
+\label{\detokenize{releases:v1-3-1-added-results-node-counts-csv}}
+The output now includes a requested feature where the counts of all three quartet options are shown in a separate file alongside representative quartet topologies with labels.  In cases where QD is high, this will allow you to check which discordant option is more common by looking at the counts.
+
 
 \section{v1.3 - Change to RAxML-ng, modernization of flags}
 \label{\detokenize{releases:v1-3-change-to-raxml-ng-modernization-of-flags}}\begin{itemize}

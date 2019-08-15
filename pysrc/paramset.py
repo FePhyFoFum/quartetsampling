@@ -138,6 +138,9 @@ class ParamSet(dict):
         self['tree_result_file_path'] = os.path.join(
             self['results_dir'], "{}.labeled.tre".format(
                 self['result_prefix']))
+        self['nodecounts_result_file_path'] = os.path.join(
+            self['results_dir'], "{}.node.counts.csv".format(
+                self['result_prefix']))
         self['figtree_file_path'] = "{}.figtree".format(
             self['tree_result_file_path'])
         self['freq_file_path'] = "{}.freq".format(

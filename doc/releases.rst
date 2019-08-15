@@ -4,6 +4,10 @@
 Releases
 ########
 
+v1.3.1 - Added RESULTS.node.counts.csv
+======================================
+The output now includes a requested feature where the counts of all three quartet options are shown in a separate file alongside representative quartet topologies with labels.  In cases where QD is high, this will allow you to check which discordant option is more common by looking at the counts.
+
 v1.3 - Change to RAxML-ng, modernization of flags
 =================================================
 * **The default is now RAxML-ng**, though classic RAxML 8.1+ is still available.  Performance of QS in RAxML-ng on test datasets gives similar results, but is much more efficient.

@@ -49,22 +49,26 @@ class DataStore():
                                  "diff", "num_replicates", "notes"],
                         "clade": ["taxon", "tree1", "tree2", "tree3", "treeu",
                                   "qc", "qd", "qi",
-                                  "qdsig", "freq0"]}
+                                  "qdsig", "freq0"],
+                        "nodecounts": ['node_label',
+                                       'count0', 'count1', 'count2',
+                                       'topo0', 'topo1', 'topo2']}
 
-    def write_headers(self, file_path, restype="main"):
+    def write_headers(self, file_path, restype="main", delim=","):
         """Write the headers into the file"""
         with open(file_path, "w") as resultsfile:
-            resultsfile.write("{}\n".format(','.join(self.headers[restype])))
+            resultsfile.write("{}\n".format(delim.join(self.headers[restype])))
         return ''
 
-    def write_entry(self, file_path, entry, restype="main"):
+    def write_entry(self, file_path, entry, restype="main", delim=","):
         """Add an entry to the file"""
         with open(file_path, "a") as resultsfile:
-            resultsfile.write("{}\n".format(','.join([
+            resultsfile.write("{}\n".format(delim.join([
                 str(entry.get(x, "NA")) for x in self.headers[restype]])))
         return ''
 
     def process_rep_results(self, fnode, results_queue, params, nreplicates):
+                            #leafsets):
         """Process the output from a replicate"""
         record_detail = False
         detail_name_sets = []
@@ -120,6 +124,31 @@ class DataStore():
         tree_counts_detailed = tree_counts_detailed + (
             rep_info['likelihood_diff']
             if rep_info['likelihood_diff'] is not None else 0)
+        # more specific details about tree frequencies and quartet configs
+        # {0: "(R1,R2,(L1,L2));",
+        #  1: "(R1,L1,(L2,R2));",
+        #  2: "(R1,L2,(L1,R2));"}
+        self.write_entry(params['nodecounts_result_file_path'],
+                         {'node_label': fnode.label,
+                          'count0': self.tree_counts[fnode].get(0, 0),
+                          'count1': self.tree_counts[fnode].get(1, 0),
+                          'count2': self.tree_counts[fnode].get(2, 0),
+                          'topo0': "(({},{}),({},{}));".format(
+                              result['seq_names']["L1"],
+                              result['seq_names']["L2"],
+                              result['seq_names']["R1"],
+                              result['seq_names']["R2"]),
+                          'topo1': "(({},{}),({},{}));".format(
+                            result['seq_names']["L1"],
+                              result['seq_names']["R1"],
+                              result['seq_names']["L2"],
+                              result['seq_names']["R2"]),
+                          'topo2': "(({},{}),({},{}));".format(
+                              result['seq_names']["L1"],
+                              result['seq_names']["R2"],
+                              result['seq_names']["R1"],
+                              result['seq_names']["L2"])
+                          }, restype='nodecounts', delim='\t')
         if record_detail:
             detail_name_sets.append(set(result["seq_names"].values()))
             detail_tree_sets.append(rep_info['best_tree'])

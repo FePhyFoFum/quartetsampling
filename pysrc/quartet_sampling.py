@@ -200,7 +200,7 @@ def generate_argparser():
     parser.add_argument("--verbose", action="store_true",
                         help="Provide more verbose output if specified.")
     parser.add_argument('--version', action='version',
-                        version='%(prog)s version 1.3.0')
+                        version='%(prog)s version 1.3.1')
     return parser
 
 
@@ -240,6 +240,8 @@ def main(arguments=None):
     #  (otherwise assume it's already there and don't overwrite it)
     if not params['startk'] > k:
         maindata.write_headers(params['score_result_file_path'])
+    maindata.write_headers(params['nodecounts_result_file_path'],
+                           restype="nodecounts", delim='\t')
     # process the nodes in the tree
     params['starttime'] = time.time()
     for fnode in treedata.tree.iternodes():
@@ -331,7 +333,7 @@ def main(arguments=None):
             # sending params['just_clade'] = True will give back detailed
             # name results
             maindata.process_rep_results(fnode, results_queue, params,
-                                         nreplicates)
+                                         nreplicates) # , leafsets)
         # clean up
         del results_queue
         del n_completed
