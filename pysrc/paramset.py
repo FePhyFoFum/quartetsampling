@@ -79,8 +79,10 @@ class ParamSet(dict):
             elif self['data_type'] == 'cat':
                 self['engine_model'] = 'JC2'
         else:
-            self['engine_model'] = 'GTR+G'
-            if self['data_type'] == 'cat':
+            self['engine_model'] = 'GTR+G4'
+            if self['data_type'] == 'amino':
+                self['engine_model'] = 'LG+G4'
+            elif self['data_type'] == 'cat':
                 self['engine_model'] = 'BIN+G'
         if args.engine_model is not None:
             self['engine_model'] = args.engine_model[0]

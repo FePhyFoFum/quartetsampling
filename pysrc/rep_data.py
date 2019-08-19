@@ -68,7 +68,6 @@ class DataStore():
         return ''
 
     def process_rep_results(self, fnode, results_queue, params, nreplicates):
-                            #leafsets):
         """Process the output from a replicate"""
         record_detail = False
         detail_name_sets = []
@@ -139,7 +138,7 @@ class DataStore():
                               result['seq_names']["R1"],
                               result['seq_names']["R2"]),
                           'topo1': "(({},{}),({},{}));".format(
-                            result['seq_names']["L1"],
+                              result['seq_names']["L1"],
                               result['seq_names']["R1"],
                               result['seq_names']["L2"],
                               result['seq_names']["R2"]),
@@ -148,7 +147,7 @@ class DataStore():
                               result['seq_names']["R2"],
                               result['seq_names']["R1"],
                               result['seq_names']["L2"])
-                          }, restype='nodecounts', delim='\t')
+                         }, restype='nodecounts', delim='\t')
         if record_detail:
             detail_name_sets.append(set(result["seq_names"].values()))
             detail_tree_sets.append(rep_info['best_tree'])
@@ -311,7 +310,7 @@ def get_replicates_exhaustive(n_completed, results_queue, leafsets,
                                          [None]))
     # look through them in random order for suitable ones
     nonoverlapping_count = 0
-    while len(replicates) < params['nreps'] and len(possible_quartets) > 0:
+    while len(replicates) < params['nreps'] and possible_quartets:
         proposed_quartet = random.sample(possible_quartets, 1)[0]
         possible_quartets.remove(proposed_quartet)
         if aln.check_aln_overlap(proposed_quartet) is False:
@@ -521,7 +520,7 @@ def process_replicate_raxml(replicate):
     result["engine_args"] = " ".join(engine_args)
     proc = subprocess.Popen(engine_args, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    serr, sout = proc.communicate()
+    serr, _ = proc.communicate()
     if replicate['verbose'] is True:
         if "fix your data" in serr.decode('utf-8'):
             print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
@@ -604,7 +603,7 @@ def process_replicate_raxml_lrt(replicate):
         print('calling: {}'.format(result["engine_args"]))
     proc = subprocess.Popen(engine_args, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    serr, sout = proc.communicate()
+    serr, _ = proc.communicate()
     if replicate['verbose'] is True:
         if "fix your data" in serr.decode('utf-8'):
             print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
@@ -684,7 +683,7 @@ def process_replicate_raxmlng(replicate):
     result["engine_args"] = " ".join(engine_args)
     proc = subprocess.Popen(engine_args, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    serr, sout = proc.communicate()
+    serr, _ = proc.communicate()
     if replicate['verbose'] is True:
         if "fix your data" in serr.decode('utf-8'):
             print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
@@ -763,7 +762,7 @@ def process_replicate_raxmlng_lrt(replicate):
         print('calling: {}'.format(result["engine_args"]))
     proc = subprocess.Popen(base_engine_args, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    serr, sout = proc.communicate()
+    serr, _ = proc.communicate()
     if replicate['verbose'] is True:
         if "fix your data" in serr.decode('utf-8'):
             print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
@@ -890,12 +889,11 @@ def process_replicate_iqtree(replicate):
                    "-m", replicate['engine_model']]
     if replicate['using_partitions']:
         temp_file_paths.extend([replicate['part_fname']])
-                               #"{}.reduced".format(replicate['part_fname'])])
         engine_args.extend(["-q", replicate["part_fname"]])
     result["engine_args"] = " ".join(engine_args)
     proc = subprocess.Popen(engine_args, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    serr, sout = proc.communicate()
+    serr, _ = proc.communicate()
     if replicate['verbose'] is True:
         if "fix your data" in serr.decode('utf-8'):
             print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")
@@ -976,7 +974,7 @@ def process_replicate_iqtree_lrt(replicate):
         print('calling: {}'.format(result["engine_args"]))
     proc = subprocess.Popen(base_engine_args, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    serr, sout = proc.communicate()
+    serr, _ = proc.communicate()
     if replicate['verbose'] is True:
         if "fix your data" in serr.decode('utf-8'):
             print("PARTITIONS WARNING OR MISSING DATA FROM RAXML")

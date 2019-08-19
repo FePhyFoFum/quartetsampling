@@ -200,7 +200,7 @@ def generate_argparser():
     parser.add_argument("--verbose", action="store_true",
                         help="Provide more verbose output if specified.")
     parser.add_argument('--version', action='version',
-                        version='%(prog)s version 1.3.1')
+                        version='%(prog)s version 1.3.1.b')
     return parser
 
 
