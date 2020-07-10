@@ -11,6 +11,13 @@ Version 1.3.1 - Adds RESULTS.node.count.csv that provides counts and representat
 
 For complete details, see the manual for Quartet Sampling (https://github.com/FePhyFoFum/quartetsampling/blob/master/quartetsampling.pdf).
 
+## NEW! Visualization ##
+
+Shuiyin Liu has created a new R-script that can visualize QS results:
+
+[https://github.com/ShuiyinLIU/QS_visualization](https://github.com/ShuiyinLIU/QS_visualization)
+
+Please reference his URL separately, if you use this visualization script.
 
 ## How to Cite ##
 
