@@ -402,7 +402,7 @@ def get_replicates_random(n_completed, results_queue, leafsets,
             if params['using_genetrees']:
                 rgenename = aln.get_random_gene()
             for subtree_name, leaf_names in leafsets.items():
-                randleaf = random.sample(leaf_names, 1)[0]
+                randleaf = random.sample(list(leaf_names), 1)[0]
                 # should really be doing this check when loading files
                 if params['using_genetrees']:
                     if randleaf not in aln.seqs[rgenename]:

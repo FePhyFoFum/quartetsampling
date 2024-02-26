@@ -36,7 +36,7 @@ def read_tree_string(instr):
     keepgoing = True
     curnode = None
     while keepgoing is True:
-        if nextchar is "(":
+        if nextchar == "(":
             if start is True:
                 root = Node()
                 curnode = root
@@ -45,16 +45,15 @@ def read_tree_string(instr):
                 newnode = Node()
                 curnode.add_child(newnode)
                 curnode = newnode
-        elif nextchar is ',':
+        elif nextchar == ',':
             curnode = curnode.parent
-        elif nextchar is ")":
+        elif nextchar == ")":
             curnode = curnode.parent
             index += 1
             nextchar = instr[index]
             name = ""
             while True:
-                if nextchar is ',' or nextchar is ')' or nextchar is ':' \
-                        or nextchar is ';' or nextchar is '[':
+                if nextchar in ',):;[':
                     break
                 name += nextchar
                 index += 1
@@ -69,8 +68,7 @@ def read_tree_string(instr):
             nextchar = instr[index]
             brlen = ""
             while True:
-                if nextchar is ',' or nextchar == ')' or nextchar is ':' \
-                        or nextchar is ';' or nextchar is '[':
+                if nextchar in ',):;[':
                     break
                 brlen += nextchar
                 index += 1
@@ -87,8 +85,7 @@ def read_tree_string(instr):
             curnode.istip = True
             name = ""
             while True:
-                if nextchar is ',' or nextchar == ')' or nextchar is ':' \
-                        or nextchar is ';' or nextchar is '[':
+                if nextchar in ',):;[':
                     break
                 name += nextchar
                 index += 1
